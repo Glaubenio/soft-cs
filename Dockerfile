@@ -1,4 +1,4 @@
-FROM node:20-slim AS deps
+FROM node:22-slim AS deps
 RUN corepack enable && \
     rm -f /usr/local/bin/pnpm && \
     rm -f /usr/local/bin/pnpx && \
@@ -10,7 +10,7 @@ COPY pnpm-lock.yaml ./
 COPY .env .env.local ./
 RUN pnpm install
 
-FROM node:20-slim AS build_image
+FROM node:22-slim AS build_image
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 #COPY --from=deps /app/package-lock.json ./
@@ -26,7 +26,7 @@ RUN apt-get update -y && \
     pnpm prisma db seed && \
     pnpm run build
 
-FROM node:20-slim AS production
+FROM node:22-slim AS production
 ENV NODE_ENV production
 
 RUN addgroup --system nodejs && \
