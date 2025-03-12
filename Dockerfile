@@ -11,19 +11,17 @@ COPY pnpm-lock.yaml ./
 RUN pnpm install
 
 FROM node:22-slim AS build_image
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 #COPY --from=deps /app/package-lock.json ./
 COPY --from=deps /app/pnpm-lock.yaml ./
 COPY . .
-ENV DATABASE_URL ""
 # Install OpenSSL
 RUN apt-get update -y && \
     apt-get install -y openssl libssl-dev && \
     npm install -g pnpm && \
-    pnpm prisma generate && \
-    pnpm prisma db push && \
-    pnpm prisma db seed && \
     pnpm run build
 
 FROM node:22-slim AS production
@@ -43,8 +41,6 @@ COPY --from=build_image --chown=nextjs:nodejs /app/pnpm-lock.yaml ./
 COPY --from=build_image --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=build_image --chown=nextjs:nodejs /app/public ./public
 COPY --from=build_image --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=build_image --chown=nextjs:nodejs /app/.env ./.env
-COPY --from=build_image --chown=nextjs:nodejs /app/.env.local ./.env.local
 
 # Switch to root to install pnpm
 USER root
