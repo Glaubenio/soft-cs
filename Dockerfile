@@ -16,7 +16,7 @@ COPY --from=deps /app/node_modules ./node_modules
 #COPY --from=deps /app/package-lock.json ./
 COPY --from=deps /app/pnpm-lock.yaml ./
 COPY . .
-
+ENV DATABASE_URL ""
 # Install OpenSSL
 RUN apt-get update -y && \
     apt-get install -y openssl libssl-dev && \
@@ -28,6 +28,7 @@ RUN apt-get update -y && \
 
 FROM node:22-slim AS production
 ENV NODE_ENV production
+
 
 RUN addgroup --system nodejs && \
     adduser --system --ingroup nodejs nextjs
