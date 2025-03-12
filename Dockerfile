@@ -1,27 +1,32 @@
-FROM node:22-slim AS deps
+FROM node:22-slim AS build_image
+
+# Needed for prisma setup
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
+# Fake env
+ENV DO_ENDPOINT a.com
+ENV DO_REGION us-east1
+ENV DO_BUCKET crm
+ENV DO_ACCESS_KEY_ID fakeid
+ENV DO_ACCESS_KEY_SECRET fake-key
+
 RUN corepack enable && \
     rm -f /usr/local/bin/pnpm && \
     rm -f /usr/local/bin/pnpx && \
     npm install -g pnpm
 
 WORKDIR /app
+
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
 # COPY .env .env.local ./
 RUN pnpm install
 
-FROM node:22-slim AS build_image
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-#COPY --from=deps /app/package-lock.json ./
-COPY --from=deps /app/pnpm-lock.yaml ./
 COPY . .
 # Install OpenSSL
 RUN apt-get update -y && \
     apt-get install -y openssl libssl-dev && \
-    npm install -g pnpm && \
     pnpm run build
 
 FROM node:22-slim AS production
