@@ -60,7 +60,7 @@ export function LoginComponent() {
   type LoginFormValues = z.infer<typeof formSchema>;
 
   const form = useForm<LoginFormValues>({
-    resolver: zodResolver(formSchema),
+  resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",

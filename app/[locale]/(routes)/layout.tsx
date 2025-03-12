@@ -60,12 +60,12 @@ export default async function AppLayout({
     return redirect("/inactive");
   }
 
-  const build = await getAllCommits();
+  // const build = await getAllCommits();
 
   //console.log(typeof build, "build");
   return (
     <div className="flex h-screen overflow-hidden">
-      <SideBar build={build} />
+      <SideBar build={1} />
       <div className="flex flex-col h-full w-full overflow-hidden">
         <Header
           id={session.user.id as string}
