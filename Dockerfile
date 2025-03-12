@@ -7,7 +7,7 @@ RUN corepack enable && \
 WORKDIR /app
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
-COPY .env .env.local ./
+# COPY .env .env.local ./
 RUN pnpm install
 
 FROM node:22-slim AS build_image
