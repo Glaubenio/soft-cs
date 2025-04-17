@@ -1,10 +1,7 @@
 "use client";
-
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-
-import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,6 +37,7 @@ import {
 } from "@/components/ui/dialog";
 
 import LoadingComponent from "@/components/LoadingComponent";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function LoginComponent() {
   const [isLoading, setIsLoading] = useState(false);
@@ -60,50 +58,13 @@ export function LoginComponent() {
   type LoginFormValues = z.infer<typeof formSchema>;
 
   const form = useForm<LoginFormValues>({
-  resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const loginWithGoogle = async () => {
-    setIsLoading(true);
-    try {
-      await signIn("google", {
-        callbackUrl: process.env.NEXT_PUBLIC_APP_URL,
-        //callbackUrl: "/",
-      });
-    } catch (error) {
-      console.log(error, "error");
-      toast({
-        variant: "destructive",
-        description:
-          "Something went wrong while logging with your Google account.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const loginWithGitHub = async () => {
-    setIsLoading(true);
-    try {
-      await signIn("github", {
-        callbackUrl: process.env.NEXT_PUBLIC_APP_URL,
-        //callbackUrl: "/",
-      });
-    } catch (error) {
-      console.log(error, "error");
-      toast({
-        variant: "destructive",
-        description:
-          "Something went wrong while logging with your Google account.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
   //Login with username(email)/password
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
@@ -120,12 +81,6 @@ export function LoginComponent() {
           variant: "destructive",
           title: "Error",
           description: status.error,
-        });
-      }
-      if (status?.ok) {
-        // console.log("Status OK");
-        toast({
-          description: "Login successful.",
         });
       }
     } catch (error: any) {
@@ -166,40 +121,12 @@ export function LoginComponent() {
   }
 
   return (
-    <Card className="shadow-lg my-5 ">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>Click here to login with: </CardDescription>
+    <Card className="shadow-[0px 64px 64px -32px rgba(94, 23, 235, 0.18)] backdrop-filter-[blur(160px)] my-5 px-[40px] py-[70px] rounded-[28px]">
+      <CardHeader className="space-y-5">
+        <CardTitle className="text-2xl text-center">Bem vindo!</CardTitle>
+        <CardDescription >Somos a sua plataforma de Customer Success.</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="grid grid-cols-2 gap-6">
-          <Button variant="outline" onClick={loginWithGitHub}>
-            <Icons.gitHub className="mr-2 h-4 w-4" />
-            Github
-          </Button>
-          <Button
-            variant="outline"
-            onClick={loginWithGoogle}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Icons.google className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.google className="mr-2 h-4 w-4" />
-            )}{" "}
-            Google
-          </Button>
-        </div>
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              Or continue with
-            </span>
-          </div>
-        </div>
+      <CardContent className="grid gap-4 min-w-[400px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid gap-2">
@@ -212,7 +139,7 @@ export function LoginComponent() {
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        placeholder="John Doe"
+                        placeholder="exemplo@gmail.com"
                         {...field}
                       />
                     </FormControl>
@@ -226,12 +153,12 @@ export function LoginComponent() {
                   name="password"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>Senha</FormLabel>
                       <FormControl>
                         <Input
                           className="w-full"
                           disabled={isLoading}
-                          placeholder="Password"
+                          placeholder="Pelo menos 8 caracteres"
                           type={show ? "text" : "password"}
                           {...field}
                         />
@@ -246,6 +173,55 @@ export function LoginComponent() {
                 >
                   <FingerprintIcon size={25} className="text-gray-400" />
                 </span>
+              </div>
+              <div className="text-sm text-gray-500">
+
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger className="text-primary">
+                    <span>Esqueceu a senha?</span>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle className="p-5">Password Reset</DialogTitle>
+                      <DialogDescription className="p-5">
+                        Enter your email address and we will send new password to your
+                        e-mail.
+                      </DialogDescription>
+                    </DialogHeader>
+                    {isLoading ? (
+                      <LoadingComponent />
+                    ) : (
+                      <div className="flex px-2 space-x-5 py-5">
+                        <Input
+                          type="email"
+                          placeholder="name@domain.com"
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Button
+                          disabled={email === ""}
+                          onClick={() => {
+                            onPasswordReset(email);
+                          }}
+                        >
+                          Reset
+                        </Button>
+                      </div>
+                    )}
+                    <DialogTrigger className="w-full text-right pt-5 ">
+                      <Button variant={"destructive"}>Cancel</Button>
+                    </DialogTrigger>
+                  </DialogContent>
+                </Dialog>
+                {/* Dialog end */}
+              </div>
+              <div className="flex items-center space-x-2 mt-[24px]">
+                <Checkbox id="terms" />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Eu aceito os <span className="text-primary">Termos de Uso</span>
+                </label>
               </div>
             </div>
             <div className="grid gap-2 py-8">
@@ -263,62 +239,13 @@ export function LoginComponent() {
                 >
                   N
                 </span>
-                <span className={isLoading ? " " : "hidden"}>Loading ...</span>
-                <span className={isLoading ? "hidden" : ""}>Login</span>
+                <span className={isLoading ? " " : "hidden"}>Aguarde ...</span>
+                <span className={isLoading ? "hidden" : ""}>Entrar</span>
               </Button>
             </div>
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex flex-col space-y-5">
-        <div className="text-sm text-gray-500">
-          Need account? Register{" "}
-          <Link href={"/register"} className="text-blue-500">
-            here
-          </Link>
-        </div>
-        <div className="text-sm text-gray-500">
-          Need password reset? Click
-          {/* Dialog start */}
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="text-blue-500">
-              <span className="px-2">here</span>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="p-5">Password Reset</DialogTitle>
-                <DialogDescription className="p-5">
-                  Enter your email address and we will send new password to your
-                  e-mail.
-                </DialogDescription>
-              </DialogHeader>
-              {isLoading ? (
-                <LoadingComponent />
-              ) : (
-                <div className="flex px-2 space-x-5 py-5">
-                  <Input
-                    type="email"
-                    placeholder="name@domain.com"
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <Button
-                    disabled={email === ""}
-                    onClick={() => {
-                      onPasswordReset(email);
-                    }}
-                  >
-                    Reset
-                  </Button>
-                </div>
-              )}
-              <DialogTrigger className="w-full text-right pt-5 ">
-                <Button variant={"destructive"}>Cancel</Button>
-              </DialogTrigger>
-            </DialogContent>
-          </Dialog>
-          {/* Dialog end */}
-        </div>
-      </CardFooter>
     </Card>
   );
 }
