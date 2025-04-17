@@ -1,7 +1,6 @@
 import "./globals.css";
 
-import { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 
 import { ReactNode } from "react";
 import { notFound } from "next/navigation";
@@ -11,7 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/app/providers/ThemeProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({ subsets: ["latin"] });
 
 type Props = {
   children: ReactNode;
@@ -100,9 +99,9 @@ export default async function RootLayout(props: Props) {
         />
         <meta name="twitter:image" content="https://nextcrm.io/api/og" />
       </head>
-      <body className={inter.className + " min-h-screen"}>
+      <body className={manrope.className + " min-h-screen"}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             {children}
           </ThemeProvider>
         </NextIntlClientProvider>
