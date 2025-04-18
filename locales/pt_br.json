@@ -15,10 +15,11 @@
     },
     "projects": "Projects",
     "emails": "E-mails",
-    "tasks": "Tasks",
+    "tasks": "Tarefas",
+    "clients": "Clientes",
     "invoices": "Invoices",
     "reports": "Reports",
-    "documents": "Documents",
+    "documents": "Documentos",
     "storage": "Storage",
     "settings": "Administration"
   },

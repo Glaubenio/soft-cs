@@ -15,10 +15,10 @@ const EmailsModuleMenu = ({ open, title }: Props) => {
   const isPath = pathname.includes("emails");
 
   return (
-    <div className="flex flex-row items-center mx-auto p-2">
+    <div className="flex flex-row items-center">
       <Link
-        href={"/emails"}
-        className={`flex gap-2 p-2 ${isPath ? "text-muted-foreground" : null}`}
+        href={"/"}
+        className={`flex flex-1 px-[16px] py-[14px] gap-2 p-2 ${isPath ? "bg-[#EBDAFD] rounded-[12px] text-primary" : 'text-[#898FAC]'}`}
       >
         <Mail className="w-6" />
         <span className={open ? "" : "hidden"}>{title}</span>

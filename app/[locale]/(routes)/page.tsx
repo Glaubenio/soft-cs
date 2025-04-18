@@ -51,7 +51,7 @@ const DashboardPage = async () => {
   const lang = session?.user?.userLanguage;
 
   //Fetch translations from dictionary
-  const dict = await getDictionary(lang as "en" | "cz" | "de" | "uk"); //Fetch data for dashboard
+  const dict = await getDictionary(lang as "pt_br" | "cz" | "de" | "uk"); //Fetch data for dashboard
 
   const modules = await getModules();
   const leads = await getLeadsCount();

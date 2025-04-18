@@ -1,21 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
-import ProjectModuleMenu from "./menu-items/Projects";
-import SecondBrainModuleMenu from "./menu-items/SecondBrain";
-import InvoicesModuleMenu from "./menu-items/Invoices";
-import ReportsModuleMenu from "./menu-items/Reports";
 import DocumentsModuleMenu from "./menu-items/Documents";
-import ChatGPTModuleMenu from "./menu-items/ChatGPT";
-import EmployeesModuleMenu from "./menu-items/Employees";
-import DataboxModuleMenu from "./menu-items/Databoxes";
-import CrmModuleMenu from "./menu-items/Crm";
-
-import AdministrationMenu from "./menu-items/Administration";
 import DashboardMenu from "./menu-items/Dashboard";
 import EmailsModuleMenu from "./menu-items/Emails";
+import TasksModuleMenu from "./menu-items/Tasks";
+import ClientsModuleMenu from "./menu-items/Clients";
 import { cn } from "@/lib/utils";
+import { ArrowLeftToLine, ArrowRightToLine } from "lucide-react";
 
 type Props = {
   modules: any;
@@ -36,97 +28,58 @@ const ModuleMenu = ({ modules, dict, build }: Props) => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-[#F7F8FF]">
       <div
-        className={` ${
-          open ? "w-72" : "w-20 "
-        }  h-screen p-5  pt-8 relative duration-300`}
+        className={` ${open ? "w-[250]" : "w-[164px] "
+          }  h-screen relative duration-300 p-[32px]`}
       >
-        <div className="flex gap-x-4 items-center">
-          <div
-            className={`cursor-pointer duration-500 border rounded-full px-4 py-2 ${
-              open && "rotate-[360deg]"
-            }`}
-            onClick={() => setOpen(!open)}
-          >
-            N
+        <div className="bg-white rounded-[20px] h-full p-[24px] shadow-[0px -6px 50px -32px rgba(94, 23, 235, 0.08)]">
+          <div className="flex gap-x-4 items-center">
+            <h1
+              className={` origin-left font-medium text-xl duration-200 ${!open && "scale-0"
+                }`}
+            >
+              <img src="/images/logo_small.svg" />
+            </h1>
+            <div
+              className={`cursor-pointer duration-500 border rounded-full px-2 py-2 bg-primary text-white ${open && "rotate-[180deg]"
+                }`}
+              onClick={() => setOpen(!open)}
+            >
+              <ArrowRightToLine className="h-[15px]" />
+            </div>
+
+          </div>
+          <hr className="mt-[20px]" />
+          <div className="mt-[20px] justify-center">
+            <DashboardMenu open={open} title={dict.ModuleMenu.dashboard} />
+            {modules.find(
+              (menuItem: any) => menuItem.name === "tasks" && menuItem.enabled
+            ) ? (
+              <ClientsModuleMenu open={open} title={dict.ModuleMenu.clients} />
+            ) : null}
+            {modules.find(
+              (menuItem: any) => menuItem.name === "projects" && menuItem.enabled
+            ) ? (
+              <TasksModuleMenu open={open} title={dict.ModuleMenu.projects} />
+            ) : null}
+            {modules.find(
+              (menuItem: any) => menuItem.name === "documents" && menuItem.enabled
+            ) ? (
+              <DocumentsModuleMenu
+                open={open}
+                title={dict.ModuleMenu.documents}
+              />
+            ) : null}
+            {modules.find(
+              (menuItem: any) => menuItem.name === "emails" && menuItem.enabled
+            ) ? (
+              <EmailsModuleMenu open={open} title={dict.ModuleMenu.emails} />
+            ) : null}
           </div>
 
-          <h1
-            className={` origin-left font-medium text-xl duration-200 ${
-              !open && "scale-0"
-            }`}
-          >
-            {process.env.NEXT_PUBLIC_APP_NAME}
-          </h1>
         </div>
-        <div className="pt-6">
-          <DashboardMenu open={open} title={dict.ModuleMenu.dashboard} />
-          {modules.find(
-            (menuItem: any) => menuItem.name === "crm" && menuItem.enabled
-          ) ? (
-            <CrmModuleMenu open={open} localizations={dict.ModuleMenu.crm} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "projects" && menuItem.enabled
-          ) ? (
-            <ProjectModuleMenu open={open} title={dict.ModuleMenu.projects} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "emails" && menuItem.enabled
-          ) ? (
-            <EmailsModuleMenu open={open} title={dict.ModuleMenu.emails} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) =>
-              menuItem.name === "secondBrain" && menuItem.enabled
-          ) ? (
-            <SecondBrainModuleMenu open={open} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "employee" && menuItem.enabled
-          ) ? (
-            <EmployeesModuleMenu open={open} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "invoice" && menuItem.enabled
-          ) ? (
-            <InvoicesModuleMenu open={open} title={dict.ModuleMenu.invoices} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "reports" && menuItem.enabled
-          ) ? (
-            <ReportsModuleMenu open={open} title={dict.ModuleMenu.reports} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "documents" && menuItem.enabled
-          ) ? (
-            <DocumentsModuleMenu
-              open={open}
-              title={dict.ModuleMenu.documents}
-            />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "databox" && menuItem.enabled
-          ) ? (
-            <DataboxModuleMenu open={open} />
-          ) : null}
-          {modules.find(
-            (menuItem: any) => menuItem.name === "openai" && menuItem.enabled
-          ) ? (
-            <ChatGPTModuleMenu open={open} />
-          ) : null}
-          <AdministrationMenu open={open} title={dict.ModuleMenu.settings} />
-        </div>
-      </div>
-      <div
-        className={cn("flex justify-center items-center w-full", {
-          hidden: !open,
-        })}
-      >
-        <span className="text-xs text-gray-500 pb-2">
-          build: 0.0.3-beta-{build}
-        </span>
+
       </div>
     </div>
   );

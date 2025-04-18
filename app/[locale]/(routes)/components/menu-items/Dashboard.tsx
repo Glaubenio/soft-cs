@@ -1,4 +1,4 @@
-import { Home } from "lucide-react";
+import { Grid2X2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,14 +11,17 @@ type Props = {
 
 const DashboardMenu = ({ open, title }: Props) => {
   const pathname = usePathname();
-  const isPath = pathname.includes("nevermind");
+  const locale = usePathname()?.split("/")[1];
+
+
+  const isPath = pathname.endsWith(locale);
   return (
-    <div className="flex flex-row items-center mx-auto p-2">
+    <div className="flex flex-row items-center">
       <Link
         href={"/"}
-        className={`flex gap-2 p-2 ${isPath ? "text-muted-foreground" : null}`}
+        className={`flex flex-1 px-[16px] py-[14px] gap-2 p-2 ${isPath ? "bg-[#EBDAFD] rounded-[12px] text-primary" : 'text-[#898FAC]'}`}
       >
-        <Home className="w-6" />
+        <Grid2X2 className="w-6" />
         <span className={open ? "" : "hidden"}>{title}</span>
       </Link>
     </div>
