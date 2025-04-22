@@ -119,7 +119,7 @@ export async function POST(
             ">",
           to: user?.email!,
           subject:
-            session.user.userLanguage === "en"
+            session.user.userLanguage === "pt_br"
               ? `New comment  on task ${task.title}.`
               : `Nový komentář k úkolu ${task.title}.`,
           text: "", // Add this line to fix the types issue

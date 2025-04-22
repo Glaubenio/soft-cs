@@ -37,7 +37,7 @@ import { useState } from "react";
 import LoadingModal from "./modals/loading-modal";
 
 const languages = [
-  { label: "English", value: "en" },
+  { label: "English", value: "pt_br" },
   { label: "Czech", value: "cz" },
   { label: "German", value: "de" },
   { label: "Ukrainian", value: "uk" },
@@ -116,8 +116,8 @@ export function SetLanguage({ userId }: Props) {
                     >
                       {field.value
                         ? languages.find(
-                            (language) => language.value === field.value
-                          )?.label
+                          (language) => language.value === field.value
+                        )?.label
                         : "Select language"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>

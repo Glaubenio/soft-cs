@@ -119,7 +119,7 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
             ">",
           to: notifyRecipient?.email!,
           subject:
-            session.user.userLanguage === "en"
+            session.user.userLanguage === "pt_br"
               ? `Task -  ${title} - was updated.`
               : `Úkol - ${title} - byl aktualizován.`,
           text: "", // Add this line to fix the types issue

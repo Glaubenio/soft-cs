@@ -59,7 +59,7 @@ export async function POST(req: Request) {
             ">",
           to: notifyRecipient?.email!,
           subject:
-            session.user.userLanguage === "en"
+            session.user.userLanguage === "pt_br"
               ? `New task -  ${title}.`
               : `Nový úkol - ${title}.`,
           text: "", // Add this line to fix the types issue
@@ -105,7 +105,7 @@ export async function POST(req: Request) {
             ">",
           to: user?.email!,
           subject:
-            session.user.userLanguage === "en"
+            session.user.userLanguage === "pt_br"
               ? `New task -  ${title}.`
               : `Nový úkol - ${title}.`,
           text: "", // Add this line to fix the types issue

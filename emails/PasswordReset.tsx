@@ -56,25 +56,25 @@ export const PasswordResetEmail = ({
               Hello {username},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "en"
+              {userLanguage === "pt_br"
                 ? "Your password was reset,"
                 : "Vaše heslo bylo resetováno,"}
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "en"
+              {userLanguage === "pt_br"
                 ? "Your username: "
                 : "Vaše uživatelské jméno: "}
               <strong>{email}</strong>
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "en"
+              {userLanguage === "pt_br"
                 ? "Your new password: "
                 : "Vaše nové heslo: "}
 
               <strong>{password}</strong>
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "en"
+              {userLanguage === "pt_br"
                 ? "Please login to "
                 : "Prosíme přihlašte se na "}
               <Link
@@ -85,7 +85,7 @@ export const PasswordResetEmail = ({
               </Link>
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "en" ? "Thank you, " : "Děkujeme, "}
+              {userLanguage === "pt_br" ? "Obrigado, " : "Děkujeme, "}
               {process.env.NEXT_PUBLIC_APP_NAME}
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />

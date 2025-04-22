@@ -50,12 +50,12 @@ export async function POST(req: Request) {
         updatedBy: userId,
         ...(assigned_account !== null && assigned_account !== undefined
           ? {
-              assigned_accounts: {
-                connect: {
-                  id: assigned_account,
-                },
+            assigned_accounts: {
+              connect: {
+                id: assigned_account,
               },
-            }
+            },
+          }
           : {}),
         assigned_to_user: {
           connect: {
@@ -98,11 +98,11 @@ export async function POST(req: Request) {
         from: process.env.EMAIL_FROM as string,
         to: notifyRecipient.email || "info@softbase.cz",
         subject:
-          notifyRecipient.userLanguage === "en"
+          notifyRecipient.userLanguage === "pt_br"
             ? `New contact ${first_name} ${last_name} has been added to the system and assigned to you.`
             : `Nový kontakt ${first_name} ${last_name} byla přidána do systému a přidělena vám.`,
         text:
-          notifyRecipient.userLanguage === "en"
+          notifyRecipient.userLanguage === "pt_br"
             ? `New contact ${first_name} ${last_name} has been added to the system and assigned to you. You can click here for detail: ${process.env.NEXT_PUBLIC_APP_URL}/crm/contacts/${newContact.id}`
             : `Nový kontakt ${first_name} ${last_name} byla přidán do systému a přidělena vám. Detaily naleznete zde: ${process.env.NEXT_PUBLIC_APP_URL}/crm/contact/${newContact.id}`,
       });
@@ -167,12 +167,12 @@ export async function PUT(req: Request) {
         //Update assigned_accountsIDs only if assigned_account is not empty
         ...(assigned_account !== null && assigned_account !== undefined
           ? {
-              assigned_accounts: {
-                connect: {
-                  id: assigned_account,
-                },
+            assigned_accounts: {
+              connect: {
+                id: assigned_account,
               },
-            }
+            },
+          }
           : {}),
         assigned_to_user: {
           connect: {
@@ -215,11 +215,11 @@ export async function PUT(req: Request) {
         from: process.env.EMAIL_FROM as string,
         to: notifyRecipient.email || "info@softbase.cz",
         subject:
-          notifyRecipient.userLanguage === "en"
+          notifyRecipient.userLanguage === "pt_br"
             ? `New contact ${first_name} ${last_name} has been added to the system and assigned to you.`
             : `Nový kontakt ${first_name} ${last_name} byla přidána do systému a přidělena vám.`,
         text:
-          notifyRecipient.userLanguage === "en"
+          notifyRecipient.userLanguage === "pt_br"
             ? `New contact ${first_name} ${last_name} has been added to the system and assigned to you. You can click here for detail: ${process.env.NEXT_PUBLIC_APP_URL}/crm/contacts/${newContact.id}`
             : `Nový kontakt ${first_name} ${last_name} byla přidán do systému a přidělena vám. Detaily naleznete zde: ${process.env.NEXT_PUBLIC_APP_URL}/crm/contact/${newContact.id}`,
       });

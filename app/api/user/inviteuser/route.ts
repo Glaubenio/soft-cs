@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     let message = "";
 
     switch (language) {
-      case "en":
+      case "pt_br":
         message = `You have been invited to ${process.env.NEXT_PUBLIC_APP_NAME} \n\n Your username is: ${email} \n\n Your password is: ${password} \n\n Please login to ${process.env.NEXT_PUBLIC_APP_URL} \n\n Thank you \n\n ${process.env.NEXT_PUBLIC_APP_NAME}`;
         break;
       case "cz":

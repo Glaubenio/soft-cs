@@ -75,7 +75,7 @@ export function InviteForm() {
       form.reset({
         name: "",
         email: "",
-        language: "en",
+        language: "pt_br",
       });
       router.refresh();
       setIsLoading(false);
@@ -131,7 +131,7 @@ export function InviteForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="pt_br">Português (Brasileiro)</SelectItem>
                   <SelectItem value="cz">Czech</SelectItem>
                 </SelectContent>
               </Select>

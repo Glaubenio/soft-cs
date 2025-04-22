@@ -25,7 +25,7 @@ export async function POST(req: Request, props: { params: Promise<{ userId: stri
     let message;
 
     switch (user.userLanguage) {
-      case "en":
+      case "pt_br":
         message = `You account has been activated in ${process.env.NEXT_PUBLIC_APP_NAME} \n\n Your username is: ${user.email} \n\n Please login to ${process.env.NEXT_PUBLIC_APP_URL} \n\n Thank you \n\n ${process.env.NEXT_PUBLIC_APP_NAME}`;
         break;
       case "cz":

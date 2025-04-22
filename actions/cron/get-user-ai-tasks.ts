@@ -61,7 +61,7 @@ export async function getUserAiTasks(session: any) {
   }
 
   switch (user.userLanguage) {
-    case "en":
+    case "pt_br":
       prompt = `Hi, Iam ${process.env.NEXT_PUBLIC_APP_URL} API Bot.
       \n\n
       There are ${getTaskPastDue.length} tasks past due and ${
