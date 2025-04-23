@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-import { FingerprintIcon } from "lucide-react";
+import { Eye, EyeClosed, FingerprintIcon } from "lucide-react";
 import axios from "axios";
 import {
   Dialog,
@@ -38,6 +38,7 @@ import {
 
 import LoadingComponent from "@/components/LoadingComponent";
 import { Checkbox } from "@/components/ui/checkbox";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function LoginComponent() {
   const [isLoading, setIsLoading] = useState(false);
@@ -155,7 +156,7 @@ export function LoginComponent() {
                     <FormItem className="w-full">
                       <FormLabel>Senha</FormLabel>
                       <FormControl>
-                        <Input
+                        <PasswordInput
                           className="w-full"
                           disabled={isLoading}
                           placeholder="Pelo menos 8 caracteres"
@@ -167,12 +168,6 @@ export function LoginComponent() {
                     </FormItem>
                   )}
                 />
-                <span
-                  className="flex px-4 pt-7 w-16"
-                  onClick={() => setShow(!show)}
-                >
-                  <FingerprintIcon size={25} className="text-gray-400" />
-                </span>
               </div>
               <div className="text-sm text-gray-500">
 
