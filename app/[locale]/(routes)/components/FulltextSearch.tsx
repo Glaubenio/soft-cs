@@ -18,12 +18,12 @@ const FulltextSearch = () => {
     <div className="flex w-full max-w-sm items-center space-x-2">
       <Input
         type="text"
-        placeholder={"Search something ..."}
+        placeholder={"Digite para pesquisar..."}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
       <Button type="submit" className="gap-2" onClick={handleSearch}>
-        <span className="hidden sm:flex">Search</span>
+        <span className="hidden sm:flex">Digite para pesquisar...</span>
         <SearchIcon />
       </Button>
     </div>

@@ -15,15 +15,17 @@ import { LogOut, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useAvatarStore from "@/store/useAvatarStore";
+import { CaretDownIcon } from "@radix-ui/react-icons";
 
 type Props = {
   avatar: string;
   userId: string;
   name: string;
   email: string;
+  isAdmin: boolean;
 };
 
-const AvatarDropdown = ({ avatar, userId, name, email }: Props) => {
+const AvatarDropdown = ({ avatar, name, email, isAdmin }: Props) => {
   const router = useRouter();
   const setAvatar = useAvatarStore((state) => state.setAvatar);
   const getAvatar = useAvatarStore((state) => state.avatar);
@@ -37,10 +39,9 @@ const AvatarDropdown = ({ avatar, userId, name, email }: Props) => {
     setNewAvatar(getAvatar);
   }, [getAvatar]);
 
-  //console.log(newAvatar, "newAvatar");
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="flex space-x-2 items-center text-start">
         <Avatar>
           <AvatarImage
             src={
@@ -50,23 +51,14 @@ const AvatarDropdown = ({ avatar, userId, name, email }: Props) => {
             }
           />
         </Avatar>
+        <div>
+          <div className="whitespace-nowrap text-[#150F41] text-[14px] font-[400]">{name}</div>
+          <div className="text-[#898FAC] text-[12px] font-[400]">{isAdmin ? 'Admin' : 'Operador'}</div>
+        </div>
+
+        <CaretDownIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel className="space-y-1">
-          <div>{name}</div>
-          <div className="text-xs text-gray-500">{email}</div>
-        </DropdownMenuLabel>
-
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => router.push("/projects/dashboard")}>
-          Todo dashboard
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => router.push(`/crm/dashboard/${userId}`)}
-        >
-          Sales dashboard
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => router.push("/profile")}>
           <Settings className="w-4 h-4 inline-block mr-2 stroke-current text-gray-500" />
           <span>Profile settings</span>
@@ -74,7 +66,7 @@ const AvatarDropdown = ({ avatar, userId, name, email }: Props) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="w-4 h-4 inline-block mr-2 stroke-current text-gray-500" />
-          <span>Sign out</span>
+          <span>Sair</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

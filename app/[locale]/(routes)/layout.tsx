@@ -60,11 +60,8 @@ export default async function AppLayout({
     return redirect("/inactive");
   }
 
-  // const build = await getAllCommits();
-
-  //console.log(typeof build, "build");
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-[#F7F8FF]">
       <SideBar build={1} />
       <div className="flex flex-col h-full w-full overflow-hidden">
         <Header
@@ -73,6 +70,7 @@ export default async function AppLayout({
           email={session.user.email as string}
           avatar={session.user.image as string}
           lang={session.user.userLanguage as string}
+          isAdmin={session.user.is_admin}
         />
         <div className="flex-grow overflow-y-auto h-full p-5">{children}</div>
         <Footer />

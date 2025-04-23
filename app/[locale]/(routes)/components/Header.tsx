@@ -1,12 +1,11 @@
-import Feedback from "./Feedback";
+"use client";
 import FulltextSearch from "./FulltextSearch";
 import AvatarDropdown from "./ui/AvatarDropdown";
 
 import { Separator } from "@/components/ui/separator";
-import { SetLanguage } from "@/components/SetLanguage";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { CommandComponent } from "@/components/CommandComponent";
-import SupportComponent from "@/components/support";
+
+import NotificationsComponent from "@/components/notifications";
+import { usePathname } from "next/navigation";
 
 type Props = {
   id: string;
@@ -14,31 +13,46 @@ type Props = {
   email: string;
   avatar: string;
   lang: string;
+  isAdmin: boolean;
 };
 
-const Header = ({ id, name, email, avatar, lang }: Props) => {
+const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
+  const getBreadcrumbAndTitle = () => {
+    const pathname = usePathname();
+
+    if (pathname.split('/').length == 2) {
+      return {
+        title: "Dashboard",
+        breadcrumb: 'Páginas / Dashboard',
+      };
+    }
+
+    if (pathname.includes('profile')) {
+      return {
+        title: "Perfil",
+        breadcrumb: 'Páginas / Perfil',
+      }
+    }
+  };
+  const { title, breadcrumb } = getBreadcrumbAndTitle()
   return (
-    <>
-      <div className="flex h-20 justify-between items-center p-5 space-x-5">
-        <div className="flex justify-center ">
-          <FulltextSearch />
-        </div>
-        <div className="flex items-center gap-3">
-          <CommandComponent />
-          <SetLanguage userId={id} />
-          <Feedback />
-          <ThemeToggle />
-          <SupportComponent />
-          <AvatarDropdown
-            avatar={avatar}
-            userId={id}
-            name={name}
-            email={email}
-          />
-        </div>
+    <div className="flex bg-[#F7F8FF] h-20 justify-between items-center pr-[32px] space-x-5 mt-[24px]">
+      <div className="flex flex-col">
+        <div className="text-[12px] text-[#898FAC] font-[400]">{breadcrumb}</div>
+        <div className="text-[28px] text-[#150F41] font-[700]">{title}</div>
       </div>
-      <Separator />
-    </>
+      <div className="flex items-center gap-3 bg-white rounded-[18px] px-[14px] py-[4px]">
+        <FulltextSearch />
+        <NotificationsComponent />
+        <AvatarDropdown
+          avatar={avatar}
+          userId={id}
+          isAdmin={isAdmin}
+          name={name}
+          email={email}
+        />
+      </div>
+    </div>
   );
 };
 

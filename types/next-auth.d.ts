@@ -19,6 +19,7 @@ declare module "next-auth" {
       isAdmin: boolean;
       userLanguage: string;
       userStatus: string;
+      is_admin: boolean;
     };
   }
 }
