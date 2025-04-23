@@ -19,7 +19,7 @@ const DashboardMenu = ({ open, title }: Props) => {
     <div className="flex flex-row items-center">
       <Link
         href={"/"}
-        className={`flex flex-1 px-[16px] py-[14px] gap-2 p-2 ${isPath ? "bg-[#EBDAFD] rounded-[12px] text-primary" : 'text-[#898FAC]'}`}
+        className={`flex flex-1 px-[16px] py-[14px] gap-2 p-2 ${isPath ? "bg-menu-active rounded-[12px] text-primary" : 'text-light-gray'}`}
       >
         <Grid2X2 className="w-6" />
         <span className={open ? "" : "hidden"}>{title}</span>

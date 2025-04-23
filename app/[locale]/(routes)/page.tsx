@@ -2,26 +2,16 @@ import { Suspense } from "react";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import {
-  CoinsIcon,
-  Contact,
-  DollarSignIcon,
-  FactoryIcon,
-  FilePenLine,
-  HeartHandshakeIcon,
-  LandmarkIcon,
-  UserIcon,
-  Users2Icon,
+  Banknote,
+  ChartBar,
+  Expand,
+  PiggyBank,
+  Repeat,
+  TrendingDown,
+  TrendingUp,
 } from "lucide-react";
-import Link from "next/link";
-
 import { getDictionary } from "@/dictionaries";
-
-import Container from "./components/ui/Container";
-import NotionsBox from "./components/dasboard/notions";
-import LoadingBox from "./components/dasboard/loading-box";
-import StorageQuota from "./components/dasboard/storage-quota";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import LoadingBox from "./components/dashboard/loading-box";
 import {
   getTasksCount,
   getUsersTasksCount,
@@ -39,6 +29,113 @@ import { getDocumentsCount } from "@/actions/dashboard/get-documents-count";
 import { getActiveUsersCount } from "@/actions/dashboard/get-active-users-count";
 import { getOpportunitiesCount } from "@/actions/dashboard/get-opportunities-count";
 import { getExpectedRevenue } from "@/actions/crm/opportunity/get-expected-revenue";
+import MetricCard from "./components/dashboard/metric-card";
+import ClientsTable from "./components/dashboard/clients-table";
+import { AreaChart, BarChart } from "@tremor/react";
+const fakeAreaChartData = [
+  {
+    month: "Jan",
+    churn: 0.5,
+  },
+  {
+    month: "Fev",
+    churn: 0.4,
+  },
+  {
+    month: "Mar",
+    churn: 0.3,
+  },
+  {
+    month: "Abr",
+    churn: 0.2,
+  },
+  {
+    month: "Mai",
+    churn: 0.1,
+  },
+  {
+    month: "Jun",
+    churn: 0.2,
+  },
+  {
+    month: "Jul",
+    churn: 0.3,
+  },
+  {
+    month: "Ago",
+    churn: 0.4,
+  },
+  {
+    month: "Set",
+    churn: 0.5,
+  },
+  {
+    month: "Out",
+    churn: 0.6,
+  },
+  {
+    month: "Nov",
+    churn: 0.7,
+  },
+  {
+    month: "Dez",
+    churn: 0.8,
+  },
+]
+const churnData = [
+  {
+    date: "Jan",
+    "Usuários": 5000,
+  },
+  {
+    date: "Fev",
+    "Usuários": -1200,
+  },
+  {
+    date: "Mar",
+    "Usuários": 3500,
+  },
+  {
+    date: "Abr",
+    "Usuários": 2200,
+  },
+  {
+    date: "Mai",
+    "Usuários": -450,
+  },
+  {
+    date: "Jun",
+    "Usuários": 1750,
+  },
+]
+
+const retentionData = [
+  {
+    date: "Jan",
+    "Churn (R$)": 5000,
+  },
+  {
+    date: "Fev",
+    "Churn (R$)": 1200,
+  },
+  {
+    date: "Mar",
+    "Churn (R$)": 3500,
+  },
+  {
+    date: "Abr",
+    "Churn (R$)": 2200,
+  },
+  {
+    date: "Mai",
+    "Churn (R$)": 450,
+  },
+  {
+    date: "Jun",
+    "Churn (R$)": 1750,
+  },
+]
+
 
 const DashboardPage = async () => {
   const session = await getServerSession(authOptions);
@@ -79,178 +176,121 @@ const DashboardPage = async () => {
     (module) => module.name === "secondBrain"
   );
 
+
+  const valueFormatter = (value: number) => {
+    return Intl.NumberFormat("us").format(value).toString();
+  };
+
   return (
-    <Container
-      title={dict.DashboardPage.containerTitle}
-      description={
-        "Welcome to NextCRM cockpit, here you can see your company overview"
-      }
-    >
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <Suspense fallback={<LoadingBox />}>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {dict.DashboardPage.totalRevenue}
-              </CardTitle>
-              <DollarSignIcon className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-medium">{"0"}</div>
-            </CardContent>
-          </Card>
-        </Suspense>
-        <Suspense fallback={<LoadingBox />}>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {dict.DashboardPage.expectedRevenue}
-              </CardTitle>
-              <DollarSignIcon className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-medium">
-                {
-                  //I need revenue value in format 1.000.000
-                  revenue.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  })
-                }
-              </div>
-            </CardContent>
-          </Card>
-        </Suspense>
-
-        <DashboardCard
-          href="/admin/users"
-          title={dict.DashboardPage.activeUsers}
-          IconComponent={UserIcon}
-          content={users}
-        />
-        {
-          //show crm module only if enabled is true
-          employeesModule?.enabled && (
-            <DashboardCard
-              href="/employees"
-              title="Employees"
-              IconComponent={Users2Icon}
-              content={employees.length}
-            />
-          )
-        }
-        {
-          //show crm module only if enabled is true
-          crmModule?.enabled && (
-            <>
-              <DashboardCard
-                href="/crm/accounts"
-                title={dict.DashboardPage.accounts}
-                IconComponent={LandmarkIcon}
-                content={accounts}
-              />
-              <DashboardCard
-                href="/crm/opportunities"
-                title={dict.DashboardPage.opportunities}
-                IconComponent={HeartHandshakeIcon}
-                content={opportunities}
-              />
-              <DashboardCard
-                href="/crm/contacts"
-                title={dict.DashboardPage.contacts}
-                IconComponent={Contact}
-                content={contacts}
-              />
-              <DashboardCard
-                href="/crm/leads"
-                title={dict.DashboardPage.leads}
-                IconComponent={CoinsIcon}
-                content={leads}
-              />
-              <DashboardCard
-                href="/crm/contracts"
-                title={dict.ModuleMenu.crm.contracts}
-                IconComponent={FilePenLine}
-                content={contracts}
-              />
-            </>
-          )
-        }
-        {projectsModule?.enabled && (
-          <>
-            <DashboardCard
-              href="/projects"
-              title={dict.DashboardPage.projects}
-              IconComponent={CoinsIcon}
-              content={projects}
-            />
-            <DashboardCard
-              href="/projects/tasks"
-              title={dict.DashboardPage.tasks}
-              IconComponent={CoinsIcon}
-              content={tasks}
-            />
-            <DashboardCard
-              href={`/projects/tasks/${userId}`}
-              title={dict.DashboardPage.myTasks}
-              IconComponent={CoinsIcon}
-              content={usersTasks}
-            />
-          </>
-        )}
-        {invoiceModule?.enabled && (
-          <DashboardCard
-            href="/invoice"
-            title={dict.DashboardPage.invoices}
-            IconComponent={CoinsIcon}
-            content={invoices}
-          />
-        )}
-        {documentsModule?.enabled && (
-          <DashboardCard
-            href="/documents"
-            title={dict.DashboardPage.documents}
-            IconComponent={CoinsIcon}
-            content={documents}
-          />
-        )}
-
-        <StorageQuota actual={storage} title={dict.DashboardPage.storage} />
-
-        {secondBrainModule?.enabled && (
+    <div className="grid gap-4">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-cols-subgrid col-span-3">
           <Suspense fallback={<LoadingBox />}>
-            <NotionsBox />
+            <MetricCard title="Taxa de churn" metricValue="10,5%" icon={<TrendingUp className="text-primary" />} />
           </Suspense>
-        )}
+          <Suspense fallback={<LoadingBox />}>
+            <MetricCard title="Retenção Média" metricValue="13 meses" icon={<Repeat className="text-primary" />} />
+          </Suspense>
+          <Suspense fallback={<LoadingBox />}>
+            <MetricCard title="Churn em Valor" metricValue="-18k" icon={<Banknote className="text-primary" />} />
+          </Suspense>
+          <Suspense fallback={<LoadingBox />}>
+            <MetricCard title="MRR Total" metricValue="R$ 180K" icon={<PiggyBank className="text-primary" />} />
+          </Suspense>
+          <Suspense fallback={<LoadingBox />}>
+            <MetricCard title="Valor de Expansão" metricValue="R$ 32K" icon={<Expand className="text-primary" />} />
+          </Suspense>
+          <Suspense fallback={<LoadingBox />}>
+            <MetricCard title="Retenção Líquida (NRR)" metricValue="115%" icon={<ChartBar className="text-primary" />} />
+          </Suspense>
+        </div>
+        <div className="grid col-span-2">
+          <ClientsTable />
+        </div>
+      </div >
+      <div className="grid text-light-gray text-[20px] font-[700]">
+        Retenção e Churn
       </div>
-    </Container>
+      <div className="grid gap-4 grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 col-span-2 bg-white rounded-[20px] p-[14px] blur-sm">
+          <div className="grid grid-rows-subgrid grid-cols-3 flex gap-4">
+            <div className="flex flex-col bg-white shadow-soft-cs px-[14px] py-[12px] backdrop-blur-soft-cs rounded-[12px] text-[12px] font-[400] text-light-gray">
+              Taxa de churn
+              <div className="flex flex-row text-[24px] font-[700] text-foreground items-baseline">
+                4,5%
+              </div>
+            </div>
+            <div className="flex flex-col bg-white shadow-soft-cs px-[14px] py-[12px] backdrop-blur-soft-cs rounded-[12px] text-[12px] font-[400] text-light-gray">
+              Clientes ativos
+              <div className="flex flex-row text-[24px] font-[700] text-foreground items-baseline">
+                250
+                <div className="flex gap-1 bg-light-green text-dot-green h-fit px-[8px] py-[3px] ml-[4px] rounded-full text-[10px] font-[700]">
+                  <TrendingUp className="h-[12px] w-[12px]" />+ 45
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white shadow-soft-cs px-[14px] py-[12px] backdrop-blur-soft-cs rounded-[12px] text-[12px] font-[400] text-light-gray">
+              Clientes perdidos
+              <div className="flex flex-row text-[24px] font-[700] text-foreground items-baseline">
+                15
+                <div className="flex gap-1 bg-light-red text-dot-red h-fit px-[8px] py-[3px] ml-[4px] rounded-full text-[10px] font-[700]">
+                  <TrendingDown className="h-[12px] w-[12px]" />- 3
+                </div>
+              </div>
+            </div>
+          </div>
+          <AreaChart
+            data={fakeAreaChartData}
+            index="month"
+            colors={["primary"]}
+            showLegend={false}
+            categories={["churn"]} />
+        </div>
+        <div className="grid gap-4 col-span-1 bg-white rounded-[20px] p-[14px] blur-sm">
+          <div className="flex flex-col text-[12px] font-[400] text-light-gray">
+            Churn em valor
+            <div className="flex flex-row text-[28px] font-[700] text-foreground items-baseline">
+              - 10k
+              <div className="flex gap-1 bg-light-red text-dot-red h-fit px-[8px] py-[3px] ml-[4px] rounded-full text-[10px] font-[700]">
+                <TrendingDown className="h-[12px] w-[12px]" />- 2500
+              </div>
+            </div>
+          </div>
+          <BarChart
+            className="h-72"
+            data={retentionData}
+            index="date"
+            showLegend={false}
+            colors={["primary"]}
+            categories={["Churn (R$)"]}
+
+          />
+        </div>
+        <div className="grid gap-4 col-span-1 bg-white rounded-[20px] p-[14px] blur-sm">
+          <div className="flex flex-col text-[12px] font-[400] text-light-gray">
+            Retenção média
+            <div className="flex flex-row text-[28px] font-[700] text-foreground items-baseline">
+              3 meses
+              <div className="flex gap-1 bg-light-red text-dot-red h-fit px-[8px] py-[3px] ml-[4px] rounded-full text-[10px] font-[700]">
+                <TrendingDown className="h-[12px] w-[12px]" />- 1 mês
+              </div>
+            </div>
+          </div>
+          <BarChart
+            className="h-72"
+            data={churnData}
+            index="date"
+            showLegend={false}
+            colors={["primary"]}
+            categories={["Usuários"]}
+
+          />
+        </div>
+      </div>
+    </div >
   );
 };
 
-export default DashboardPage;
 
-const DashboardCard = ({
-  href,
-  title,
-  IconComponent,
-  content,
-}: {
-  href?: string;
-  title: string;
-  IconComponent: any;
-  content: number;
-}) => (
-  <Link href={href || "#"}>
-    <Suspense fallback={<LoadingBox />}>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">{title}</CardTitle>
-          <IconComponent className="w-4 h-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-medium">{content}</div>
-        </CardContent>
-      </Card>
-    </Suspense>
-  </Link>
-);
+
+export default DashboardPage;

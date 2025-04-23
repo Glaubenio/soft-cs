@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
-import Footer from "./components/Footer";
-import getAllCommits from "@/actions/github/get-repo-commits";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -61,7 +59,7 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F7F8FF]">
+    <div className="flex h-screen overflow-hidden ">
       <SideBar build={1} />
       <div className="flex flex-col h-full w-full overflow-hidden">
         <Header
@@ -72,8 +70,7 @@ export default async function AppLayout({
           lang={session.user.userLanguage as string}
           isAdmin={session.user.is_admin}
         />
-        <div className="flex-grow overflow-y-auto h-full p-5">{children}</div>
-        <Footer />
+        <div className="flex-grow overflow-y-auto h-full py-[20px] pr-[32px] mt-[20px]">{children}</div>
       </div>
     </div>
   );

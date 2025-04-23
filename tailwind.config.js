@@ -48,6 +48,15 @@ module.exports = {
             inverted: "#ffffff", // white
           },
         },
+        "light-purple": 'rgba(94, 23, 235, 0.12)',
+        "light-gray": '#898FAC',
+        "menu-active": "#EBDAFD",
+        "light-green": '#DBF8E5',
+        "dot-green": '#00C94A',
+        "light-yellow": '#FDF2D1',
+        "dot-yellow": '#F5B801',
+        "light-red": '#FCDCDC',
+        "dot-red": '#ED1515',
         // dark mode
         "dark-tremor": {
           brand: {
@@ -115,6 +124,7 @@ module.exports = {
       },
       //tremor
       boxShadow: {
+        "soft-cs": '0px 26px 64px 0px rgba(94, 23, 235, 0.07)',
         // light
         "tremor-input": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
         "tremor-card":
@@ -127,6 +137,9 @@ module.exports = {
           "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
         "dark-tremor-dropdown":
           "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+      },
+      backdropBlur: {
+        "soft-cs": "blur(160px)",
       },
       //end tremor
       borderRadius: {
@@ -165,32 +178,43 @@ module.exports = {
   },
   //tremor
   safelist: [
+    'bg-light-green',
+    'bg-light-yellow',
+    'bg-light-red',
+    'bg-dot-green',
+    'bg-dot-yellow',
+    'bg-dot-red',
+    'text-dot-green',
+    'text-dot-yellow',
+    'text-dot-red',
+    'stroke-primary',
+    'fill-primary',
     {
       pattern:
-        /^(bg-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+        /^(bg-(?:slate|light-green|dot-green|light-yellow|dot-yellow|light-red|dot-red|gray|zinc|neutral|stone|red|orange|primary|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
       variants: ["hover", "ui-selected"],
     },
     {
       pattern:
-        /^(text-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+        /^(text-(?:slate|light-green|dot-green|light-yellow|dot-yellow|light-red|dot-red|gray|zinc|neutral|stone|red|orange|primary|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
       variants: ["hover", "ui-selected"],
     },
     {
       pattern:
-        /^(border-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+        /^(border-(?:slate|gray|zinc|neutral|stone|red|orange|primary|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
       variants: ["hover", "ui-selected"],
     },
     {
       pattern:
-        /^(ring-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+        /^(ring-(?:slate|gray|zinc|neutral|stone|red|orange|primary|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
     {
       pattern:
-        /^(stroke-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+        /^(stroke-(?:slate|gray|zinc|neutral|stone|red|orange|primary|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
     {
       pattern:
-        /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+        /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|primary|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
   ],
   //end tremor

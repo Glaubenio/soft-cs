@@ -28,7 +28,7 @@ const ModuleMenu = ({ modules, dict, build }: Props) => {
   }
 
   return (
-    <div className="flex flex-col bg-[#F7F8FF]">
+    <div className="flex flex-col ">
       <div
         className={` ${open ? "w-[250]" : "w-[164px] "
           }  h-screen relative duration-300 px-[32px] py-[24px]`}

@@ -36,10 +36,10 @@ const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
   };
   const { title, breadcrumb } = getBreadcrumbAndTitle()
   return (
-    <div className="flex bg-[#F7F8FF] h-20 justify-between items-center pr-[32px] space-x-5 mt-[24px]">
+    <div className="flex  h-20 justify-between items-center pr-[32px] space-x-5 mt-[24px]">
       <div className="flex flex-col">
-        <div className="text-[12px] text-[#898FAC] font-[400]">{breadcrumb}</div>
-        <div className="text-[28px] text-[#150F41] font-[700]">{title}</div>
+        <div className="text-[12px] text-light-gray font-[400]">{breadcrumb}</div>
+        <div className="text-[28px] font-[700]">{title}</div>
       </div>
       <div className="flex items-center gap-3 bg-white rounded-[18px] px-[14px] py-[4px]">
         <FulltextSearch />

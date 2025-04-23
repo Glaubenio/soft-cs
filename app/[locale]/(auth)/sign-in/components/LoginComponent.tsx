@@ -121,7 +121,7 @@ export function LoginComponent() {
   }
 
   return (
-    <Card className="shadow-[0px 64px 64px -32px rgba(94, 23, 235, 0.18)] backdrop-filter-[blur(160px)] my-5 px-[40px] py-[70px] rounded-[28px]">
+    <Card className="shadow-soft-cs backdrop-blur-soft-cs my-5 px-[40px] py-[70px] rounded-[28px]">
       <CardHeader className="space-y-5">
         <CardTitle className="text-2xl text-center">Bem vindo!</CardTitle>
         <CardDescription className="text-center">Somos a sua plataforma de Customer Success.</CardDescription>

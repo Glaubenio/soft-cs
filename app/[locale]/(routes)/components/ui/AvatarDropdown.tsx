@@ -52,8 +52,8 @@ const AvatarDropdown = ({ avatar, name, email, isAdmin }: Props) => {
           />
         </Avatar>
         <div>
-          <div className="whitespace-nowrap text-[#150F41] text-[14px] font-[400]">{name}</div>
-          <div className="text-[#898FAC] text-[12px] font-[400]">{isAdmin ? 'Admin' : 'Operador'}</div>
+          <div className="whitespace-nowrap text-[14px] font-[400]">{name}</div>
+          <div className="text-light-gray text-[12px] font-[400]">{isAdmin ? 'Admin' : 'Operador'}</div>
         </div>
 
         <CaretDownIcon />
