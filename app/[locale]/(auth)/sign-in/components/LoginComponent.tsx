@@ -97,30 +97,6 @@ export function LoginComponent() {
     }
   }
 
-  async function onPasswordReset(email: string) {
-    try {
-      setIsLoading(true);
-      await axios.post("/api/user/passwordReset", {
-        email,
-      });
-      toast({
-        title: "Success",
-        description: "Password reset email has been sent.",
-      });
-    } catch (error) {
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Something went wrong while resetting the password.",
-        });
-      }
-    } finally {
-      setIsLoading(false);
-      setOpen(false);
-    }
-  }
-
   return (
     <Card className="shadow-soft-cs backdrop-blur-soft-cs my-5 px-[40px] py-[70px] rounded-[28px]">
       <CardHeader className="space-y-5">
@@ -148,75 +124,27 @@ export function LoginComponent() {
                   </FormItem>
                 )}
               />
-              <div className="flex items-center w-full ">
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Senha</FormLabel>
-                      <FormControl>
-                        <PasswordInput
-                          className="w-full"
-                          disabled={isLoading}
-                          placeholder="Pelo menos 8 caracteres"
-                          type={show ? "text" : "password"}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Senha</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        className="w-full"
+                        disabled={isLoading}
+                        placeholder="Pelo menos 8 caracteres"
+                        type={show ? "text" : "password"}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="text-sm text-gray-500">
-
-                <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogTrigger className="text-primary">
-                    <span>Esqueceu a senha?</span>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle className="p-5">Password Reset</DialogTitle>
-                      <DialogDescription className="p-5">
-                        Enter your email address and we will send new password to your
-                        e-mail.
-                      </DialogDescription>
-                    </DialogHeader>
-                    {isLoading ? (
-                      <LoadingComponent />
-                    ) : (
-                      <div className="flex px-2 space-x-5 py-5">
-                        <Input
-                          type="email"
-                          placeholder="name@domain.com"
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <Button
-                          disabled={email === ""}
-                          onClick={() => {
-                            onPasswordReset(email);
-                          }}
-                        >
-                          Reset
-                        </Button>
-                      </div>
-                    )}
-                    <DialogTrigger className="w-full text-right pt-5 ">
-                      <Button variant={"destructive"}>Cancel</Button>
-                    </DialogTrigger>
-                  </DialogContent>
-                </Dialog>
-                {/* Dialog end */}
-              </div>
-              <div className="flex items-center space-x-2 mt-[24px]">
-                <Checkbox id="terms" />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Eu aceito os <span className="text-primary">Termos de Uso</span>
-                </label>
+                <Link href="/reset-password" className="text-primary">Esqueceu a senha?</Link>
               </div>
             </div>
             <div className="grid gap-2 py-8">

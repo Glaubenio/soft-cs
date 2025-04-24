@@ -599,6 +599,8 @@ model Users {
   watching_boards      Boards[]              @relation(name: "watching_users", fields: [watching_boardsIDs], references: [id])
   watching_accountsIDs String[]              @db.ObjectId
   watching_accounts    crm_Accounts[]        @relation(name: "watching_accounts", fields: [watching_accountsIDs], references: [id])
+  recoverPasswordCode  String?
+  recoverPasswordCodeExpiresAt          DateTime?             @db.Date
 }
 
 enum Language {

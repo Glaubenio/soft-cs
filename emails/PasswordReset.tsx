@@ -20,6 +20,7 @@ interface VercelInviteUserEmailProps {
   email: string;
   password: string;
   userLanguage: string;
+  recoverPasswordCode: string;
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
@@ -30,6 +31,7 @@ export const PasswordResetEmail = ({
   email,
   password,
   userLanguage,
+  recoverPasswordCode
 }: VercelInviteUserEmailProps) => {
   const previewText = `Password reset from ${process.env.NEXT_PUBLIC_APP_NAME}`;
 
@@ -50,45 +52,17 @@ export const PasswordResetEmail = ({
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-              Password reset for: <strong>{username}</strong>
+              Recuperação de senha para o usuário: <strong>{username}</strong>
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">
-              Hello {username},
+              Olá, {username},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "pt_br"
-                ? "Your password was reset,"
-                : "Vaše heslo bylo resetováno,"}
+              Use o código abaixo para redefinir sua senha
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "pt_br"
-                ? "Your username: "
-                : "Vaše uživatelské jméno: "}
-              <strong>{email}</strong>
+              Seu código é: ${recoverPasswordCode}
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "pt_br"
-                ? "Your new password: "
-                : "Vaše nové heslo: "}
-
-              <strong>{password}</strong>
-            </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "pt_br"
-                ? "Please login to "
-                : "Prosíme přihlašte se na "}
-              <Link
-                href={process.env.NEXT_PUBLIC_APP_URL}
-                className="text-blue-500 underline"
-              >
-                {process.env.NEXT_PUBLIC_APP_URL}
-              </Link>
-            </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              {userLanguage === "pt_br" ? "Obrigado, " : "Děkujeme, "}
-              {process.env.NEXT_PUBLIC_APP_NAME}
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
           </Container>
         </Body>
       </Tailwind>

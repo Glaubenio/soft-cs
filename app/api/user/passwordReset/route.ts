@@ -5,26 +5,21 @@ import { prismadb } from "@/lib/prisma";
 
 import { generateRandomPassword } from "@/lib/utils";
 
-import { hash } from "bcryptjs";
 import PasswordResetEmail from "@/emails/PasswordReset";
 import resendHelper from "@/lib/resend";
+import moment from "moment";
 
 export async function POST(req: Request) {
-  /*
-  Resend.com function init - this is a helper function that will be used to send emails
-  */
+
   const resend = await resendHelper();
+  const recoverPasswordCode = `${Math.floor(Math.random() * (999999 + 1))}`.padStart(6, '0');
+
   try {
     const body = await req.json();
     const { email } = body;
 
-    //console.log(body, "body");
-    //console.log(email, "email");
-
     if (!email) {
-      return new NextResponse("Email is required!", {
-        status: 401,
-      });
+      return NextResponse.json({ message: "Email é obrigatório" }, { status: 400 });
     }
 
     const password = generateRandomPassword();
@@ -36,15 +31,14 @@ export async function POST(req: Request) {
     });
 
     if (!user) {
-      return new NextResponse("No user with that Email exist in Db!", {
-        status: 401,
-      });
+      return NextResponse.json({ message: "Usuário não encontrado" }, { status: 400 });
     }
-
+    const recoverPasswordCode = `${Math.floor(Math.random() * (999999 + 1))}`.padStart(6, '0');
     const newpassword = await prismadb.users.update({
       where: { id: user.id },
       data: {
-        password: await hash(password, 12),
+        recoverPasswordCodeExpiresAt: moment().add(5, "minute").toDate(),
+        recoverPasswordCode: recoverPasswordCode,
       },
     });
 
@@ -54,24 +48,22 @@ export async function POST(req: Request) {
       });
     } else {
       const data = await resend.emails.send({
-        from: process.env.EMAIL_FROM!,
+        from: "Acme <onboarding@resend.dev>",
         to: user.email,
         subject: "NextCRM - Password reset",
-        text: "", // Add this line to fix the types issue
-        //react: DemoTemplate({ firstName: "John" }),
+        text: "",
         react: PasswordResetEmail({
           username: user?.name!,
           avatar: user.avatar,
           email: user.email,
           password: password,
           userLanguage: user.userLanguage,
+          recoverPasswordCode: recoverPasswordCode,
         }),
       });
-      console.log(data, "data");
-      console.log("Email sent to: " + user.email);
     }
 
-    return NextResponse.json({ message: "Password changed!", status: true });
+    return NextResponse.json({ message: "Código de recuperação enviado!", status: true });
   } catch (error) {
     console.log("[USER_PASSWORD_CHANGE_POST]", error);
     return new NextResponse("Initial error", { status: 500 });

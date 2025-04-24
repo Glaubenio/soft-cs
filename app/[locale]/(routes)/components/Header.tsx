@@ -17,9 +17,8 @@ type Props = {
 };
 
 const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
+  const pathname = usePathname();
   const getBreadcrumbAndTitle = () => {
-    const pathname = usePathname();
-
     if (pathname.split('/').length == 2) {
       return {
         title: "Dashboard",
