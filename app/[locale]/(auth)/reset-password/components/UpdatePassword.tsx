@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -157,7 +156,7 @@ export function UpdatePassword({ email, otp }: Props) {
         </div>
         <div className="flex gap-1 text-[14px] mt-[8px]">
           {getPasswordIcon(passwordValue, passwordDoNotContainsSpecialCharacter)}
-          Precisa conter um caractere especial (!@#$%^&*(),.?":{ }|<></>)
+          {"Precisa conter um caractere especial (!@#$%^&*(),.?\":{ }|<></>)"}
         </div>
       </CardHeader>
       <CardContent className="grid gap-4 min-w-[400px]">
