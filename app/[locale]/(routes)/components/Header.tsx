@@ -18,7 +18,7 @@ type Props = {
 
 const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
   const pathname = usePathname();
-  const getBreadcrumbAndTitle = () => {
+  const getBreadcrumbAndTitle = (): { title: string | undefined, breadcrumb: string | undefined } => {
     if (pathname.split('/').length == 2) {
       return {
         title: "Dashboard",
@@ -32,8 +32,9 @@ const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
         breadcrumb: 'Páginas / Perfil',
       }
     }
+    return { title: undefined, breadcrumb: undefined }
   };
-  const { title, breadcrumb } = getBreadcrumbAndTitle()
+  const { title, breadcrumb } = getBreadcrumbAndTitle()!
   return (
     <div className="flex  h-20 justify-between items-center pr-[32px] space-x-5 mt-[24px]">
       <div className="flex flex-col">
