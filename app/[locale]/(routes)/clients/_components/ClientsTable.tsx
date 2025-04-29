@@ -92,9 +92,9 @@ const ClientRow = ({ name, avatarUrl, status, description, journey, revenue, csm
       </div>
     </TableCell>
     <TableCell>
-      <div className={`bg-light-${statusColor} rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
-        <div className={`h-[6px] w-[6px] bg-dot-${statusColor} rounded-full inline-block mr-[8px]`} />
-        <div className={`text-dot-${statusColor} text-[10px] font-[700]`}>
+      <div className={`bg-light-${journeyColor} rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
+        <div className={`h-[6px] w-[6px] bg-dot-${journeyColor} rounded-full inline-block mr-[8px]`} />
+        <div className={`text-dot-${journeyColor} text-[10px] font-[700]`}>
           {journey}
         </div>
       </div>
@@ -120,7 +120,7 @@ const ClientRow = ({ name, avatarUrl, status, description, journey, revenue, csm
 }
 
 export const ClientsTable = ({ data }: any) => <div className="flex gap-2 py-10">
-  <Table>
+  <Table className="bg-white rounded-[20px]">
     <TableHeader>
       <TableRow>
         <TableHead>Nome</TableHead>

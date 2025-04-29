@@ -50,6 +50,7 @@ module.exports = {
         },
         "light-purple": 'rgba(94, 23, 235, 0.12)',
         "light-gray": '#898FAC',
+        "lighter-gray": '#F7F8FF',
         "menu-active": "#EBDAFD",
         "light-green": '#DBF8E5',
         "dot-green": '#00C94A',
