@@ -32,7 +32,7 @@ interface Props {
   onEmailChangeRequest: () => void;
 }
 export function VerifyCode({ onCodeVerified, onEmailChangeRequest, email }: Props) {
-  const [remainingTimeInSeconds, setRemainingTimeInSeconds] = useState(5);
+  const [remainingTimeInSeconds, setRemainingTimeInSeconds] = useState(5 * 60);
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState<NodeJS.Timeout | undefined>();
 
