@@ -1,7 +1,6 @@
 "use client";
 
 import axios from "axios";
-import moment from "moment";
 import {
   DragDropContext,
   Droppable,
@@ -10,31 +9,12 @@ import {
 } from "react-beautiful-dnd";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Check, Edit, EllipsisVertical, EyeIcon, Pencil, PlusCircle, PlusIcon } from "lucide-react";
+import {  Edit, EllipsisVertical} from "lucide-react";
 
-import {
-  DotsHorizontalIcon,
-  ExclamationTriangleIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
-
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import AlertModal from "@/components/modals/alert-modal";
 import LoadingComponent from "@/components/LoadingComponent";
-import { DialogHeader } from "@/components/ui/dialog-document-view";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 const clients = [
@@ -275,24 +255,6 @@ const ClientsKanban = (props: any) => {
         variant: "destructive",
         title: "Error",
         description: "Something went wrong, during creating task",
-      });
-    } finally {
-      setIsLoading(false);
-      router.refresh();
-    }
-  };
-
-  const onDone = async (id: string) => {
-    setIsLoading(true);
-    try {
-      await getTaskDone(id);
-      toast({
-        title: "Success, task marked as done.",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error, task not marked as done.",
       });
     } finally {
       setIsLoading(false);
