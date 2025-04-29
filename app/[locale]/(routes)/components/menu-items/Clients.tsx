@@ -15,7 +15,7 @@ const DashboardMenu = ({ open, title }: Props) => {
   return (
     <div className="flex flex-row items-center">
       <Link
-        href={"/"}
+        href={"/clients"}
         className={`flex flex-1 px-[16px] py-[14px] gap-2 p-2 ${isPath ? "bg-menu-active rounded-[12px] text-primary" : 'text-light-gray'}`}
       >
         <Users className="w-6" />

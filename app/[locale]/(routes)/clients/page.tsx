@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Session } from "next-auth";
 
-import ProjectsView from "./_components/ProjectsView";
+import ClientsView from "./_components/ClientsView";
 import SuspenseLoading from "@/components/loadings/suspense";
 
 export const maxDuration = 300;
@@ -22,7 +22,7 @@ const ProjectsPage = async () => {
       description={"Everything you need to know about projects"}
     >
       <Suspense fallback={<SuspenseLoading />}>
-        <ProjectsView />
+        <ClientsView />
       </Suspense>
     </Container>
   );

@@ -138,49 +138,6 @@ const retentionData = [
 
 
 const DashboardPage = async () => {
-  const session = await getServerSession(authOptions);
-
-  if (!session) return null;
-
-  const userId = session?.user?.id;
-
-  //Get user language
-  const lang = session?.user?.userLanguage;
-
-  //Fetch translations from dictionary
-  const dict = await getDictionary(lang as "pt_br" | "cz" | "de" | "uk"); //Fetch data for dashboard
-
-  const modules = await getModules();
-  const leads = await getLeadsCount();
-  const tasks = await getTasksCount();
-  const employees = await getEmployees();
-  const storage = await getStorageSize();
-  const projects = await getBoardsCount();
-  const contacts = await getContactCount();
-  const contracts = await getContractsCount();
-  const users = await getActiveUsersCount();
-  const accounts = await getAccountsCount();
-  const invoices = await getInvoicesCount();
-  const revenue = await getExpectedRevenue();
-  const documents = await getDocumentsCount();
-  const opportunities = await getOpportunitiesCount();
-  const usersTasks = await getUsersTasksCount(userId);
-
-  //Find which modules are enabled
-  const crmModule = modules.find((module) => module.name === "crm");
-  const invoiceModule = modules.find((module) => module.name === "invoice");
-  const projectsModule = modules.find((module) => module.name === "projects");
-  const documentsModule = modules.find((module) => module.name === "documents");
-  const employeesModule = modules.find((module) => module.name === "employees");
-  const secondBrainModule = modules.find(
-    (module) => module.name === "secondBrain"
-  );
-
-
-  const valueFormatter = (value: number) => {
-    return Intl.NumberFormat("us").format(value).toString();
-  };
-
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-5">

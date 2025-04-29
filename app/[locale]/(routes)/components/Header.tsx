@@ -32,6 +32,13 @@ const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
         breadcrumb: 'Páginas / Perfil',
       }
     }
+
+    if (pathname.includes('clients')) {
+      return {
+        title: "Clientes",
+        breadcrumb: 'Páginas / Clientes',
+      }
+    }
     return { title: undefined, breadcrumb: undefined }
   };
   const { title, breadcrumb } = getBreadcrumbAndTitle()!

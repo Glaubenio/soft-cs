@@ -8,6 +8,7 @@ import { generateRandomPassword } from "@/lib/utils";
 import PasswordResetEmail from "@/emails/PasswordReset";
 import resendHelper from "@/lib/resend";
 import moment from "moment";
+import { DataTableColumnHeader } from "@/app/[locale]/(routes)/crm/contacts/table-components/data-table-column-header";
 
 export async function POST(req: Request) {
 
@@ -48,9 +49,9 @@ export async function POST(req: Request) {
       });
     } else {
       const data = await resend.emails.send({
-        from: "Acme <onboarding@resend.dev>",
+        from: "Soft CS <naoresponsa@softcs.com.br>",
         to: user.email,
-        subject: "NextCRM - Password reset",
+        subject: "Soft CS - Recupere sua senha",
         text: "",
         react: PasswordResetEmail({
           username: user?.name!,
@@ -61,6 +62,7 @@ export async function POST(req: Request) {
           recoverPasswordCode: recoverPasswordCode,
         }),
       });
+      console.log(data)
     }
 
     return NextResponse.json({ message: "Código de recuperação enviado!", status: true });
