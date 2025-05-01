@@ -33,12 +33,12 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen w-full bg-[url(/images/bg.png)] bg-repeat-round" >
-      <img src="/images/wave1.svg" className="absolute top-0 left-0 opacity-50 mix-blend-overlay" />
-      <img src="/images/wave2.svg" className="absolute top-0 left-0 opacity-60 mix-blend-overlay" />
+      <img src="/images/wave1.svg" className="absolute top-0 left-0 opacity-50 mix-blend-overlay w-[600px]" />
+      <img src="/images/wave2.svg" className="absolute top-0 left-0 opacity-60 mix-blend-overlay w-[600px]" />
       <div className="flex items-center grow h-full overflow-hidden">
         {children}
       </div>
-      <img src="/images/logo.svg" className="absolute bottom-0 right-0 mix-blend-overlay" />
+      <img src="/images/logo.svg" className="absolute bottom-0 right-0 mix-blend-overlay h-[25vh]" />
     </div>
   );
 };

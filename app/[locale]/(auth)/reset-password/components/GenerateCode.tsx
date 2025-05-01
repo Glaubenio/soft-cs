@@ -70,12 +70,12 @@ export function GenerateCode({ onCodeGenerated }: Props) {
   }
 
   return (
-    <Card className="shadow-soft-cs backdrop-blur-soft-cs my-5 px-[40px] py-[70px] rounded-[28px] max-w-[480px]">
-      <CardHeader className="space-y-5">
+    <Card className="shadow-soft-cs backdrop-blur-soft-cs my-5 px-[24px] py-[40px] rounded-[28px] mx-[24px] md:mx-0 w-[330px] md:w-[480px]">
+      <CardHeader className="p-0 space-y-5">
         <CardTitle className="text-2xl text-center">Recuperar senha</CardTitle>
         <CardDescription className="text-center">Forneça o email vinculado a uma conta para o qual você deseja enviar o link de recuperação de senha.</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4 min-w-[400px]">
+      <CardContent className="grid gap-4 mt-[28px] p-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid gap-2">
@@ -98,7 +98,7 @@ export function GenerateCode({ onCodeGenerated }: Props) {
               />
 
             </div>
-            <div className="grid gap-2 py-8 grid-cols-2">
+            <div className="grid gap-2  mt-[20px] grid-cols-2">
               <Button
                 disabled={isLoading}
                 type="submit"

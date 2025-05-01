@@ -1,6 +1,6 @@
+"use client";
 import { FileText } from "lucide-react";
 import Link from "next/link";
-
 import { usePathname } from "next/navigation";
 import React from "react";
 
@@ -13,15 +13,25 @@ const DocumentsModuleMenu = ({ open, title }: Props) => {
   const pathname = usePathname();
   const isPath = pathname.includes("documents");
   return (
-    <div className="flex flex-row items-center">
+    <div className={`flex flex-row items-center ${isPath && "mb-7 md:mb-0"}`}>
       <Link
-        href={"/"}
-        className={`flex flex-1 px-[16px] py-[14px] gap-2 p-2 ${isPath ? "bg-menu-active rounded-[12px] text-primary" : 'text-light-gray'}`}
+        href={"/documents"}
+        className={`text-[10px] md:text-[14px] flex flex-1 flex-col md:flex-row items-center md:items-start px-[16px] py-[14px] gap-2 p-2 ${isPath ? "md:bg-menu-active md:rounded-[12px] text-primary" : 'text-light-gray'}`}
       >
-        <FileText className="w-6" />
+        {
+          isPath ?
+            <div className="md:hidden flex flex-row items-center justify-center bg-primary rounded-full w-[52px] h-[52px]">
+              <FileText className="w-[16px] h-[16px] md:w-6 md:h-6 text-[#ffffff]" />
+            </div>
+            :
+            <FileText className="md:hidden w-[24px] h-[24px]" />
+        }
+        <FileText className="hidden md:block md:w-6 md:h-6" />
+
         <span className={open ? "" : "hidden"}>{title}</span>
       </Link>
     </div>
+
   );
 };
 

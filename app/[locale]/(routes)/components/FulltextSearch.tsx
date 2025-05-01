@@ -17,7 +17,7 @@ const FulltextSearch = () => {
 
   return (
     <div className="flex w-full max-w-sm items-center space-x-2">
-      <form onSubmit={handleSearch}>
+      <form className="flex-1 md:flex-0" onSubmit={handleSearch}>
         <SearchInput
           type="text"
           placeholder={"Digite para pesquisar..."}
