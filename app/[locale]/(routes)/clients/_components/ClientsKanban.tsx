@@ -9,7 +9,7 @@ import {
 } from "react-beautiful-dnd";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import {  Edit, EllipsisVertical} from "lucide-react";
+import { Edit, EllipsisVertical } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -17,9 +17,9 @@ import AlertModal from "@/components/modals/alert-modal";
 import LoadingComponent from "@/components/LoadingComponent";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-const clients = [
+const clients = () => [
   {
-    id: "1",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Carla Valentin",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Ativo",
@@ -27,7 +27,7 @@ const clients = [
     csm: "Tony Stark",
   },
   {
-    id: "2",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Cersei Lannister",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Cancelamento",
@@ -35,7 +35,7 @@ const clients = [
     csm: "Jon Snow",
   },
   {
-    id: "3",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Robert Baratheon",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Em risco",
@@ -43,35 +43,35 @@ const clients = [
     csm: "Daenerys Targaryen",
   },
   {
-    id: "4",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Robert Baratheon",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Em risco",
     revenue: "R$ 120.000,00",
     csm: "Daenerys Targaryen",
   }, {
-    id: "4",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Robert Baratheon",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Em risco",
     revenue: "R$ 120.000,00",
     csm: "Daenerys Targaryen",
   }, {
-    id: "4",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Robert Baratheon",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Em risco",
     revenue: "R$ 120.000,00",
     csm: "Daenerys Targaryen",
   }, {
-    id: "4",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Robert Baratheon",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Em risco",
     revenue: "R$ 120.000,00",
     csm: "Daenerys Targaryen",
   }, {
-    id: "4",
+    id: Math.floor(Math.random() * 1000).toString(),
     name: "Robert Baratheon",
     avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
     status: "Em risco",
@@ -82,18 +82,18 @@ const clients = [
 
 const sections = [
   {
-    id: "1",
+    id: Math.floor(Math.random() * 1000).toString(),
     title: "Adoção",
-    clients: clients,
+    clients: clients(),
   },
   {
-    id: "2",
+    id: Math.floor(Math.random() * 1000).toString(),
     title: "Expansão",
-    clients: clients,
+    clients: clients(),
   }, {
-    id: "3",
+    id: Math.floor(Math.random() * 1000).toString(),
     title: "Risco de churn",
-    clients: clients,
+    clients: clients(),
   }
 ];
 
@@ -115,8 +115,6 @@ const ClientsKanban = (props: any) => {
 
   const [open, setOpen] = useState(false);
   const [openSectionAlert, setOpenSectionAlert] = useState(false);
-  const [sectionOpenDialog, setSectionOpenDialog] = useState(false);
-  const [updateOpenSheet, setUpdateOpenSheet] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingSection, setIsLoadingSection] = useState(false);
@@ -230,38 +228,6 @@ const ClientsKanban = (props: any) => {
     }, timeout);
   };
 
-  //Done
-  const createTask = async (sectionId: string) => {
-    try {
-      const task = await axios.post(
-        `/api/projects/tasks/create-task/${boardId}`,
-        {
-          section: sectionId,
-        }
-      );
-      //console.log(task, "task - createTask");
-      const newData = [...data];
-      //console.log(newData, "newData - createTask");
-      const index = newData.findIndex((e) => e.id === sectionId);
-      newData[index].tasks.unshift(task);
-      setData(newData);
-      toast({
-        title: "Task created",
-        description: "New task saved in database",
-      });
-    } catch (error) {
-      console.log(error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Something went wrong, during creating task",
-      });
-    } finally {
-      setIsLoading(false);
-      router.refresh();
-    }
-  };
-
   const onDelete = async () => {
     setOpen(false);
     setIsLoading(true);
@@ -314,21 +280,25 @@ const ClientsKanban = (props: any) => {
         onConfirm={onDeleteSection}
         loading={isLoadingSection}
       />
-      <div className="overflow-scroll flex flex-col space-y-2  ">
+      <div className="flex flex-col space-y-2">
         <div className="flex">
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="flex flex-row items-start gap-2">
               {sections?.map((section: any, index: any) => (
                 <div
-                  className="flex flex-col items-center justify-center max-h-[80vh] w-[360px] mt-[12px] overflow-scroll  bg-white rounded-[20px] "
+                  className="flex flex-col items-center justify-center w-[360px] mt-[12px]  bg-white rounded-[20px] "
                   key={section.id}
                 >
-                  <Droppable key={section.id} droppableId={section.id}>
+                  <Droppable
+                    isCombineEnabled={false}
+                    isDropDisabled={false}
+                    key={section.id}
+                    droppableId={section.id}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className="flex flex-col w-full h-full px-[14px] py-[12px] rounded-[20px] overflow-scroll"
+                        className="flex flex-col w-full h-full px-[14px] py-[12px] rounded-[20px]"
                       >
                         <div className="flex flex-col py-[16px] px-[14px] shadow-soft-cs rounded-[12px] text-[16px] bg-white font-[700] border-0 border-t-4 border-solid border-primary">
                           {section?.title}

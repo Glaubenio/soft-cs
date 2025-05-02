@@ -53,29 +53,13 @@ const ModuleMenu = ({ modules, dict, build }: Props) => {
           <hr className="mt-[20px]" />
           <div className="mt-[20px] justify-center">
             <DashboardMenu open={open} title={dict.ModuleMenu.dashboard} />
-            {modules.find(
-              (menuItem: any) => menuItem.name === "tasks" && menuItem.enabled
-            ) ? (
-              <ClientsModuleMenu open={open} title={dict.ModuleMenu.clients} />
-            ) : null}
-            {modules.find(
-              (menuItem: any) => menuItem.name === "projects" && menuItem.enabled
-            ) ? (
-              <TasksModuleMenu open={open} title={dict.ModuleMenu.projects} />
-            ) : null}
-            {modules.find(
-              (menuItem: any) => menuItem.name === "documents" && menuItem.enabled
-            ) ? (
-              <DocumentsModuleMenu
-                open={open}
-                title={dict.ModuleMenu.documents}
-              />
-            ) : null}
-            {modules.find(
-              (menuItem: any) => menuItem.name === "emails" && menuItem.enabled
-            ) ? (
-              <EmailsModuleMenu open={open} title={dict.ModuleMenu.emails} />
-            ) : null}
+            <ClientsModuleMenu open={open} title={dict.ModuleMenu.clients} />
+            <TasksModuleMenu open={open} title={dict.ModuleMenu.projects} />
+            <DocumentsModuleMenu
+              open={open}
+              title={dict.ModuleMenu.documents}
+            />
+            <EmailsModuleMenu open={open} title={dict.ModuleMenu.emails} />
           </div>
         </div>
       </div>

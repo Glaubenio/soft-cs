@@ -17,14 +17,12 @@ const ProjectsPage = async () => {
   if (!session) return redirect("/sign-in");
 
   return (
-    <Container
-      title="Projects"
-      description={"Everything you need to know about projects"}
-    >
+    <div className="flex-1 space-y-4 h-full overflow-scroll">
+
       <Suspense fallback={<SuspenseLoading />}>
         <ClientsView />
       </Suspense>
-    </Container>
+    </div>
   );
 };
 
