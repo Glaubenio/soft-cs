@@ -6,8 +6,7 @@ import DashboardMenu from "./menu-items/Dashboard";
 import EmailsModuleMenu from "./menu-items/Emails";
 import TasksModuleMenu from "./menu-items/Tasks";
 import ClientsModuleMenu from "./menu-items/Clients";
-import { cn } from "@/lib/utils";
-import { ArrowLeftToLine, ArrowRightToLine } from "lucide-react";
+import { ArrowRightToLine } from "lucide-react";
 
 type Props = {
   modules: any;

@@ -340,17 +340,17 @@ const ClientsKanban = (props: any) => {
                                     </div>
                                   </div>
                                   <div className="flex flex-row gap-1 items-center">
-                                    <Button size={"icon"} >
-                                      <Edit className="w-4 h-4" />
+                                    <Button className="size-[28px] [&_svg]:size-[12px]" >
+                                      <Edit />
                                     </Button>
-                                    <Button size={"icon"} >
-                                      <EllipsisVertical className="w-4 h-4" />
+                                    <Button className="size-[28px] [&_svg]:size-[12px]" >
+                                      <EllipsisVertical />
                                     </Button>
                                   </div>
                                 </div>
                                 <Separator className="my-[10px]" />
                                 {/* Kanban card Body*/}
-                                <div className="flex flex-col w-full text-[10px] font-[400] text-light-gray">
+                                < div className="flex flex-col w-full text-[10px] font-[400] text-light-gray" >
                                   Descrição:
                                   <div className="text-[12px] font-[400]">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -385,12 +385,12 @@ const ClientsKanban = (props: any) => {
                       </div>
                     )}
                   </Droppable>
-                </div>
+                </div >
               ))}
-            </div>
-          </DragDropContext>
-        </div>
-      </div>
+            </div >
+          </DragDropContext >
+        </div >
+      </div >
     </>
   );
 };

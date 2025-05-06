@@ -18,7 +18,7 @@ interface Props {
 
 export const ClientForm = ({ open, setOpen }: Props) => {
   const [contactFormOpen, setContactFormOpen] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (<Dialog open={open} onOpenChange={setOpen}>
     <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] max-w-[680px]">

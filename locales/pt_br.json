@@ -3,6 +3,23 @@
     "title": "Soft CS",
     "description": "Soft CS is an open source CRM build on top of NextJS."
   },
+  "TaskStatus": {
+    "todo": "A fazer",
+    "doing": "Em andamento",
+    "done": "Feito"
+  },
+  "TaskPriority": {
+    "label": {
+      "high": "Alta",
+      "normal": "Média",
+      "low": "Baixa"
+    },
+    "color": {
+      "high": "red",
+      "normal": "yellow",
+      "low": "green"
+    }
+  },
   "ModuleMenu": {
     "dashboard": "Dashboard",
     "crm": {

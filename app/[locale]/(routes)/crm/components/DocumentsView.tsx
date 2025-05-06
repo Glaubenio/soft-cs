@@ -1,8 +1,5 @@
 "use client";
 
-import { columns } from "@/app/[locale]/(routes)/documents/components/columns";
-import { DocumentsDataTable } from "@/app/[locale]/(routes)/documents/components/data-table";
-
 import {
   Card,
   CardContent,
@@ -49,11 +46,7 @@ const DocumentsView = ({ data }: DocumentsViewProps) => {
         <Separator />
       </CardHeader>
       <CardContent>
-        {!data || data.length === 0 ? (
-          "No assigned documents found"
-        ) : (
-          <DocumentsDataTable data={data} columns={columns} />
-        )}
+
       </CardContent>
     </Card>
   );
