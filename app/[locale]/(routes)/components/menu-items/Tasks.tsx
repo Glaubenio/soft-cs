@@ -26,7 +26,7 @@ const DashboardMenu = ({ open, title }: Props) => {
               <Archive className="w-[16px] h-[16px] md:w-6 md:h-6 text-[#ffffff]" />
             </div>
             :
-            <Archive className="md:hidden w-[24px] h-[24px]" />
+            <Archive className="md:hidden size-[24px]" />
         }
         <Archive className="hidden md:block md:w-6 md:h-6" />
 

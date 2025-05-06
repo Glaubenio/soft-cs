@@ -182,7 +182,7 @@ const DashboardPage = async () => {
               <div className="flex flex-row text-[24px] font-[700] text-foreground items-baseline">
                 250
                 <div className="flex gap-1 bg-light-green text-dot-green h-fit px-[8px] py-[3px] ml-[4px] rounded-full text-[10px] font-[700]">
-                  <TrendingUp className="h-[12px] w-[12px]" />+ 45
+                  <TrendingUp className="size-[12px]" />+ 45
                 </div>
               </div>
             </div>
@@ -191,7 +191,7 @@ const DashboardPage = async () => {
               <div className="flex flex-row text-[24px] font-[700] text-foreground items-baseline">
                 15
                 <div className="flex gap-1 bg-light-red text-dot-red h-fit px-[8px] py-[3px] ml-[4px] rounded-full text-[10px] font-[700]">
-                  <TrendingDown className="h-[12px] w-[12px]" />- 3
+                  <TrendingDown className="size-[12px]" />- 3
                 </div>
               </div>
             </div>

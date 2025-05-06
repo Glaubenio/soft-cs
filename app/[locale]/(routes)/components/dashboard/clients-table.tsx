@@ -51,7 +51,7 @@ const ClientRow = ({ name, avatarUrl, status, revenue, csm }: any) => {
   return <TableRow>
     <TableCell>
       <div className="flex flex-row gap-2 items-center text-[10px] font-[400]">
-        <Avatar className="w-[24px] h-[24px]">
+        <Avatar className="size-[24px]">
           <AvatarImage
             src={avatarUrl ? avatarUrl : `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
           />

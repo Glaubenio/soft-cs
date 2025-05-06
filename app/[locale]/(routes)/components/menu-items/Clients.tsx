@@ -25,7 +25,7 @@ const ClientsMenu = ({ open, title }: Props) => {
               <Users className="w-[16px] h-[16px] md:w-6 md:h-6 text-[#ffffff]" />
             </div>
             :
-            <Users className="md:hidden w-[24px] h-[24px]" />
+            <Users className="md:hidden size-[24px]" />
         }
         <Users className="hidden md:block md:w-6 md:h-6" />
 

@@ -57,16 +57,16 @@ const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="p-0 ml-[16px]">
-              <AlignRight className="h-[24px] w-[24px]" />
+              <AlignRight className="size-[24px]" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuGroup>
               <DropdownMenuItem className="text-[14px] font-[500]">
-                <Bell className="mr-1 h-[24px] w-[24px]" /> Notificações
+                <Bell className="mr-1 size-[24px]" /> Notificações
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut()} className="text-[14px] font-[500]">
-                <LogOut className="mr-1 h-[24px] w-[24px]" /> Sair
+                <LogOut className="mr-1 size-[24px]" /> Sair
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

@@ -24,7 +24,7 @@ const DocumentsModuleMenu = ({ open, title }: Props) => {
               <FileText className="w-[16px] h-[16px] md:w-6 md:h-6 text-[#ffffff]" />
             </div>
             :
-            <FileText className="md:hidden w-[24px] h-[24px]" />
+            <FileText className="md:hidden size-[24px]" />
         }
         <FileText className="hidden md:block md:w-6 md:h-6" />
 

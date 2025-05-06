@@ -75,7 +75,7 @@ const ClientRow = ({ name, avatarUrl, status, description, journey, revenue, csm
   return <TableRow>
     <TableCell>
       <div className="flex flex-row gap-2 items-center text-[14px] font-[400]">
-        <Avatar className="w-[24px] h-[24px]">
+        <Avatar className="size-[24px]">
           <AvatarImage
             src={avatarUrl ? avatarUrl : `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
           />
@@ -85,7 +85,7 @@ const ClientRow = ({ name, avatarUrl, status, description, journey, revenue, csm
     <TableCell className="text-[12px] font-[400]">{description}</TableCell>
     <TableCell>
       <div className={`bg-light-${statusColor} rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
-        <div className={`h-[6px] w-[6px] bg-dot-${statusColor} rounded-full inline-block mr-[8px]`} />
+        <div className={`size-[6px] bg-dot-${statusColor} rounded-full inline-block mr-[8px]`} />
         <div className={`text-dot-${statusColor} text-[10px] font-[700]`}>
           {status}
         </div>
@@ -93,7 +93,7 @@ const ClientRow = ({ name, avatarUrl, status, description, journey, revenue, csm
     </TableCell>
     <TableCell>
       <div className={`bg-light-${journeyColor} rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
-        <div className={`h-[6px] w-[6px] bg-dot-${journeyColor} rounded-full inline-block mr-[8px]`} />
+        <div className={`size-[6px] bg-dot-${journeyColor} rounded-full inline-block mr-[8px]`} />
         <div className={`text-dot-${journeyColor} text-[10px] font-[700]`}>
           {journey}
         </div>

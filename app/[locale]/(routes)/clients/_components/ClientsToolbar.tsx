@@ -1,6 +1,7 @@
 'use client'
 import { SearchInput } from "@/components/ui/search-input"
 import { ClientForm } from "../forms/Client"
+import { JourneysDialog } from "../forms/Journey"
 import { Button } from "@/components/ui/button"
 import { PlusCircle, Sliders, Waypoints } from "lucide-react"
 import { ReactNode, useState } from "react"
@@ -58,9 +59,11 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
 
 export const ClientsToolbar = () => {
   const [clientFormOpen, setClientFormOpen] = useState(false);
+  const [journeysDialogOpen, setJourneysDialogOpen] = useState(false);
 
   return <div className="flex flex-row gap-2">
     <ClientForm open={clientFormOpen} setOpen={setClientFormOpen} />
+    <JourneysDialog open={journeysDialogOpen} setOpen={setJourneysDialogOpen} />
     <SearchInput placeholder="Filtrar por nome do cliente..." className="w-80" />
     <FilterDropDownMenu triggerButton={(
       <Button>
@@ -68,8 +71,8 @@ export const ClientsToolbar = () => {
       </Button>)
     } />
 
-    <Button>
-      <Waypoints /> Nova Jornada
+    <Button onClick={() => setJourneysDialogOpen(true)}>
+      <Waypoints /> Jornada
     </Button>
     <Button onClick={() => setClientFormOpen(true)}>
       <PlusCircle /> Novo Cliente

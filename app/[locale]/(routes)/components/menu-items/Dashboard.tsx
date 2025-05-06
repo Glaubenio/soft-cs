@@ -27,7 +27,7 @@ const DashboardMenu = ({ open, title }: Props) => {
               <Grid2X2 className="w-[16px] h-[16px] md:w-6 md:h-6 text-[#ffffff]" />
             </div>
             :
-            <Grid2X2 className="md:hidden w-[24px] h-[24px]" />
+            <Grid2X2 className="md:hidden size-[24px]" />
         }
         <Grid2X2 className="hidden md:block md:w-6 md:h-6" />
 
