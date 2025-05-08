@@ -61,21 +61,23 @@ export const ClientsToolbar = () => {
   const [clientFormOpen, setClientFormOpen] = useState(false);
   const [journeysDialogOpen, setJourneysDialogOpen] = useState(false);
 
-  return <div className="flex flex-row gap-2">
+  return <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
     <ClientForm open={clientFormOpen} setOpen={setClientFormOpen} />
     <JourneysDialog open={journeysDialogOpen} setOpen={setJourneysDialogOpen} />
-    <SearchInput placeholder="Filtrar por nome do cliente..." className="w-80" />
-    <FilterDropDownMenu triggerButton={(
-      <Button>
-        <Sliders /> Filtrar
-      </Button>)
-    } />
+    <SearchInput placeholder="Filtrar por nome do cliente..." className="md:w-80 w-full" />
+    <div className="flex flex-row gap-1 justify-between items-center">
+      <FilterDropDownMenu triggerButton={(
+        <Button>
+          <Sliders /> Filtrar
+        </Button>)
+      } />
 
-    <Button onClick={() => setJourneysDialogOpen(true)}>
-      <Waypoints /> Jornada
-    </Button>
-    <Button onClick={() => setClientFormOpen(true)}>
-      <PlusCircle /> Novo Cliente
-    </Button>
+      <Button onClick={() => setJourneysDialogOpen(true)}>
+        <Waypoints /> Jornada
+      </Button>
+      <Button onClick={() => setClientFormOpen(true)}>
+        <PlusCircle /> Novo Cliente
+      </Button>
+    </div>
   </div>
 }

@@ -1,5 +1,6 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Edit, EllipsisVertical } from "lucide-react"
 const fakeData = [
@@ -119,7 +120,8 @@ const ClientRow = ({ name, avatarUrl, status, description, journey, revenue, csm
   </TableRow>
 }
 
-export const ClientsTable = ({ data }: any) => <div className="flex gap-2 py-10">
+// Desktop view
+const ClientsTable = ({ data }: any) => <div className="hidden md:flex gap-2 py-10">
   <Table className="bg-white rounded-[20px]">
     <TableHeader>
       <TableRow>
@@ -150,3 +152,74 @@ export const ClientsTable = ({ data }: any) => <div className="flex gap-2 py-10"
     </TableBody>
   </Table>
 </div>
+
+// Mobile view
+const ClientsCardList = ({ data }: any) => <div className="md:hidden flex flex-col gap-2">
+  {fakeData.map((client) => <div className="flex flex-col rounded-[12px] px-[12px] py-[14px] bg-white gap-2">
+    <div className="flex flex-row justify-between items-center w-full">
+      <div className="flex flex-col">
+        <div className="flex flex-row gap-2 items-center text-[18px] font-[400]">
+          <Avatar className="size-[46px]">
+            <AvatarImage
+              src={`${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
+            />
+          </Avatar>
+          <div className="flex flex-col text-[18px]">
+            {client.name}
+            <div className="flex flex-row font-[400] text-[10px] mt-[6px] items-center gap-1">
+              <div className={`bg-light-green rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
+                <div className={`h-[6px] w-[6px] bg-dot-green rounded-full inline-block mr-[8px]`} />
+                <div className={`text-dot-green text-[10px] font-[700]`}>
+                  Ativo
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div className="flex flex-row gap-1 items-center">
+        <Button className="size-[28px] [&_svg]:size-[12px]" >
+          <Edit />
+        </Button>
+        <Button className="size-[28px] [&_svg]:size-[12px]" >
+          <EllipsisVertical />
+        </Button>
+      </div>
+    </div>
+    <Separator className="my-[10px]" />
+    < div className="flex flex-col w-full text-[10px] font-[400] text-light-gray" >
+      Descrição:
+      <div className="text-[12px] font-[400] text-foreground">
+        {client.description}
+      </div>
+      <div className="flex flex-row mt-[10px] gap-1">
+        <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
+          RR:
+          <div className={`font-[700]`}>
+            R$ 12k
+          </div>
+        </div>
+        <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
+          CSM:
+          <div className={`font-[700]`}>
+            Jon Snow
+          </div>
+        </div>
+        <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
+          Atendimento:
+          <div className={`font-[700]`}>
+            Low
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>)}
+</div>
+
+export const ClientsList = ({ data }: any) => {
+  return <div>
+    <ClientsTable data={data} />
+    <ClientsCardList data={data} />
+  </div>
+}

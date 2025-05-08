@@ -1,35 +1,29 @@
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { PlusCircle, Sliders, Waypoints } from "lucide-react";
-import { ClientsTable } from "./ClientsTable";
+import { ClientsList } from "./ClientsList";
 import ClientsKanban from "./ClientsKanban";
-import { SearchInput } from "@/components/ui/search-input";
-import { ClientForm } from "../forms/Client";
 import { ClientsToolbar } from "./ClientsToolbar";
 
 
 const ClientsView = async () => {
   return (
     <>
-      <div className="space-y-3">
-        <Tabs defaultValue="list">
-          <TabsList className="flex flex-row justify-between items-center w-full">
-            <div>
-              <TabsTrigger value="list">Lista</TabsTrigger>
-              <TabsTrigger value="kanban">Kanban</TabsTrigger>
-            </div>
-            <ClientsToolbar />
-          </TabsList>
-          <TabsContent value="list">
-            <ClientsTable />
-          </TabsContent>
-          <TabsContent value="kanban">
-            <ClientsKanban />
-          </TabsContent>
-        </Tabs>
-      </div >
 
+      <Tabs defaultValue="list">
+        <TabsList className="flex md:flex-row flex-col-reverse justify-between md:items-center gap-1 md:gap-0 items-start w-full">
+          <div >
+            <TabsTrigger value="list">Lista</TabsTrigger>
+            <TabsTrigger value="kanban">Kanban</TabsTrigger>
+          </div>
+          <ClientsToolbar />
+        </TabsList>
+        <TabsContent value="list">
+          <ClientsList />
+        </TabsContent>
+        <TabsContent value="kanban">
+          <ClientsKanban />
+        </TabsContent>
+      </Tabs>
 
     </>
   );
