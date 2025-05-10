@@ -149,26 +149,6 @@ const TasksCardList = ({ data }: any) => {
           <div className="text-[12px] font-[400] text-foreground">
             {task.description}
           </div>
-          <div className="flex flex-row mt-[10px] gap-1">
-            <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
-              RR:
-              <div className={`font-[700]`}>
-                R$ 12k
-              </div>
-            </div>
-            <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
-              CSM:
-              <div className={`font-[700]`}>
-                Jon Snow
-              </div>
-            </div>
-            <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
-              Atendimento:
-              <div className={`font-[700]`}>
-                Low
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     })}
