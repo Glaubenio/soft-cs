@@ -267,7 +267,6 @@ const ClientsKanban = (props: any) => {
 
   if (isLoading) return <LoadingComponent />;
   const isMobile = window.innerWidth < 768;
-  console.log(isMobile, "isMobile");
   return (
     <>
       <AlertModal

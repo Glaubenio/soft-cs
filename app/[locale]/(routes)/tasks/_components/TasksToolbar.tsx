@@ -56,9 +56,8 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
   </DropdownMenuContent>
 </DropdownMenu>
 
-export const ClientsToolbar = () => {
+export const TasksToolbar = () => {
   const [clientFormOpen, setClientFormOpen] = useState(false);
-  const [journeysDialogOpen, setJourneysDialogOpen] = useState(false);
 
   return <div className="flex flex-row gap-2">
     <TaskForm open={clientFormOpen} setOpen={setClientFormOpen} />

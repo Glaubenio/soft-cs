@@ -1,8 +1,8 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ClientsTable } from "./TasksTable";
-import ClientsKanban from "./TasksKanban";
-import { ClientsToolbar } from "./TasksToolbar";
+import { TasksLists } from "./TasksLists";
+import TasksKanban from "./TasksKanban";
+import { TasksToolbar } from "./TasksToolbar";
 
 
 const TasksView = async () => {
@@ -15,13 +15,13 @@ const TasksView = async () => {
               <TabsTrigger value="list">Lista</TabsTrigger>
               <TabsTrigger value="kanban">Kanban</TabsTrigger>
             </div>
-            <ClientsToolbar />
+            <TasksToolbar />
           </TabsList>
           <TabsContent value="list">
-            <ClientsTable />
+            <TasksLists />
           </TabsContent>
           <TabsContent value="kanban">
-            <ClientsKanban />
+            <TasksKanban />
           </TabsContent>
         </Tabs>
       </div>

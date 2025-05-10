@@ -9,15 +9,15 @@ import {
 } from "react-beautiful-dnd";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Edit, EllipsisVertical } from "lucide-react";
+import { ChevronsUpDown, Edit, EllipsisVertical } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import AlertModal from "@/components/modals/alert-modal";
 import LoadingComponent from "@/components/LoadingComponent";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 interface Task {
   id: string
   name: string
@@ -143,32 +143,39 @@ const ClientsKanban = (props: any) => {
 
 
   if (isLoading) return <LoadingComponent />;
+  const isMobile = window.innerWidth < 768;
 
   return (
     <>
       <div className="flex flex-col space-y-2">
-        <div className="flex">
-          <DragDropContext onDragEnd={onDragEnd}>
-            <div className="flex flex-row items-start gap-2">
-              {sections?.map((section, index: any) => (
-                <div
-                  className="flex flex-col items-center justify-center w-[360px] mt-[12px]  bg-white rounded-[20px] "
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="flex flex-col md:flex-row items-start gap-2">
+            {sections?.map((section, index: any) => (
+              <div
+                className="flex flex-col items-center justify-center w-full md:w-[360px] mt-[12px]  bg-white rounded-[20px] "
+                key={section.id}
+              >
+                <Droppable
+                  isCombineEnabled={false}
+                  isDropDisabled={false}
                   key={section.id}
-                >
-                  <Droppable
-                    isCombineEnabled={false}
-                    isDropDisabled={false}
-                    key={section.id}
-                    droppableId={section.id}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className="flex flex-col w-full h-full px-[14px] py-[12px] rounded-[20px]"
-                      >
-                        <div className="flex flex-col py-[16px] px-[14px] shadow-soft-cs rounded-[12px] text-[16px] bg-white font-[700] border-0 border-t-4 border-solid border-primary">
-                          {t(`TaskStatus.${section.status}`)}
-                        </div>
+                  droppableId={section.id}>
+                  {(provided) => (
+                    <Collapsible
+                      open={isMobile ? undefined : true}
+                      className="flex flex-col items-center justify-center w-full md:w-[360px] mt-[12px]  bg-white rounded-[20px] "
+                      key={section.id}
+                    >
+                      <div className="flex flex-row justify-between items-center w-full py-[16px] px-[14px] shadow-soft-cs rounded-[12px] text-[16px] bg-white font-[700] border-0 border-t-4 border-solid border-primary">
+                        {t(`TaskStatus.${section.status}`)}
+                        <CollapsibleTrigger asChild className="flex md:hidden">
+                          <Button variant="ghost" size="sm">
+                            <ChevronsUpDown className="h-4 w-4" />
+                            <span className="sr-only">Toggle</span>
+                          </Button>
+                        </CollapsibleTrigger>
+                      </div>
+                      <CollapsibleContent>
                         {section.tasks?.map((task, index: any) => (
                           <Draggable
                             key={task.id}
@@ -234,16 +241,17 @@ const ClientsKanban = (props: any) => {
                             )}
                           </Draggable>
                         ))}
-                        {provided.placeholder}
+                      </CollapsibleContent>
+                      {provided.placeholder}
 
-                      </div>
-                    )}
-                  </Droppable>
-                </div >
-              ))}
-            </div >
-          </DragDropContext >
-        </div >
+
+                    </Collapsible>
+                  )}
+                </Droppable>
+              </div >
+            ))}
+          </div >
+        </DragDropContext >
       </div >
     </>
   );
