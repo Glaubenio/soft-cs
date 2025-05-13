@@ -49,12 +49,12 @@ model crm_Accounts {
   leads                crm_Leads[]
   industry_type        crm_Industry_Type?  @relation(fields: [industry], references: [id])
   opportunities        crm_Opportunities[]
-  assigned_to_user     Users?              @relation(fields: [assigned_to], references: [id])
   contracts            crm_Contracts[]
   watchers             String[]            @db.ObjectId
-  watching_users       Users[]             @relation(name: "watching_accounts", fields: [watchers], references: [id])
   clients              clients[]
   journeys             journeys[]
+  tasks                tasks[]
+  users                Users[]
 }
 
 model crm_Leads {
@@ -500,7 +500,6 @@ model Users {
   userLanguage                 Language              @default(pt_br)
   created_by_documents         Documents[]           @relation(name: "created_by_user")
   assigned_documents           Documents[]           @relation(name: "assigned_to_user")
-  accounts                     crm_Accounts[]
   leads                        crm_Leads[]
   created_by_user              crm_Opportunities[]   @relation(name: "created_by_user_relation")
   assigned_opportunity         crm_Opportunities[]   @relation(name: "assigned_to_user_relation")
@@ -514,10 +513,12 @@ model Users {
   watching_boardsIDs           String[]              @db.ObjectId
   watching_boards              Boards[]              @relation(name: "watching_users", fields: [watching_boardsIDs], references: [id])
   watching_accountsIDs         String[]              @db.ObjectId
-  watching_accounts            crm_Accounts[]        @relation(name: "watching_accounts", fields: [watching_accountsIDs], references: [id])
   recoverPasswordCode          String?
   recoverPasswordCodeExpiresAt DateTime?             @db.Date
   clients                      clients[]
+  tasks                        tasks[]
+  accountId                    String?               @db.ObjectId
+  account                      crm_Accounts?         @relation(fields: [accountId], references: [id])
 }
 
 enum Language {
@@ -604,13 +605,13 @@ model clients {
   csmResponsible           Users?                  @relation(fields: [userId], references: [id])
   serviceModel             String?
   tasks                    tasks[]
-  account                  String?                 @db.ObjectId
   type                     String?
-  assignedAccount          crm_Accounts?           @relation(fields: [account], references: [id])
   clientContacts           client_contacts[]
   journeyStepsClients      journey_steps_clients[]
   createdAt                DateTime?               @default(now()) @db.Date
   updatedAt                DateTime?               @updatedAt @db.Date
+  accountId                String?                 @db.ObjectId
+  account                  crm_Accounts?           @relation(fields: [accountId], references: [id])
 }
 
 model client_contacts {
@@ -626,13 +627,13 @@ model client_contacts {
 }
 
 model journeys {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  jorneySteps     journey_steps[]
-  accountId       String          @db.ObjectId
-  assignedAccount crm_Accounts    @relation(fields: [accountId], references: [id])
-  createdAt       DateTime?       @default(now()) @db.Date
-  updatedAt       DateTime?       @updatedAt @db.Date
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  jorneySteps journey_steps[]
+  accountId   String?         @db.ObjectId
+  account     crm_Accounts?   @relation(fields: [accountId], references: [id])
+  createdAt   DateTime?       @default(now()) @db.Date
+  updatedAt   DateTime?       @updatedAt @db.Date
 }
 
 model journey_steps {
@@ -657,31 +658,22 @@ model journey_steps_clients {
 }
 
 model tasks {
-  id               String          @id @default(auto()) @map("_id") @db.ObjectId
-  title            String?
-  content          String?
-  createdAt        DateTime?       @default(now()) @db.Date
-  createdBy        String?         @db.ObjectId
-  updatedAt        DateTime?       @updatedAt @db.Date
-  updatedBy        String?         @db.ObjectId
-  dueDateAt        DateTime?       @default(now()) @db.Date
-  lastEditedAt     DateTime?       @default(now()) @updatedAt @db.Date
-  position         Int
-  priority         String
-  section          String?         @db.ObjectId
-  tags             Json?
-  title            String
-  likes            Int?            @default(0)
-  user             String?         @db.ObjectId
-  documentIDs      String[]        @db.ObjectId
-  comments         tasksComments[]
-  documents        Documents[]     @relation(fields: [documentIDs], references: [id])
-  assigned_user    Users?          @relation(fields: [user], references: [id])
-  assigned_section Sections?       @relation(fields: [section], references: [id])
-  //Staus
-  taskStatus       taskStatus?     @default(ACTIVE)
-  clients          clients?        @relation(fields: [clientsId], references: [id])
-  clientsId        String?         @db.ObjectId
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  content       String?
+  createdAt     DateTime?        @default(now()) @db.Date
+  updatedAt     DateTime?        @updatedAt @db.Date
+  startDate     DateTime?        @db.Date
+  endDate       DateTime?        @db.Date
+  position      Int              @default(0)
+  priority      task_priorities? @default(LOW)
+  status        task_status?     @default(TODO)
+  responsibleId String?          @db.ObjectId
+  responsible   Users?           @relation(fields: [responsibleId], references: [id])
+  accountId     String?          @db.ObjectId
+  account       crm_Accounts?    @relation(fields: [accountId], references: [id])
+  clientId      String?          @db.ObjectId
+  client        clients?         @relation(fields: [clientId], references: [id])
 }
 
 enum task_status {
@@ -689,4 +681,10 @@ enum task_status {
   DOING
   DONE
   DELAYED
+}
+
+enum task_priorities {
+  HIGH
+  MEDIUM
+  LOW
 }
