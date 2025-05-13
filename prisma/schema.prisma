@@ -627,13 +627,13 @@ model client_contacts {
 }
 
 model journeys {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  jorneySteps journey_steps[]
-  accountId   String?         @db.ObjectId
-  account     crm_Accounts?   @relation(fields: [accountId], references: [id])
-  createdAt   DateTime?       @default(now()) @db.Date
-  updatedAt   DateTime?       @updatedAt @db.Date
+  id           String          @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  journeySteps journey_steps[]
+  accountId    String?         @db.ObjectId
+  account      crm_Accounts?   @relation(fields: [accountId], references: [id])
+  createdAt    DateTime?       @default(now()) @db.Date
+  updatedAt    DateTime?       @updatedAt @db.Date
 }
 
 model journey_steps {
