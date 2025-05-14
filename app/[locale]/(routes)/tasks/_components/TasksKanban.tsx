@@ -8,7 +8,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { ChevronsUpDown, Edit, EllipsisVertical } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,79 +18,31 @@ import LoadingComponent from "@/components/LoadingComponent";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-interface Task {
-  id: string
-  name: string
-  responsible: string
-  status: string
-  description: string
-  priority: string
-  startAt: string
-  endAt: string
-}
-
-const fakeData = (): Task[] => [
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Matar o rei Raeagar",
-    responsible: "Jamie Lannister",
-    status: "done",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    priority: "high",
-    startAt: new Date().toLocaleDateString(),
-    endAt: new Date().toLocaleDateString()
-  },
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Invadir kings Landing",
-    responsible: "Daenerys Targaryen",
-    status: "doing",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    priority: "low",
-    startAt: new Date().toLocaleDateString(),
-    endAt: new Date().toLocaleDateString()
-  },
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Comprar espadas de aço valiriano",
-    responsible: "Tyrion Lannister",
-    status: "todo",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    priority: "normal",
-    startAt: new Date().toLocaleDateString(),
-    endAt: new Date().toLocaleDateString()
-  }
-]
-
-const sections: { id: string; status: string; tasks: Task[] }[] = [
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    status: "todo",
-    tasks: fakeData(),
-  },
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    status: "doing",
-    tasks: fakeData(),
-  }, {
-    id: Math.floor(Math.random() * 1000).toString(),
-    status: "done",
-    tasks: fakeData(),
-  }
-];
+import { TasksContext } from "../tasks-context";
+import { Task } from "@/types/types";
 
 const ClientsKanban = (props: any) => {
   const t = useTranslations();
+  const { tasks } = useContext(TasksContext);
   const [data, setData]: any = useState([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-
   const { toast } = useToast();
 
-  useEffect(() => {
-    setData(props.data);
-    setIsLoading(false);
-  }, [props.data]);
+  const groupedTasks = () => {
+    const groupedTasks = tasks.reduce((acc: any, task: any) => {
+      const status = task.status;
+      if (!acc[status]) {
+        acc[status] = {
+          id: Math.floor(Math.random() * 1000).toString(),
+          status: status,
+          tasks: [],
+        };
+      }
+      acc[status].tasks.push(task);
+      return acc;
+    }
+      , {});
+    return Object.values(groupedTasks);
+  }
 
   const onDragEnd = async ({ source, destination }: DropResult) => {
     if (!destination) return;
@@ -142,7 +94,6 @@ const ClientsKanban = (props: any) => {
   };
 
 
-  if (isLoading) return <LoadingComponent />;
   const isMobile = window.innerWidth < 768;
 
   return (
@@ -150,16 +101,16 @@ const ClientsKanban = (props: any) => {
       <div className="flex flex-col space-y-2">
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex flex-col md:flex-row items-start gap-2">
-            {sections?.map((section, index: any) => (
+            {groupedTasks()?.map((section: any, index: any) => (
               <div
                 className="flex flex-col items-center justify-center w-full md:w-[360px] mt-[12px]  bg-white rounded-[20px] "
-                key={section.id}
+                key={String(index)}
               >
                 <Droppable
                   isCombineEnabled={false}
                   isDropDisabled={false}
                   key={section.id}
-                  droppableId={section.id}>
+                  droppableId={String(index)}>
                   {(provided) => (
                     <Collapsible
                       open={isMobile ? undefined : true}
@@ -175,8 +126,8 @@ const ClientsKanban = (props: any) => {
                           </Button>
                         </CollapsibleTrigger>
                       </div>
-                      <CollapsibleContent>
-                        {section.tasks?.map((task, index: any) => (
+                      <CollapsibleContent className="w-full p-[10px]">
+                        {section.tasks?.map((task: Task, index: any) => (
                           <Draggable
                             key={task.id}
                             draggableId={task.id}
@@ -218,15 +169,15 @@ const ClientsKanban = (props: any) => {
                                 <div className="flex flex-row justify-between items-center w-full">
                                   <div className="flex flex-col">
                                     <div className="text-[10px]">Início:</div>
-                                    <div className="text-[12px] font-[700]">{task.startAt}</div>
+                                    <div className="text-[12px] font-[700]">{task.startDate.toLocaleDateString()}</div>
                                   </div>
                                   <div className="flex flex-col">
                                     <div className="text-[10px]">Fim:</div>
-                                    <div className="text-[12px] font-[700]">{task.endAt}</div>
+                                    <div className="text-[12px] font-[700]">{task.endDate.toLocaleDateString()}</div>
                                   </div>
                                   <div className="flex flex-col">
                                     <div className="text-[10px]">Responsável:</div>
-                                    <div className="text-[12px] font-[700]">{task.responsible}</div>
+                                    <div className="text-[12px] font-[700]">{task.responsible?.name}</div>
                                   </div>
                                 </div>
                                 <Separator className="my-[10px]" />
@@ -234,7 +185,7 @@ const ClientsKanban = (props: any) => {
                                 < div className="flex flex-col w-full text-[10px] font-[400] text-light-gray" >
                                   Descrição:
                                   <div className="text-[12px] font-[400]">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    {task.content}
                                   </div>
                                 </div>
                               </div>

@@ -1,5 +1,9 @@
-import {prismadb} from "@/lib/prisma";
+import { prismadb } from "@/lib/prisma";
 
 export const getTasks = async () => {
-    return await prismadb.tasks.findMany({});
+    return await prismadb.tasks.findMany({
+        include: {
+            responsible: true
+        }
+    });
 };

@@ -1,13 +1,24 @@
+'use client';
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TasksLists } from "./TasksLists";
 import TasksKanban from "./TasksKanban";
 import { TasksToolbar } from "./TasksToolbar";
+import { Task, User } from "@/types/types";
+import { TasksContext } from "../tasks-context";
 
+interface Props {
+  tasks: Task[]
+  activeUsers: User[]
+}
 
-const TasksView = async () => {
+const TasksView = ({ tasks, activeUsers }: Props) => {
+
   return (
-    <>
+    <TasksContext.Provider value={{
+      tasks,
+      activeUsers,
+    }} >
       <div className="space-y-3">
         <Tabs defaultValue="list">
           <TabsList className="flex flex-row justify-between items-center w-full">
@@ -25,7 +36,7 @@ const TasksView = async () => {
           </TabsContent>
         </Tabs>
       </div>
-    </>
+    </TasksContext.Provider>
   );
 };
 

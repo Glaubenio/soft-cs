@@ -30,17 +30,17 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
     }
 
     try {
-        const user = await prismadb.users.findUnique({
-            where: {
-                id: session.user.id,
-            }
-        })
+        // const user = await prismadb.users.findUnique({
+        //     where: {
+        //         id: session.user.id,
+        //     }
+        // })
 
-        const account = await prismadb.crm_Accounts.findFirst({
-            where: {
-                id: user?.accountId || "",
-            }
-        });
+        // const account = await prismadb.crm_Accounts.findFirst({
+        //     where: {
+        //         id: user?.accountId || "",
+        //     }
+        // });
 
         const task = await prismadb.tasks.update({
             where: {
@@ -58,16 +58,16 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
                         id: responsibleId,
                     },
                 },
-                client: {
-                    connect: {
-                        id: clientId,
-                    },
-                },
-                account: {
-                    connect: {
-                        id: account?.id,
-                    },
-                },
+                // client: {
+                //     connect: {
+                //         id: clientId,
+                //     },
+                // },
+                // account: {
+                //     connect: {
+                //         id: account?.id,
+                //     },
+                // },
             }
         });
 

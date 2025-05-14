@@ -21,8 +21,8 @@ export const ClientForm = ({ open, setOpen }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (<Dialog open={open} onOpenChange={setOpen}>
-    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] max-w-[680px]">
-      <DialogHeader className="flex flex-row justify-between items-center">
+    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] overflow-scroll">
+      <DialogHeader className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
         <DialogTitle className="hidden">Criar/Editar cliente</DialogTitle>
         <div className="flex flex-row items-start">
           <Avatar className="w-[74px] h-[74px] brightness-[0.5]">
@@ -49,9 +49,8 @@ export const ClientForm = ({ open, setOpen }: Props) => {
               <Input name="status" className="ml-[8px] bg-lighter-gray" type="text" />
             </div>
           </div>
-
         </div>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 justify-end md:self-start">
           <Button className="[&_svg]:size-[12px]">
             <CheckCircle />
             Salvar
@@ -68,7 +67,7 @@ export const ClientForm = ({ open, setOpen }: Props) => {
         <Label htmlFor="description" className="text-[12px] font-[400] text-light-gray">Descrição:</Label>
         <Textarea name="description" className="bg-lighter-gray border-foreground border mt-[6px]" rows={5} />
       </div>
-      <div className="flex flex-row gap-2 justify-between items-center mt-[16px]">
+      <div className="flex md:flex-row flex-col gap-2 justify-between md:items-center mt-[16px]">
         <div className="flex flex-col mt-[16px]">
           <Label htmlFor="csm" className="text-[12px] font-[400] text-light-gray">Modelo de Atendimento:</Label>
           <Input name="csm" className="mt-[6px] bg-lighter-gray" type="text" />

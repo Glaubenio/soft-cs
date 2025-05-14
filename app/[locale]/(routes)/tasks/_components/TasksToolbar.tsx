@@ -5,7 +5,10 @@ import { PlusCircle, Sliders } from "lucide-react"
 import { ReactNode, useState } from "react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
-
+import { User } from "@/types/types"
+interface Props {
+  activeUsers: User[]
+}
 const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => <DropdownMenu>
   <DropdownMenuTrigger asChild>
     {triggerButton}

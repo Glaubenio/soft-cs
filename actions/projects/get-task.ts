@@ -12,6 +12,7 @@ export const getTask = async (taskId: string) => {
           name: true,
         },
       },
+      responsible: true,
       documents: {
         select: {
           id: true,
