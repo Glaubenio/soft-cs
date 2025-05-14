@@ -18,7 +18,7 @@ import { Task } from "@/types/types"
 interface Props {
   open: boolean
   setOpen: (open: boolean) => void
-  task: Task | null
+  task?: Task
 }
 
 const formSchema = z.object({

@@ -9,21 +9,28 @@ import {
 } from "react-beautiful-dnd";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { ChevronsUpDown, Edit, EllipsisVertical } from "lucide-react";
+import { ChevronsUpDown, Edit, EllipsisVertical, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import AlertModal from "@/components/modals/alert-modal";
-import LoadingComponent from "@/components/LoadingComponent";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TasksContext } from "../tasks-context";
 import { Task } from "@/types/types";
+import AlertModal from "@/components/modals/alert-modal";
+import { TaskForm } from "../forms/Task";
 
 const ClientsKanban = (props: any) => {
+  const { tasks, deleteTask, deleting } = useContext(TasksContext);
+  const [editingModalInfo, setEditingModalInfo] = useState<{ open: boolean; task?: Task }>({
+    open: false,
+    task: undefined,
+  });
+  const [deleteModalInfo, setDeleteModalInfo] = useState<{ open: boolean; task?: Task }>({ open: false, task: undefined });
+
   const t = useTranslations();
-  const { tasks } = useContext(TasksContext);
+
   const [data, setData]: any = useState([]);
   const { toast } = useToast();
 
@@ -43,6 +50,8 @@ const ClientsKanban = (props: any) => {
       , {});
     return Object.values(groupedTasks);
   }
+
+
 
   const onDragEnd = async ({ source, destination }: DropResult) => {
     if (!destination) return;
@@ -93,11 +102,26 @@ const ClientsKanban = (props: any) => {
     }
   };
 
+  const onDeleteClick = (task: Task) => {
+    setDeleteModalInfo({ open: true, task });
+  }
 
   const isMobile = window.innerWidth < 768;
 
   return (
     <>
+      <AlertModal
+        isOpen={deleteModalInfo.open}
+        onClose={() => setDeleteModalInfo(prev => ({ ...prev, open: false }))}
+        onConfirm={() => deleteTask(deleteModalInfo.task!, () => setDeleteModalInfo({ open: false, task: undefined }))}
+        loading={deleting}
+      />
+      {editingModalInfo.open &&
+        <TaskForm
+          open={editingModalInfo.open}
+          task={editingModalInfo.task}
+          setOpen={(open) => setEditingModalInfo((prev) => ({ ...prev, open: open }))} />
+      }
       <div className="flex flex-col space-y-2">
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex flex-col md:flex-row items-start gap-2">
@@ -157,11 +181,11 @@ const ClientsKanban = (props: any) => {
                                     </div>
                                   </div>
                                   <div className="flex flex-row gap-1 items-center">
-                                    <Button className="size-[28px] [&_svg]:size-[12px]" >
+                                    <Button onClick={() => setEditingModalInfo({ open: true, task: task })} className="size-[28px] [&_svg]:size-[12px]" >
                                       <Edit />
                                     </Button>
-                                    <Button className="size-[28px] [&_svg]:size-[12px]">
-                                      <EllipsisVertical />
+                                    <Button onClick={() => onDeleteClick(task)} className="size-[28px] [&_svg]:size-[12px]">
+                                      <Trash />
                                     </Button>
                                   </div>
                                 </div>

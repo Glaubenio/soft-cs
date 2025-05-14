@@ -5,7 +5,7 @@ import { TasksLists } from "./TasksLists";
 import TasksKanban from "./TasksKanban";
 import { TasksToolbar } from "./TasksToolbar";
 import { Task, User } from "@/types/types";
-import { TasksContext } from "../tasks-context";
+import { TasksProvider } from "../tasks-context";
 
 interface Props {
   tasks: Task[]
@@ -15,10 +15,7 @@ interface Props {
 const TasksView = ({ tasks, activeUsers }: Props) => {
 
   return (
-    <TasksContext.Provider value={{
-      tasks,
-      activeUsers,
-    }} >
+    <TasksProvider tasks={tasks} activeUsers={activeUsers} >
       <div className="space-y-3">
         <Tabs defaultValue="list">
           <TabsList className="flex flex-row justify-between items-center w-full">
@@ -36,7 +33,7 @@ const TasksView = ({ tasks, activeUsers }: Props) => {
           </TabsContent>
         </Tabs>
       </div>
-    </TasksContext.Provider>
+    </TasksProvider>
   );
 };
 

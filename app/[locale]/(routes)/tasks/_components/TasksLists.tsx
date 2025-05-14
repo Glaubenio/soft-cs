@@ -2,15 +2,20 @@
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Edit, EllipsisVertical } from "lucide-react"
+import { Edit, EllipsisVertical, Trash } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useContext, useState } from "react"
 import { TasksContext } from "../tasks-context"
 import { Task } from "@/types/types";
 import { TaskForm } from "../forms/Task";
+import AlertModal from "@/components/modals/alert-modal";
 
 
-const TaskRow = ({ onEditClick, task }: { task: Task, onEditClick: (task: Task) => void }) => {
+const TaskRow = ({ onEditClick, onDeleteClick, task }: {
+  task: Task,
+  onDeleteClick: (task: Task) => void,
+  onEditClick: (task: Task) => void
+}) => {
   const { title, content, responsible, status, priority, startDate, endDate } = task;
   const t = useTranslations();
 
@@ -44,14 +49,18 @@ const TaskRow = ({ onEditClick, task }: { task: Task, onEditClick: (task: Task) 
       <Button onClick={() => onEditClick(task)}>
         <Edit className="w-4 h-4" />
       </Button>
-      <Button>
-        <EllipsisVertical className="w-4 h-4" />
+      <Button onClick={() => onDeleteClick(task)}>
+        <Trash className="w-4 h-4" />
       </Button>
     </TableCell>
   </TableRow>
 }
 
-const TasksCardList = ({ tasks, onEditClick }: { tasks: Task[], onEditClick: (task: Task) => void }) => {
+const TasksCardList = ({ tasks, onEditClick, onDeleteClick }: {
+  tasks: Task[],
+  onDeleteClick: (task: Task) => void,
+  onEditClick: (task: Task) => void
+}) => {
   const t = useTranslations();
 
 
@@ -91,8 +100,8 @@ const TasksCardList = ({ tasks, onEditClick }: { tasks: Task[], onEditClick: (ta
             <Button onClick={() => onEditClick(task)} className="size-[28px] [&_svg]:size-[12px]" >
               <Edit />
             </Button>
-            <Button className="size-[28px] [&_svg]:size-[12px]" >
-              <EllipsisVertical />
+            <Button className="size-[28px] [&_svg]:size-[12px]" onClick={() => onDeleteClick(task)}>
+              <Trash />
             </Button>
           </div>
         </div>
@@ -123,47 +132,69 @@ const TasksCardList = ({ tasks, onEditClick }: { tasks: Task[], onEditClick: (ta
   </div>
 }
 
-export const TasksTable = ({ tasks, onEditClick }: { tasks: Task[], onEditClick: (task: Task) => void }) => <div className="hidden md:flex gap-2 py-10">
-  <Table className="bg-white rounded-[20px]">
-    <TableHeader>
-      <TableRow>
-        <TableHead>Nome</TableHead>
-        <TableHead>Descrição</TableHead>
-        <TableHead>Responsável</TableHead>
-        <TableHead>Status</TableHead>
-        <TableHead>Prioridade</TableHead>
-        <TableHead>Início</TableHead>
-        <TableHead>Fim</TableHead>
-        <TableHead></TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {tasks.map((task, index) => (
-        <TaskRow
-          key={index}
-          task={task}
-          onEditClick={onEditClick}
-        />
-      ))}
-    </TableBody>
-  </Table>
-</div>
+export const TasksTable = ({ tasks, onEditClick, onDeleteClick }: {
+  tasks: Task[],
+  onDeleteClick: (task: Task) => void,
+  onEditClick: (task: Task) => void
+}) => <div className="hidden md:flex gap-2 py-10">
+    <Table className="bg-white rounded-[20px]">
+      <TableHeader>
+        <TableRow>
+          <TableHead>Nome</TableHead>
+          <TableHead>Descrição</TableHead>
+          <TableHead>Responsável</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Prioridade</TableHead>
+          <TableHead>Início</TableHead>
+          <TableHead>Fim</TableHead>
+          <TableHead></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {tasks.map((task, index) => (
+          <TaskRow
+            onDeleteClick={onDeleteClick}
+            key={index}
+            task={task}
+            onEditClick={onEditClick}
+          />
+        ))}
+      </TableBody>
+    </Table>
+  </div>
 
 export const TasksLists = () => {
-  const [editingModalInfo, setEditingModalInfo] = useState<{ open: boolean; task: Task | null }>({
+  const [editingModalInfo, setEditingModalInfo] = useState<{ open: boolean; task?: Task }>({
     open: false,
-    task: null,
+    task: undefined,
   });
-  const { tasks } = useContext(TasksContext);
-  console.log(tasks, "tasks");
+  const [deleteModalInfo, setDeleteModalInfo] = useState<{ open: boolean; task?: Task }>({ open: false, task: undefined });
+  const { tasks, deleteTask, deleting } = useContext(TasksContext);
+  const onDeleteClick = (task: Task) => {
+    setDeleteModalInfo({ open: true, task });
+  }
   return <div>
+    <AlertModal
+      isOpen={deleteModalInfo.open}
+      onClose={() => setDeleteModalInfo(prev => ({ ...prev, open: false }))}
+      onConfirm={() => deleteTask(deleteModalInfo.task!, () => setDeleteModalInfo({ open: false, task: undefined }))}
+      loading={deleting}
+    />
     {editingModalInfo.open &&
       <TaskForm
         open={editingModalInfo.open}
         task={editingModalInfo.task}
         setOpen={(open) => setEditingModalInfo((prev) => ({ ...prev, open: open }))} />
     }
-    <TasksTable tasks={tasks || []} onEditClick={(task) => setEditingModalInfo({ task, open: true })} />
-    <TasksCardList tasks={tasks || []} onEditClick={(task) => setEditingModalInfo({ task, open: true })} />
+    <TasksTable
+      onDeleteClick={onDeleteClick}
+      tasks={tasks || []}
+      onEditClick={(task) => setEditingModalInfo({ task, open: true })}
+    />
+    <TasksCardList
+      onDeleteClick={onDeleteClick}
+      tasks={tasks || []}
+      onEditClick={(task) => setEditingModalInfo({ task, open: true })}
+    />
   </div>
 }
