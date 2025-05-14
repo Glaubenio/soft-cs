@@ -155,7 +155,7 @@ const ClientsTable = ({ data }: any) => <div className="hidden md:flex gap-2 py-
 
 // Mobile view
 const ClientsCardList = ({ data }: any) => <div className="md:hidden flex flex-col gap-2">
-  {fakeData.map((client) => <div className="flex flex-col rounded-[12px] px-[12px] py-[14px] bg-white gap-2">
+  {fakeData.map((client, index) => <div key={String(index)} className="flex flex-col rounded-[12px] px-[12px] py-[14px] bg-white gap-2">
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-col">
         <div className="flex flex-row gap-2 items-center text-[18px] font-[400]">
