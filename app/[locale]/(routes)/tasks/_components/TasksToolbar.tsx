@@ -62,15 +62,15 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
 export const TasksToolbar = () => {
   const [clientFormOpen, setClientFormOpen] = useState(false);
 
-  return <div className="flex flex-row gap-2">
+  return <div className="flex flex-row gap-1">
     <TaskForm open={clientFormOpen} setOpen={setClientFormOpen} />
     <FilterDropDownMenu triggerButton={(
-      <Button>
+      <Button className="md:py-2 md:px-4 md:h-10 md:rounded-[12px] md:text-sm text-[12px] py-1.5 px-3 h-auto rounded-sm">
         <Sliders /> Filtrar
       </Button>)
     } />
 
-    <Button onClick={() => setClientFormOpen(true)}>
+    <Button className="md:py-2 md:px-4 md:h-10 md:rounded-[12px] md:text-sm text-[12px] py-1.5 px-3 h-auto rounded-sm" onClick={() => setClientFormOpen(true)}>
       <PlusCircle /> Nova Tarefa
     </Button>
   </div>

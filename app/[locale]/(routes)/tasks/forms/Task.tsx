@@ -72,28 +72,30 @@ export const TaskForm = ({ open, setOpen, task }: Props) => {
   }
   return <Dialog open={open} onOpenChange={setOpen}>
     <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] max-w-[680px] gap-0">
-      <DialogHeader className="flex flex-row justify-between items-center">
-        <DialogTitle className="hidden">{task ? `Editar tarefa` : 'Criar tarefa'}</DialogTitle>
-        <div className="flex flex-row items-start items-center">
-          <div className="flex w-[46px] h-[46px] bg-light-purple justify-center items-center rounded-full">
-            {task ? <Edit className="text-primary" /> : <PlusCircle className="text-primary" />}
+      <DialogHeader className="flex flex-col">
+        <DialogTitle className="hidden">{task ? `Editar tarefa` : 'Adicionar tarefa'}</DialogTitle>
+        <div className="flex flex-row  justify-between items-center">
+          <div className="flex flex-row items-start items-center">
+            <div className="flex w-[46px] h-[46px] bg-light-purple justify-center items-center rounded-full">
+              {task ? <Edit className="text-primary" /> : <PlusCircle className="text-primary" />}
+            </div>
+            <div className="flex md:flex hidden ml-[16px] h-full">{task ? `Editar tarefa` : 'Adicionar tarefa'}</div>
           </div>
-          <div className="flex ml-[16px] h-full">{task ? `Editar tarefa` : 'Criar tarefa'}</div>
+          <div className="flex flex-row gap-2">
+            <Button type="submit" form="task-form" className="[&_svg]:size-[12px]">
+              {
+                form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : <CheckCircle />
+              }
 
+              Salvar
+            </Button>
+            <Button variant={"outline"} onClick={() => setOpen(false)} className="[&_svg]:size-[12px] text-primary border-primary">
+              <XCircle className="text-primary" />
+              Fechar
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-row gap-2">
-          <Button type="submit" form="task-form" className="[&_svg]:size-[12px]">
-            {
-              form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : <CheckCircle />
-            }
-
-            Salvar
-          </Button>
-          <Button variant={"outline"} onClick={() => setOpen(false)} className="[&_svg]:size-[12px] text-primary border-primary">
-            <XCircle className="text-primary" />
-            Fechar
-          </Button>
-        </div>
+        <div className="flex flex md:hidden mt-1 h-full">{task ? `Editar tarefa` : 'Adicionar tarefa'}</div>
       </DialogHeader>
       <Form {...form}>
         <form id="task-form" onSubmit={form.handleSubmit(onSubmit)}>

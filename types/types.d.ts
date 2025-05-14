@@ -9,27 +9,19 @@ export interface Session {
 }
 
 
-interface User {
-  name: string
+export interface User {
+  name?: string | null
 }
 export interface Task {
   id: string
   title: string
   responsible: User?;
-  client: User?;
-  status: string
-  content: string
-  priority: string
-  startAt: string
-  endAt: string
-  startDate: Date
-  endDate: Date
-  priority: string
-  responsibleId: string?
-  clientId: string?
-}
-
-export interface User {
-  id: string
-  name: string
+  client?: User
+  status: string | null
+  content: string | null
+  priority: string | null
+  startDate: Date | null
+  endDate: Date | null
+  responsibleId?: string | null
+  clientId?: string | null
 }
