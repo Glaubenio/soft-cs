@@ -19,9 +19,10 @@ const ProjectsPage = async ({
     const queryParams = await searchParams;
     const priority = queryParams.priority?.split(',').filter((a) => a.length > 0) || [];
     const status = queryParams.status?.split(',').filter((a) => a.length > 0) || [];
+    const responsibleId = queryParams.responsibleId?.split(',').filter((a) => a.length > 0) || [];
     const session: Session | null = await getServerSession(authOptions);
 
-    const tasks = await getTasks(priority, status);
+    const tasks = await getTasks(priority, status, responsibleId);
     const user = await getUser();
     const activeUsers = await getActiveUsers();
 

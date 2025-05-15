@@ -1,7 +1,7 @@
 import { prismadb } from "@/lib/prisma";
 import { task_priorities, task_status } from "@prisma/client";
 
-export const getTasks = async (priority?: string[], status?: string[]) => {
+export const getTasks = async (priority?: string[], status?: string[], responsibleId: string[]) => {
     let whereClause: any = {
     };
     if (priority && priority.length > 0) {
@@ -14,6 +14,12 @@ export const getTasks = async (priority?: string[], status?: string[]) => {
         console.log(status, "status");
         whereClause.status = {
             in: status as task_status[]
+        };
+    }
+
+    if (responsibleId && responsibleId.length > 0) {
+        whereClause.responsibleId = {
+            in: responsibleId
         };
     }
     return await prismadb.tasks.findMany({

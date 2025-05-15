@@ -2,21 +2,24 @@
 import { TaskForm } from "../forms/Task"
 import { Button } from "@/components/ui/button"
 import { PlusCircle, Sliders } from "lucide-react"
-import { ReactNode, useState } from "react"
+import { ReactNode, useContext, useState } from "react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import { User } from "@/types/types"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
+import { TasksContext } from "../tasks-context"
 
 const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => {
   const router = useRouter()
+  const { activeUsers } = useContext(TasksContext)
   const [filters, setFilters] = useState<{
     status: string[]
     priority: string[]
-  }>({ status: [], priority: [] })
+    responsibleId: string[]
+  }>({ status: [], priority: [], responsibleId: [] })
 
-  const handleSelectedFilter = (name: 'status' | 'priority', value: string) => {
+  const handleSelectedFilter = (name: 'status' | 'priority' | 'responsibleId', value: string) => {
     if (filters[name]?.includes(value)) {
       setFilters({
         ...filters,
@@ -33,7 +36,9 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
   const t = useTranslations()
 
   const submitFilters = () => {
-    router.push(`/tasks?status=${filters.status.join(',')}&priority=${filters.priority.join(',')}`)
+    router.push(`/tasks?status=${filters.status.join(',')}` +
+      `&priority=${filters.priority.join(',')}` +
+      `&responsibleId=${filters.responsibleId.join(',')}`)
   }
 
   return <DropdownMenu>
@@ -73,6 +78,18 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
             onCheckedChange={() => handleSelectedFilter("priority", "LOW")}
           />{t('TaskPriority.label.LOW')}
         </div>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuLabel>CSM Responsável</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        {activeUsers.map((user: User) => <div className="flex items-center gap-2 px-2">
+          <Checkbox
+            onCheckedChange={() => handleSelectedFilter("responsibleId", user.id)}
+          />{user.name}
+        </div>
+        )
+        }
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <Button
