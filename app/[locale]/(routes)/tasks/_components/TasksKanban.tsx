@@ -21,92 +21,77 @@ import { Task } from "@/types/types";
 import AlertModal from "@/components/modals/alert-modal";
 import { TaskForm } from "../forms/Task";
 
-const ClientsKanban = (props: any) => {
-  const { tasks, deleteTask, deleting } = useContext(TasksContext);
+interface TasksKanbanSection {
+  status: string, id: string, tasks: Task[]
+}
+
+const ClientsKanban = () => {
+  const { tasks, deleteTask, deleting, setCurrentTasks } = useContext(TasksContext);
   const [editingModalInfo, setEditingModalInfo] = useState<{ open: boolean; task?: Task }>({
     open: false,
     task: undefined,
   });
   const [deleteModalInfo, setDeleteModalInfo] = useState<{ open: boolean; task?: Task }>({ open: false, task: undefined });
-
+  const [isMobile, setIsMobile] = useState(false);
   const t = useTranslations();
 
   const [data, setData]: any = useState([]);
   const { toast } = useToast();
 
-  const groupedTasks = () => {
-    const groupedTasks = tasks.reduce((acc: any, task: any) => {
-      const status = task.status;
-      if (!acc[status]) {
-        acc[status] = {
-          id: Math.floor(Math.random() * 1000).toString(),
-          status: status,
-          tasks: [],
-        };
-      }
-      acc[status].tasks.push(task);
-      return acc;
-    }
-      , {});
-    return Object.values(groupedTasks);
+  const groupedTasks = (): TasksKanbanSection[] => {
+    const kanbandColumns = [
+      "TODO",
+      "DOING",
+      "DONE"
+    ]
+    return kanbandColumns.map((status) => {
+      return {
+        id: status,
+        status: status,
+        tasks: tasks.filter((task) => task.status === status),
+      };
+    });
   }
 
 
 
   const onDragEnd = async ({ source, destination }: DropResult) => {
     if (!destination) return;
-    console.log(source, "source - onDragEnd");
-    console.log(destination, "destination - onDragEnd");
-    const sourceColIndex = data.findIndex(
-      (e: any) => e.id === source.droppableId
-    );
-    const destinationColIndex = data.findIndex(
-      (e: any) => e.id === destination.droppableId
-    );
+    const { droppableId: sourceStatus, index: sourceIndex } = source;
+    const { droppableId: destinationStatus } = destination;
 
-    const sourceCol = data[sourceColIndex];
-    if (!sourceCol) return null;
-    const destinationCol = data[destinationColIndex];
-
-    const sourceSectionId = sourceCol.id;
-    const destinationSectionId = destinationCol.id;
-
-    const sourceTasks = [...sourceCol.tasks];
-    const destinationTasks = [...destinationCol.tasks];
-
-    if (source.droppableId !== destination.droppableId) {
-      const [removed] = sourceTasks.splice(source.index, 1);
-      destinationTasks.splice(destination.index, 0, removed);
-      data[sourceColIndex].tasks = sourceTasks;
-      data[destinationColIndex].tasks = destinationTasks;
-    } else {
-      const [removed] = destinationTasks.splice(source.index, 1);
-      destinationTasks.splice(destination.index, 0, removed);
-      data[destinationColIndex].tasks = destinationTasks;
+    const taskToUpdate = groupedTasks().find((section: any) => section.id === sourceStatus)?.tasks[sourceIndex];
+    if (!taskToUpdate) {
+      console.log("Task not found");
+      return;
     }
-
-    try {
-      setData(data);
-      await axios.put(`/api/projects/tasks/update-ClientsKanban-position`, {
-        resourceList: sourceTasks,
-        destinationList: destinationTasks,
-        resourceSectionId: sourceSectionId,
-        destinationSectionId: destinationSectionId,
-      });
-      toast({
-        title: "Task moved",
-        description: "New task position saved in database",
-      });
-    } catch (err) {
-      alert(err);
-    }
+    const updatedTasks = tasks.map((task: Task) => {
+      if (task.id === taskToUpdate.id) {
+        return {
+          ...task,
+          status: destinationStatus,
+        };
+      }
+      return task;
+    });
+    setCurrentTasks(updatedTasks)
+    await axios.put(`/api/tasks/${taskToUpdate.id}`, {
+      ...taskToUpdate,
+      status: destinationStatus,
+    })
   };
 
   const onDeleteClick = (task: Task) => {
     setDeleteModalInfo({ open: true, task });
   }
 
-  const isMobile = window.innerWidth < 768;
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  }, []);
 
   return (
     <>
@@ -128,15 +113,18 @@ const ClientsKanban = (props: any) => {
             {groupedTasks()?.map((section: any, index: any) => (
               <div
                 className="flex flex-col items-center justify-center w-full md:w-[360px] mt-[12px]  bg-white rounded-[20px] "
-                key={String(index)}
+                key={section.id}
               >
                 <Droppable
                   isCombineEnabled={false}
                   isDropDisabled={false}
+                  ignoreContainerClipping={false}
                   key={section.id}
-                  droppableId={String(index)}>
+                  droppableId={section.id}>
                   {(provided) => (
                     <Collapsible
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
                       open={isMobile ? undefined : true}
                       className="flex flex-col items-center justify-center w-full md:w-[360px] mt-[12px]  bg-white rounded-[20px] "
                       key={section.id}
@@ -193,11 +181,11 @@ const ClientsKanban = (props: any) => {
                                 <div className="flex flex-row justify-between items-center w-full">
                                   <div className="flex flex-col">
                                     <div className="text-[10px]">Início:</div>
-                                    <div className="text-[12px] font-[700]">{task.startDate.toLocaleDateString()}</div>
+                                    <div className="text-[12px] font-[700]">{task.startDate?.toLocaleDateString() || '-'}</div>
                                   </div>
                                   <div className="flex flex-col">
                                     <div className="text-[10px]">Fim:</div>
-                                    <div className="text-[12px] font-[700]">{task.endDate.toLocaleDateString()}</div>
+                                    <div className="text-[12px] font-[700]">{task.endDate?.toLocaleDateString() || '-'}</div>
                                   </div>
                                   <div className="flex flex-col">
                                     <div className="text-[10px]">Responsável:</div>

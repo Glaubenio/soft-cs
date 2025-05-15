@@ -16,8 +16,12 @@ const ProjectsPage = async ({
 }: {
     searchParams: { [key: string]: string | undefined }
 }) => {
+    const queryParams = await searchParams;
+    const priority = queryParams.priority?.split(',').filter((a) => a.length > 0) || [];
+    const status = queryParams.status?.split(',').filter((a) => a.length > 0) || [];
     const session: Session | null = await getServerSession(authOptions);
-    const tasks = await getTasks();
+
+    const tasks = await getTasks(priority, status);
     const user = await getUser();
     const activeUsers = await getActiveUsers();
 
@@ -25,13 +29,17 @@ const ProjectsPage = async ({
     console.log(tasks, "tasks");
 
     if (!session) return redirect("/sign-in");
-    const queryParams = await searchParams;
+
+
     const activeTab: string = queryParams.activeTab || 'list'
     return (
         <div className="flex-1 space-y-4 h-full overflow-scroll">
 
             <Suspense fallback={<SuspenseLoading />}>
-                <TasksView activeTab={activeTab} tasks={tasks} activeUsers={activeUsers} />
+                <TasksView
+                    activeTab={activeTab}
+                    tasks={tasks}
+                    activeUsers={activeUsers} />
             </Suspense>
         </div>
     );

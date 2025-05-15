@@ -3,61 +3,86 @@ import { TaskForm } from "../forms/Task"
 import { Button } from "@/components/ui/button"
 import { PlusCircle, Sliders } from "lucide-react"
 import { ReactNode, useState } from "react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import { User } from "@/types/types"
-interface Props {
-  activeUsers: User[]
+import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
+
+const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => {
+  const router = useRouter()
+  const [filters, setFilters] = useState<{
+    status: string[]
+    priority: string[]
+  }>({ status: [], priority: [] })
+
+  const handleSelectedFilter = (name: 'status' | 'priority', value: string) => {
+    if (filters[name]?.includes(value)) {
+      setFilters({
+        ...filters,
+        [name]: filters[name].filter((s) => s !== value),
+      })
+    } else {
+      setFilters({
+        ...filters,
+        [name]: [...filters[name], value],
+      })
+    }
+  }
+
+  const t = useTranslations()
+
+  const submitFilters = () => {
+    router.push(`/tasks?status=${filters.status.join(',')}&priority=${filters.priority.join(',')}`)
+  }
+
+  return <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      {triggerButton}
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-56">
+      <DropdownMenuLabel>Status</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <div className="flex items-center gap-2 px-2">
+          <Checkbox onCheckedChange={() => handleSelectedFilter("status", "TODO")} />{t('TaskStatus.TODO')}
+        </div>
+        <div className="flex items-center gap-2 px-2">
+          <Checkbox onCheckedChange={() => handleSelectedFilter("status", "DOING")} />{t('TaskStatus.DOING')}
+        </div>
+        <div className="flex items-center gap-2 px-2">
+          <Checkbox onCheckedChange={() => handleSelectedFilter("status", "DONE")} />{t('TaskStatus.DONE')}
+        </div>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuLabel>Prioridade</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <div className="flex items-center gap-2 px-2">
+          <Checkbox
+            onCheckedChange={() => handleSelectedFilter("priority", "HIGH")}
+          />{t('TaskPriority.label.HIGH')}
+        </div>
+        <div className="flex items-center gap-2 px-2">
+          <Checkbox
+            onCheckedChange={() => handleSelectedFilter("priority", "MEDIUM")}
+          />{t('TaskPriority.label.MEDIUM')}
+        </div>
+        <div className="flex items-center gap-2 px-2">
+          <Checkbox
+            onCheckedChange={() => handleSelectedFilter("priority", "LOW")}
+          />{t('TaskPriority.label.LOW')}
+        </div>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <Button
+        onClick={() => submitFilters()}
+        className="float-right mr-1">
+        Aplicar
+      </Button>
+    </DropdownMenuContent>
+  </DropdownMenu>
 }
-const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => <DropdownMenu>
-  <DropdownMenuTrigger asChild>
-    {triggerButton}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent className="w-56">
-    <DropdownMenuLabel>Tipo de atendimento</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuGroup>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />High
-      </div>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Low
-      </div>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Tech
-      </div>
-    </DropdownMenuGroup>
-    <DropdownMenuSeparator />
-    <DropdownMenuLabel>CSM Responsável</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuGroup>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Jon Snow
-      </div>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Cersei Lannister
-      </div>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Tyrion Lannister
-      </div>
-    </DropdownMenuGroup>
-    <DropdownMenuSeparator />
-    <DropdownMenuLabel>Status</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuGroup>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Ativo
-      </div>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Inativo
-      </div>
-      <div className="flex items-center gap-2 px-2">
-        <Checkbox />Em Implantação
-      </div>
-    </DropdownMenuGroup>
-    <DropdownMenuSeparator />
-  </DropdownMenuContent>
-</DropdownMenu>
 
 export const TasksToolbar = () => {
   const [clientFormOpen, setClientFormOpen] = useState(false);

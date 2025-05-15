@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import { TasksContext } from "../tasks-context"
 import { useToast } from "@/components/ui/use-toast"
 import { Task } from "@/types/types"
+import { useRouter } from "next/navigation"
 
 interface Props {
   open: boolean
@@ -36,6 +37,7 @@ const formSchema = z.object({
 export const TaskForm = ({ open, setOpen, task }: Props) => {
   const t = useTranslations()
   const { toast } = useToast();
+  const router = useRouter()
 
   const { activeUsers } = useContext(TasksContext)
 
@@ -60,7 +62,8 @@ export const TaskForm = ({ open, setOpen, task }: Props) => {
       data.startDate = data.startDate ? new Date(data.startDate) : null
       data.endDate = data.endDate ? new Date(data.endDate) : null
       await (task ? axios.put(`/api/tasks/${task?.id}`, data) : axios.post("/api/tasks", data))
-      window.location.reload()
+      router.refresh()
+      setOpen(false)
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Erro desconhecido"
       toast({

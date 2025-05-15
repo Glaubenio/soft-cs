@@ -32,7 +32,10 @@ const TasksView = ({ tasks, activeUsers, activeTab }: Props) => {
                           bg-white 
                           border-primary`
   return (
-    <TasksProvider tasks={tasks} activeUsers={activeUsers} >
+    <TasksProvider
+      tasks={tasks}
+      activeUsers={activeUsers}
+    >
       <div className="space-y-3">
         <Tabs defaultValue={activeTab}>
           <TabsList className="flex flex-row md:justify-between items-center w-full gap-1">
