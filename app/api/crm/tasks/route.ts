@@ -18,32 +18,33 @@ export async function DELETE(req: Request) {
     return new NextResponse("Missing board id", { status: 400 });
   }
 
-  try {
-    const currentTask = await prismadb.crm_Accounts_Tasks.findUnique({
-      where: {
-        id,
-      },
-    });
+  // try {
+  //   const currentTask = await prismadb.crm_Accounts_Tasks.findUnique({
+  //     where: {
+  //       id,
+  //     },
+  //   });
 
-    await prismadb.tasksComments.deleteMany({
-      where: {
-        task: id,
-      },
-    });
+  //   await prismadb.tasksComments.deleteMany({
+  //     where: {
+  //       task: id,
+  //     },
+  //   });
 
-    await prismadb.crm_Accounts_Tasks.delete({
-      where: {
-        id,
-      },
-    });
+  //   await prismadb.crm_Accounts_Tasks.delete({
+  //     where: {
+  //       id,
+  //     },
+  //   });
 
-    if (!currentTask) {
-      return NextResponse.json({ Message: "NO currentTask" }, { status: 200 });
-    }
+  //   if (!currentTask) {
+  //     return NextResponse.json({ Message: "NO currentTask" }, { status: 200 });
+  //   }
 
-    return NextResponse.json({ status: 200 });
-  } catch (error) {
-    console.log("[NEW_BOARD_POST]", error);
-    return new NextResponse("Initial error", { status: 500 });
-  }
+  //   return NextResponse.json({ status: 200 });
+  // } catch (error) {
+  //   console.log("[NEW_BOARD_POST]", error);
+  //   return new NextResponse("Initial error", { status: 500 });
+  // }
+  return new NextResponse("Initial error", { status: 500 });
 }

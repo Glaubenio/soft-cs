@@ -29,31 +29,32 @@ export async function POST(req: Request, props: { params: Promise<{ taskId: stri
     return new NextResponse("Missing comment", { status: 400 });
   }
 
-  try {
-    const task = await prismadb.crm_Accounts_Tasks.findUnique({
-      where: { id: taskId },
-    });
+  // try {
+  //   const task = await prismadb.crm_Accounts_Tasks.findUnique({
+  //     where: { id: taskId },
+  //   });
 
-    if (!task) {
-      return new NextResponse("Task not found", { status: 404 });
-    }
+  //   if (!task) {
+  //     return new NextResponse("Task not found", { status: 404 });
+  //   }
 
-    const newComment = await prismadb.tasksComments.create({
-      data: {
-        v: 0,
-        comment: comment,
-        task: taskId,
-        user: session.user.id,
-      },
-    });
+  //   const newComment = await prismadb.tasksComments.create({
+  //     data: {
+  //       v: 0,
+  //       comment: comment,
+  //       task: taskId,
+  //       user: session.user.id,
+  //     },
+  //   });
 
-    //TODO: add email notification
+  //   //TODO: add email notification
 
-    return NextResponse.json(newComment, { status: 200 });
+  //   return NextResponse.json(newComment, { status: 200 });
 
-    /*      */
-  } catch (error) {
-    console.log("[COMMENTS_POST]", error);
-    return new NextResponse("Initial error", { status: 500 });
-  }
+  //   /*      */
+  // } catch (error) {
+  //   console.log("[COMMENTS_POST]", error);
+  //   return new NextResponse("Initial error", { status: 500 });
+  // }
+  return new NextResponse("Initial error", { status: 500 });
 }

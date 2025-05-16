@@ -109,11 +109,11 @@ const TasksCardList = ({ tasks, onEditClick, onDeleteClick }: {
         <div className="flex flex-row justify-between items-center w-full">
           <div className="flex flex-col">
             <div className="text-[10px]">Início:</div>
-            <div className="text-[12px] font-[700]">{task.startAt}</div>
+            <div className="text-[12px] font-[700]">{task.startDate?.toLocaleDateString()}</div>
           </div>
           <div className="flex flex-col">
             <div className="text-[10px]">Fim:</div>
-            <div className="text-[12px] font-[700]">{task.endAt}</div>
+            <div className="text-[12px] font-[700]">{task.endDate?.toLocaleDateString()}</div>
           </div>
           <div className="flex flex-col">
             <div className="text-[10px]">Responsável:</div>

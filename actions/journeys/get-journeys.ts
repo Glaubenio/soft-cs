@@ -1,7 +1,10 @@
-import {prismadb} from "@/lib/prisma";
+import { prismadb } from "@/lib/prisma";
+import { getUser } from "../get-user";
 
 
-export const getJourneys = async (accountId: String) => {
+export const getJourneys = async () => {
+    const user = await getUser();
+    const accountId = user.accountId;
     if (!accountId) {
         throw new Error("Account ID is required");
     }

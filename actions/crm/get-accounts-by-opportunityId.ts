@@ -10,11 +10,11 @@ export const getAccountsByOpportunityId = async (opportunityId: string) => {
       },
     },
     include: {
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
       contacts: {
         select: {
           first_name: true,

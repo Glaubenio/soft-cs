@@ -19,7 +19,7 @@ import DocumentsView from "../../components/DocumentsView";
 import {
   Documents,
   crm_Accounts,
-  crm_Accounts_Tasks,
+  // crm_Accounts_Tasks,
   crm_Contacts,
   crm_Contracts,
   crm_Leads,
@@ -45,7 +45,7 @@ const AccountDetailPage = async (props: AccountDetailPageProps) => {
   const contracts: crm_Contracts[] = await getContractsByAccountId(accountId);
   const leads: crm_Leads[] = await getLeadsByAccountId(accountId);
   const documents: Documents[] = await getDocumentsByAccountId(accountId);
-  const tasks: crm_Accounts_Tasks[] = await getAccountsTasks(accountId);
+  const tasks: any = []
   const crmData = await getAllCrmData();
 
   if (!account) return <div>Account not found</div>;

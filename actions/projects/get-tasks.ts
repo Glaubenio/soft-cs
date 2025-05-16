@@ -33,32 +33,32 @@ export const getTasks = async () => {
   if (!userId) return null;
 
   //Filtering tasks by section and board
-  const sections = await prismadb.sections.findMany({
-    where: {
-      OR: boards.map((board: any) => {
-        return {
-          board: board.id,
-        };
-      }),
-    },
-  });
+  // const sections = await prismadb.sections.findMany({
+  //   where: {
+  //     OR: boards.map((board: any) => {
+  //       return {
+  //         board: board.id,
+  //       };
+  //     }),
+  //   },
+  // });
 
   const data = await prismadb.tasks.findMany({
-    where: {
-      OR: sections.map((section: any) => {
-        return {
-          section: section.id,
-        };
-      }),
-    },
-    include: {
-      assigned_user: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
+    // where: {
+    //   OR: sections.map((section: any) => {
+    //     return {
+    //       section: section.id,
+    //     };
+    //   }),
+    // },
+    // include: {
+    //   assigned_user: {
+    //     select: {
+    //       id: true,
+    //       name: true,
+    //     },
+    //   },
+    // },
     orderBy: { createdAt: "desc" },
   });
   return data;

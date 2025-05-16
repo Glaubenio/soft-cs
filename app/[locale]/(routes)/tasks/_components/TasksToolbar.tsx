@@ -83,7 +83,7 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
       <DropdownMenuLabel>CSM Responsável</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        {activeUsers.map((user: User) => <div className="flex items-center gap-2 px-2">
+        {activeUsers.map((user: User) => <div key={user.id} className="flex items-center gap-2 px-2">
           <Checkbox
             onCheckedChange={() => handleSelectedFilter("responsibleId", user.id)}
           />{user.name}

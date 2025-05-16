@@ -10,6 +10,7 @@ export interface Session {
 
 
 export interface User {
+  id: string;
   name?: string | null
 }
 export interface Task {
@@ -24,4 +25,16 @@ export interface Task {
   endDate: Date | null
   responsibleId?: string | null
   clientId?: string | null
+}
+
+export interface JourneyStep {
+  name: string;
+  color: string;
+}
+
+export interface Journey {
+  id: string;
+  name: string;
+  journeySteps: JourneyStep[];
+
 }

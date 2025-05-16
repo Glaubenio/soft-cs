@@ -1,4 +1,4 @@
-import {prismadb} from "@/lib/prisma";
+import { prismadb } from "@/lib/prisma";
 
 export const getClients = async () => {
     return await prismadb.clients.findMany({
@@ -14,24 +14,6 @@ export const getClients = async () => {
                     jobTitle: true,
                     email: true,
                     phoneNumber: true
-                }
-            }, tasks: {
-                select: {
-                    id: true,
-                    title: true,
-                    content: true,
-                    status: true,
-                    priority: true,
-                    createdAt: true,
-                    updatedAt: true,
-                    dueDate: true,
-                    priority: true,
-                    clientId: true,
-                    assigned_user: {
-                        select: {
-                            name: true
-                        }
-                    }
                 }
             }
         }

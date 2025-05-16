@@ -21,7 +21,7 @@ export const ClientForm = ({ open, setOpen }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (<Dialog open={open} onOpenChange={setOpen}>
-    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] overflow-scroll">
+    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px] w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] overflow-scroll">
       <DialogHeader className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
         <DialogTitle className="hidden">Criar/Editar cliente</DialogTitle>
         <div className="flex flex-row items-start">

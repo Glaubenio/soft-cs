@@ -55,8 +55,6 @@ export const TaskForm = ({ open, setOpen, task }: Props) => {
     }
   })
 
-  console.log(form.formState.errors)
-
   const onSubmit = async (data: any) => {
     try {
       data.startDate = data.startDate ? new Date(data.startDate) : null
@@ -74,7 +72,7 @@ export const TaskForm = ({ open, setOpen, task }: Props) => {
 
   }
   return <Dialog open={open} onOpenChange={setOpen}>
-    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] max-w-[680px] gap-0">
+    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px] w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] gap-0">
       <DialogHeader className="flex flex-col">
         <DialogTitle className="hidden">{task ? `Editar tarefa` : 'Adicionar tarefa'}</DialogTitle>
         <div className="flex flex-row  justify-between items-center">

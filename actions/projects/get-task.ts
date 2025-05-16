@@ -6,34 +6,34 @@ export const getTask = async (taskId: string) => {
       id: taskId,
     },
     include: {
-      assigned_user: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
+      // assigned_user: {
+      //   select: {
+      //     id: true,
+      //     name: true,
+      //   },
+      // },
       responsible: true,
-      documents: {
-        select: {
-          id: true,
-          document_name: true,
-          document_file_url: true,
-        },
-      },
-      comments: {
-        select: {
-          id: true,
-          comment: true,
-          createdAt: true,
-          assigned_user: {
-            select: {
-              id: true,
-              name: true,
-              avatar: true,
-            },
-          },
-        },
-      },
+      // documents: {
+      //   select: {
+      //     id: true,
+      //     document_name: true,
+      //     document_file_url: true,
+      //   },
+      // },
+      // comments: {
+      //   select: {
+      //     id: true,
+      //     comment: true,
+      //     createdAt: true,
+      //     assigned_user: {
+      //       select: {
+      //         id: true,
+      //         name: true,
+      //         avatar: true,
+      //       },
+      //     },
+      //   },
+      // },
     },
   });
   return data;

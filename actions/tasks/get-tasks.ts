@@ -1,7 +1,7 @@
 import { prismadb } from "@/lib/prisma";
 import { task_priorities, task_status } from "@prisma/client";
 
-export const getTasks = async (priority?: string[], status?: string[], responsibleId: string[]) => {
+export const getTasks = async (priority?: string[], status?: string[], responsibleId?: string[]) => {
     let whereClause: any = {
     };
     if (priority && priority.length > 0) {

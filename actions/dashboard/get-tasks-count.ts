@@ -7,10 +7,10 @@ export const getTasksCount = async () => {
 };
 
 export const getUsersTasksCount = async (userId: string) => {
-  const data = await prismadb.tasks.count({
-    where: {
-      user: userId,
-    },
-  });
-  return data;
+  // const data = await prismadb.tasks.count({
+  //   where: {
+  //     user: userId,
+  //   },
+  // });
+  return [];
 };

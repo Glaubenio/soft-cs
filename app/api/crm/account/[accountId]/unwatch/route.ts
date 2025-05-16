@@ -17,18 +17,18 @@ export async function POST(req: Request, props: { params: Promise<{ accountId: s
   const accountId = params.accountId;
 
   try {
-    await prismadb.crm_Accounts.update({
-      where: {
-        id: accountId,
-      },
-      data: {
-        watching_users: {
-          disconnect: {
-            id: session.user.id,
-          },
-        },
-      },
-    });
+    // await prismadb.crm_Accounts.update({
+    //   where: {
+    //     id: accountId,
+    //   },
+    //   data: {
+    //     watching_users: {
+    //       disconnect: {
+    //         id: session.user.id,
+    //       },
+    //     },
+    //   },
+    // });
     return NextResponse.json({ message: "Board watched" }, { status: 200 });
   } catch (error) {
     console.log(error);

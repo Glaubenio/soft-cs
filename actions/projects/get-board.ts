@@ -14,25 +14,25 @@ export const getBoard = async (id: string) => {
     },
   });
 
-  const sections = await prismadb.sections.findMany({
-    where: {
-      board: id,
-    },
-    orderBy: {
-      position: "asc",
-    },
-    include: {
-      tasks: {
-        orderBy: {
-          position: "desc",
-        },
-      },
-    },
-  });
+  // const sections = await prismadb.sections.findMany({
+  //   where: {
+  //     board: id,
+  //   },
+  //   orderBy: {
+  //     position: "asc",
+  //   },
+  //   include: {
+  //     tasks: {
+  //       orderBy: {
+  //         position: "desc",
+  //       },
+  //     },
+  //   },
+  // });
 
   const data = {
     board,
-    sections,
+    sections: [],
   };
   return data;
 };

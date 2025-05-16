@@ -10,11 +10,11 @@ export const getAccount = async (accountId: string) => {
       opportunities: true,
       assigned_documents: true,
       invoices: true,
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
     },
   });
   return data;
