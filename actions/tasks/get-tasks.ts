@@ -1,17 +1,17 @@
-import { prismadb } from "@/lib/prisma";
-import { task_priorities, task_status } from "@prisma/client";
+import {prismadb} from "@/lib/prisma";
+import {task_priorities, task_status} from "@prisma/client";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/lib/auth";
 
 export const getTasks = async (priority?: string[], status?: string[], responsibleId?: string[]) => {
-    let whereClause: any = {
-    };
+    let whereClause: any = {};
+
     if (priority && priority.length > 0) {
-        console.log(priority, "priority");
         whereClause.priority = {
             in: priority as task_priorities[]
         };
     }
     if (status && status.length > 0) {
-        console.log(status, "status");
         whereClause.status = {
             in: status as task_status[]
         };
@@ -22,6 +22,20 @@ export const getTasks = async (priority?: string[], status?: string[], responsib
             in: responsibleId
         };
     }
+
+    const session = await getServerSession(authOptions);
+    const current_user = await prismadb.users.findUnique({
+        where: {
+            id: session?.user?.id,
+        }
+    });
+
+    if (!current_user) {
+        throw new Error("User not found");
+    }
+
+    whereClause.accountId = current_user.accountId
+
     return await prismadb.tasks.findMany({
         where: whereClause,
         include: {

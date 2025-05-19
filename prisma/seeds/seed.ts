@@ -137,8 +137,8 @@ async function main() {
 
     console.log("-------- Seeding Tasks --------");
 
-    for (let i = 0; i < 10; i++) {
-        let newTask = {
+    for (let i = 0; i < 3; i++) {
+        const newTask = {
             title: faker.lorem.sentence(),
             content: faker.lorem.paragraph(),
             startDate: faker.date.past(),
@@ -151,7 +151,7 @@ async function main() {
             const randomUser = users[Math.floor(Math.random() * users.length)]
             const account = accounts[Math.floor(Math.random() * accounts.length)]
 
-            const task = await prisma.tasks.create({
+            await prisma.tasks.create({
                 data: {
                     ...newTask,
                     responsible: {
@@ -179,7 +179,7 @@ async function main() {
 
     console.log("-------- Seeding Clients --------");
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
         let newClient = {
             "name": faker.person.fullName(),
             "description": faker.lorem.paragraph(),
@@ -189,11 +189,36 @@ async function main() {
 
         try {
             const randomUser = users[Math.floor(Math.random() * users.length)]
-            const tasks = await prisma.tasks.findMany()
-            const randomTasks = tasks.sort(() => 0.5 - Math.random()).slice(0, 4)
             const account = accounts[Math.floor(Math.random() * accounts.length)]
 
-            console.log("Task created: ", randomTasks)
+            const newTasks = []
+
+            newTasks.push({
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
+                startDate: faker.date.past(),
+                endDate: faker.date.future(),
+                priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
+                status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
+            })
+
+            newTasks.push({
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
+                startDate: faker.date.past(),
+                endDate: faker.date.future(),
+                priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
+                status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
+            })
+
+            newTasks.push({
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
+                startDate: faker.date.past(),
+                endDate: faker.date.future(),
+                priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
+                status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
+            })
 
             const client = await prisma.clients.create({
                 data: {
@@ -203,7 +228,11 @@ async function main() {
                             id: randomUser.id,
                         },
                     },
-                    tasks: randomTasks,
+                    tasks: {
+                        createMany: {
+                            data: newTasks
+                        }
+                    },
                     account: {
                         connect: {
                             id: account.id,
