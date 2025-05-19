@@ -111,7 +111,6 @@ async function main() {
     if (users.length > 0 && accounts.length > 0) {
         for (let i = 0; i < users.length; i++) {
             if (!users[i].accountId) {
-                console.log("Updating user with ID: ", users[i].name);
 
                 const user = users[i];
                 const account = accounts[i % accounts.length];
@@ -171,13 +170,57 @@ async function main() {
                 }
             })
 
-            console.log("Task created: ", task)
         } catch (e) {
             console.log("Error creating client: ", e)
         }
     }
 
     console.log("-------- Seed Tasks Complete --------");
+
+    console.log("-------- Seeding Clients --------");
+
+    for (let i = 0; i < 3; i++) {
+        let newClient = {
+            "name": faker.person.fullName(),
+            "description": faker.lorem.paragraph(),
+            "recurringContractRevenue": faker.number.float(),
+            "image": faker.image.url()
+        }
+
+        try {
+            const randomUser = users[Math.floor(Math.random() * users.length)]
+            const tasks = await prisma.tasks.findMany()
+            const randomTasks = tasks.sort(() => 0.5 - Math.random()).slice(0, 4)
+            const account = accounts[Math.floor(Math.random() * accounts.length)]
+
+            console.log("Task created: ", randomTasks)
+
+            const client = await prisma.clients.create({
+                data: {
+                    ...newClient,
+                    csmResponsible: {
+                        connect: {
+                            id: randomUser.id,
+                        },
+                    },
+                    tasks: randomTasks,
+                    account: {
+                        connect: {
+                            id: account.id,
+                        },
+                    }
+                }, include: {
+                    csmResponsible: true,
+                    tasks: true,
+                    account: true
+                },
+            })
+
+            console.log("Client created: ", client)
+        } catch (e) {
+            console.log("Error creating client: ", e)
+        }
+    }
 
     console.log("-------- Seed DB completed --------");
 }

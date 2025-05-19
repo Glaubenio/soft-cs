@@ -642,9 +642,9 @@ model journey_steps {
 model journey_steps_clients {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
   journeyStepId String         @db.ObjectId
-  journeyStep   journey_steps? @relation(fields: [journeyStepId], references: [id])
+  journeyStep   journey_steps? @relation(fields: [journeyStepId], references: [id], onDelete: Cascade)
   clientId      String         @db.ObjectId
-  client        clients?       @relation(fields: [clientId], references: [id])
+  client        clients?       @relation(fields: [clientId], references: [id], onDelete: Cascade)
   createdAt     DateTime?      @default(now()) @db.Date
   updatedAt     DateTime?      @updatedAt @db.Date
 }
