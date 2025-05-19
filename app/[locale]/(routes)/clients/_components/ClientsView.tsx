@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ClientsList } from "./ClientsList";
 import ClientsKanban from "./ClientsKanban";
@@ -13,35 +13,36 @@ interface Props {
   journeys: Journey[];
   clients: Client[];
   activeTab: string;
-  activeUsers: User[]
+  activeUsers: User[],
+  queryParams: Record<string, string | string[] | undefined>;
 }
-const ClientsView = ({ journeys, activeTab, clients }: Props) => {
+const ClientsView = ({ journeys, activeTab, clients, activeUsers, queryParams }: Props) => {
   const router = useRouter();
   return (
     <>
       <JourneysProvider journeys={journeys}>
-        <Tabs defaultValue={activeTab}>
-          <TabsList className="flex md:flex-row flex-col-reverse justify-between md:items-center gap-1 md:gap-0 items-start w-full">
-            <div >
-              <TabsTrigger
-                onClick={() => router.push('/clients?activeTab=list')} value="list">
-                Lista
-              </TabsTrigger>
-              <TabsTrigger onClick={() => router.push('/clients?activeTab=kanban')} value="kanban">
-                Kanban
-              </TabsTrigger>
-            </div>
-            <ClientsToolbar activeTab={activeTab} />
-          </TabsList>
-          <CientsProvider clients={clients} >
+        <CientsProvider currentQueryParams={queryParams} clients={clients} activeUsers={activeUsers}>
+          <Tabs defaultValue={activeTab}>
+            <TabsList className="flex md:flex-row flex-col-reverse justify-between md:items-center gap-1 md:gap-0 items-start w-full">
+              <div >
+                <TabsTrigger
+                  onClick={() => router.push('/clients?activeTab=list')} value="list">
+                  Lista
+                </TabsTrigger>
+                <TabsTrigger onClick={() => router.push('/clients?activeTab=kanban')} value="kanban">
+                  Kanban
+                </TabsTrigger>
+              </div>
+              <ClientsToolbar activeTab={activeTab} />
+            </TabsList>
             <TabsContent value="list">
               <ClientsList />
             </TabsContent>
             <TabsContent value="kanban">
               <ClientsKanban />
             </TabsContent>
-          </CientsProvider>
-        </Tabs>
+          </Tabs>
+        </CientsProvider>
       </JourneysProvider>
     </>
   );

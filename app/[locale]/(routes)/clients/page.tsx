@@ -19,6 +19,7 @@ const ClientPage = async ({ searchParams }: {
 
   if (!session) return redirect("/sign-in");
   const clients = await getClients();
+  console.log(clients);
   const journeys = await getJourneys();
   const activeUsers = await getActiveUsers();
 
@@ -30,7 +31,12 @@ const ClientPage = async ({ searchParams }: {
     <div className="flex-1 space-y-4 h-full overflow-scroll">
 
       <Suspense fallback={<SuspenseLoading />}>
-        <ClientsView activeUsers={activeUsers} clients={clients} activeTab={activeTab} journeys={journeys} />
+        <ClientsView activeUsers={activeUsers}
+          queryParams={queryParams}
+          clients={clients}
+          activeTab={activeTab}
+          journeys={journeys} />
+
       </Suspense>
     </div>
   );

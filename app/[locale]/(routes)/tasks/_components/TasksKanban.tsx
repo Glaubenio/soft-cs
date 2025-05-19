@@ -35,7 +35,6 @@ const ClientsKanban = () => {
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslations();
 
-  const [data, setData]: any = useState([]);
   const { toast } = useToast();
 
   const groupedTasks = (): TasksKanbanSection[] => {

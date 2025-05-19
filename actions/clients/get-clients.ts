@@ -1,9 +1,14 @@
-import {prismadb} from "@/lib/prisma";
+import { prismadb } from "@/lib/prisma";
 
 export const getClients = async () => {
     return await prismadb.clients.findMany({
         include: {
-            csmResponsible: true
+            csmResponsible: true,
+            journeyStepsClients: {
+                include: {
+                    journeyStep: true
+                }
+            }
         }
     });
 };
