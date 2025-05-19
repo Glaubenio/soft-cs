@@ -7,6 +7,7 @@ import { Session } from "next-auth";
 import ClientsView from "./_components/ClientsView";
 import SuspenseLoading from "@/components/loadings/suspense";
 import { getJourneys } from "@/actions/journeys/get-journeys";
+import {getClients} from "@/actions/clients/get-clients";
 
 export const maxDuration = 300;
 
@@ -15,7 +16,8 @@ const ClientPage = async () => {
 
   if (!session) return redirect("/sign-in");
   const journeys = await getJourneys();
-  console.log("Journeys", journeys);
+  const clients = await getClients();
+  console.log("Clients", clients);
   return (
     <div className="flex-1 space-y-4 h-full overflow-scroll">
 
