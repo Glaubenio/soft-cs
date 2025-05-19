@@ -28,6 +28,7 @@ export interface Task {
 }
 
 export interface JourneyStep {
+  id: string;
   name: string;
   color: string;
 }
@@ -36,18 +37,6 @@ export interface Journey {
   id: string;
   name: string;
   journeySteps: JourneyStep[];
-}
-
-export enum ClientStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  IN_IMPLANTATION = "IN_IMPLANTATION",
-}
-
-export enum ClientServiceType {
-  HIGH = "HIGH",
-  LOW = "LOW",
-  TECH = "TECH",
 }
 
 export interface ClientContact {
@@ -59,12 +48,11 @@ export interface ClientContact {
 }
 export interface Client {
   id: string;
-  name: string;
-  status: ClientStatus;
+  name: string | null;
+  status: "ACTIVE" | "INACTIVE" | "IN_IMPLANTATION";
   description: string | null;
   csmResponsible: User?;
   userId: string | null;
-  serviceModel: string | null;
   recurringContractRevenue: number;
-  serviceType: ClientServiceType;
+  serviceType: "HIGH" | "LOW" | "TECH" | null;
 }

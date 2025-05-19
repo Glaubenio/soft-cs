@@ -22,6 +22,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useTranslations } from "next-intl";
 import { ClientsContext } from "../clients-context";
 import MoneyInput from "@/components/ui/money-input";
+import { TableRow } from "@tremor/react";
+import { JourneysContext } from "../journeys-context";
+import { MultiSelect } from "@/components/ui/multiselect";
 
 
 interface Props {
@@ -33,14 +36,16 @@ interface Props {
 const formSchema = z.object({
   name: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
   status: z.enum(["ACTIVE", "INACTIVE", "IN_IMPLANTATION"], { errorMap: () => ({ message: "Campo obrigatório" }) }),
-  description: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
+  description: z.string().nullable(),
   userId: z.string().nullable(),
   recurringContractRevenue: z.number().min(0, { message: "Campo obrigatório" }),
   serviceType: z.enum(["HIGH", "LOW", "TECH"], { errorMap: () => ({ message: "Campo obrigatório" }) }),
+  journeyIds: z.array(z.string()).optional(),
 });
 
 export const ClientForm = ({ open, setOpen, client }: Props) => {
   const { activeUsers } = useContext(ClientsContext)
+  const { journeys } = useContext(JourneysContext)
   const [contactFormOpen, setContactFormOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -56,6 +61,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
       userId: client?.userId || undefined,
       recurringContractRevenue: client?.recurringContractRevenue || 0,
       serviceType: client?.serviceType || "LOW",
+      jorneyIds: client?.journeyIds || [],
     }
   })
 
@@ -211,9 +217,11 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>CSM Responsável</SelectLabel>
-                          <SelectItem value="HIGH">{t('ClientServiceType.HIGH')}</SelectItem>
-                          <SelectItem value="LOW">{t('ClientServiceType.LOW')}</SelectItem>
-                          <SelectItem value="TECH">{t('ClientServiceType.TECH')}</SelectItem>
+                          {
+                            activeUsers.map((user) => (
+                              <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+                            ))
+                          }
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -233,6 +241,34 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
               />
             </div>
           </div>
+          <div className="flex flex-col mt-[16px] w-full">
+            <FormField
+              control={form.control}
+              name="jorneyIds"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full">
+                  <FormLabel className="text-[12px] font-[400] text-light-gray">Jornadas:</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      {...field}
+                      className="mt-[6px] bg-lighter-gray"
+                      modalPopover={true}
+                      options={journeys.map((journey) => ({
+                        label: journey.name,
+                        value: journey.id,
+                      }))}
+                      onValueChange={field.onChange}
+                      placeholder="Selecione..."
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="flex flex-col gap-2 mt-[16px] bg-lighter-gray px-[14px] py-[12px] rounded-[20px] mt-[16px]">
             <div className="flex flex-row justify-between items-center">
               <div className="text-[16px] font-[700]">Contatos</div>
@@ -245,20 +281,22 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
             </div>
             <Table>
               <TableHeader className="border-b">
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Nome
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Cargo
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Celular
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  E-mail
-                </TableHead>
-                <TableHead className=" px-0 h-[14px]">
-                </TableHead>
+                <TableRow>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Nome
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Cargo
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Celular
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    E-mail
+                  </TableHead>
+                  <TableHead className=" px-0 h-[14px]">
+                  </TableHead>
+                </TableRow>
               </TableHeader>
               <TableBody>
                 <TableCell className="text-[10px] p-0">
@@ -288,26 +326,28 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
             </div>
             <Table>
               <TableHeader className="border-b">
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Nome
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Responsável
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Status
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Prioridade
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Início
-                </TableHead>
-                <TableHead className="text-[10px] px-0 h-[14px]">
-                  Fim
-                </TableHead>
-                <TableHead className="px-0 h-[14px]">
-                </TableHead>
+                <TableRow>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Nome
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Responsável
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Status
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Prioridade
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Início
+                  </TableHead>
+                  <TableHead className="text-[10px] px-0 h-[14px]">
+                    Fim
+                  </TableHead>
+                  <TableHead className="px-0 h-[14px]">
+                  </TableHead>
+                </TableRow>
               </TableHeader>
               <TableBody>
                 <TableCell className="text-[10px] p-0">
