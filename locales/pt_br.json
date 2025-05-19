@@ -9,6 +9,23 @@
     "DONE": "Feito",
     "DELAYED": "Atrasado"
   },
+  "ClientStatus": {
+    "label": {
+      "ACTIVE": "Ativo",
+      "INACTIVE": "Inativo",
+      "IN_IMPLANTATION": "Em implantação"
+    },
+    "color": {
+      "ACTIVE": "green",
+      "INACTIVE": "red",
+      "IN_IMPLANTATION": "yellow"
+    }
+  },
+  "ClientServiceType": {
+    "HIGH": "Alto",
+    "LOW": "Baixo",
+    "TECH": "Tech"
+  },
   "TaskPriority": {
     "label": {
       "HIGH": "Alta",

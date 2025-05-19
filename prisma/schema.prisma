@@ -597,6 +597,8 @@ enum client_service_types {
 model clients {
   id                       String                  @id @default(auto()) @map("_id") @db.ObjectId
   name                     String?
+  description              String?
+
   status                   client_statuses         @default(ACTIVE)
   serviceType              client_service_types?   @default(LOW)
   recurringContractRevenue Float                   @default(0.0)

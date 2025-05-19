@@ -81,7 +81,7 @@ export const JourneyForm = ({ open, setOpen, journey }: Props) => {
             <div className="flex md:flex hidden ml-[16px] h-full">{journey ? `Editar jornada` : 'Adicionar jornada'}</div>
           </div>
           <div className="flex flex-row gap-2">
-            <Button type="submit" form="task-form" className="[&_svg]:size-[12px]">
+            <Button type="submit" form="journey-form" className="[&_svg]:size-[12px]">
               {
                 form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : <CheckCircle />
               }
@@ -97,7 +97,7 @@ export const JourneyForm = ({ open, setOpen, journey }: Props) => {
         <div className="flex flex md:hidden mt-1 h-full">{journey ? `Editar jornada` : 'Adicionar jornada'}</div>
       </DialogHeader>
       <Form {...form}>
-        <form id="task-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="journey-form" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center mt-[16px]">
             <div className="flex flex-1 flex-col mt-[16px] ">
               <FormField

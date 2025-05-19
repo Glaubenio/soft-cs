@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Edit, EllipsisVertical } from "lucide-react"
+import { useContext } from "react"
+import { ClientsContext } from "../clients-context"
 const fakeData = [
   {
     name: "Carla Valentin",
@@ -218,6 +220,8 @@ const ClientsCardList = ({ data }: any) => <div className="md:hidden flex flex-c
 </div>
 
 export const ClientsList = ({ data }: any) => {
+  const { clients } = useContext(ClientsContext)
+  console.log(clients)  
   return <div>
     <ClientsTable data={data} />
     <ClientsCardList data={data} />

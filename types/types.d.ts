@@ -36,5 +36,35 @@ export interface Journey {
   id: string;
   name: string;
   journeySteps: JourneyStep[];
+}
 
+export enum ClientStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  IN_IMPLANTATION = "IN_IMPLANTATION",
+}
+
+export enum ClientServiceType {
+  HIGH = "HIGH",
+  LOW = "LOW",
+  TECH = "TECH",
+}
+
+export interface ClientContact {
+  id: string;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  jobTitle: string | null;
+}
+export interface Client {
+  id: string;
+  name: string;
+  status: ClientStatus;
+  description: string | null;
+  csmResponsible: User?;
+  userId: string | null;
+  serviceModel: string | null;
+  recurringContractRevenue: number;
+  serviceType: ClientServiceType;
 }
