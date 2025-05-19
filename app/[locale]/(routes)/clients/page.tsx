@@ -7,12 +7,8 @@ import { Session } from "next-auth";
 import ClientsView from "./_components/ClientsView";
 import SuspenseLoading from "@/components/loadings/suspense";
 import { getJourneys } from "@/actions/journeys/get-journeys";
-<<<<<<< HEAD
 import { getClients } from "@/actions/clients/get-clients";
 import { getActiveUsers } from "@/actions/get-users";
-=======
-import {getClients} from "@/actions/clients/get-clients";
->>>>>>> 5fb8dd9d2d169dded98b2b3760e2b2f651a956b1
 
 export const maxDuration = 300;
 
