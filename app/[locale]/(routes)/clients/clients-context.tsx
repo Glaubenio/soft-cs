@@ -76,7 +76,6 @@ export const CientsProvider = ({ children, clients, activeUsers, currentQueryPar
   }
 
   const selectedJourney = journeys.find((journey) => journey.id === queryParams.journeyId) || undefined;
-  console.log("Selected journey: ", selectedJourney);
   return (
     <ClientsContext.Provider value={{
       deleteClient,

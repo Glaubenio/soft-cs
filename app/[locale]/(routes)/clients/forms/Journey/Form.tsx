@@ -25,6 +25,7 @@ const formSchema = z.object({
   steps: z.array(z.object({
     color: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
     name: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
+    position: z.number({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(0, { message: "Campo obrigatório" }),
   })),
 });
 
@@ -35,6 +36,7 @@ export const JourneyForm = ({ open, setOpen, journey }: Props) => {
     const newStep = {
       color: "#150F41",
       name: '',
+      position: fields.length
     }
     append(newStep)
   }
@@ -125,6 +127,18 @@ export const JourneyForm = ({ open, setOpen, journey }: Props) => {
             <div className="flex flex-col w-full gap-2">
               {
                 fields.map((field, index) => <div className="flex flex-row items-center justify-between gap-3 p-[12px] bg-lighter-gray rounded-[8px]" key={field.id}>
+                  <FormField
+                    control={form.control}
+                    name={`steps.${index}.position`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input  {...field} type="hidden" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <div className="flex flex-1 flex-col">
                     <FormField
                       control={form.control}

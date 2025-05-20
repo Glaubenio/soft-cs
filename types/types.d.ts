@@ -31,6 +31,7 @@ export interface JourneyStep {
   id?: string;
   name: string;
   color: string;
+  position: number;
   journeyId?: string;
 }
 

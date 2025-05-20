@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Expansão",
+    "journeySteps": {
+      "createMany": {
+        "data": [
+          {
+            "name": "Identificação",
+            "color": "#FF5733",
+            "position": 0
+          },
+          {
+            "name": "Planejamento",
+            "color": "#33FF57",
+            "position": 1
+          },
+          {
+            "name": "Crescimento",
+            "color": "#3357FF",
+            "position": 2
+          },
+          {
+            "name": "Retenção",
+            "color": "#FF33A1",
+            "position": 3
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Relacionamento",
+    "journeySteps": {
+      "createMany": {
+        "data": [
+          {
+            "name": "Conhecimento",
+            "color": "#2b00ff",
+            "position": 0
+          },
+          {
+            "name": "Engajamento",
+            "color": "#ff0068",
+            "position": 1
+          },
+          {
+            "name": "Ampliação",
+            "color": "#00e4ff",
+            "position": 2
+          },
+          {
+            "name": "Fidelização",
+            "color": "#fff200",
+            "position": 3
+          }
+        ]
+      }
+    }
+  }
+]

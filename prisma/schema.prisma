@@ -632,6 +632,7 @@ model journey_steps {
   id                  String                  @id @default(auto()) @map("_id") @db.ObjectId
   name                String
   color               String
+  position            Int                     @default(0)
   journeyId           String                  @db.ObjectId
   journey             journeys?               @relation(fields: [journeyId], references: [id], onDelete: Cascade)
   journeyStepsClients journey_steps_clients[]

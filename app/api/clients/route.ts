@@ -62,7 +62,7 @@ export const POST = async (req: Request) => {
       },
     });
     const syncStepsQuery = journeys.map(async (journey) => {
-      const firstStep = journey.journeySteps[0];
+      const firstStep = journey.journeySteps.find((step) => step.position === 0)!;
       await prismadb.journey_steps_clients.create({
         data: {
           clientId: newClient.id,
@@ -72,7 +72,6 @@ export const POST = async (req: Request) => {
     }
     );
     const results = await Promise.all(syncStepsQuery);
-    console.log("Results", results);
     return NextResponse.json({ data: newClient }, { status: 201 });
   } catch
   (error) {

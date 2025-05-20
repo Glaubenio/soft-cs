@@ -54,11 +54,10 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
 
   const clientJourneyIds = () => {
     const journeyIds = client?.journeyStepsClients?.map((association) => association.journeyStep?.journeyId || "") || [];
-    console.log("clientJourneyIds", journeyIds)
     const uniqueJourneyIds = Array.from(new Set(journeyIds));
-    console.log("Unique journey ids: ", uniqueJourneyIds)
-    return uniqueJourneyIds.filter((id) => Boolean(id));
+    return uniqueJourneyIds
   }
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

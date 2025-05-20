@@ -68,12 +68,10 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
       });
     });
 
-    console.log("New Journeys", newJourneys);
     const deletedJourneys = client.journeyStepsClients.filter((clientStep) => {
       const journeySteps = journeys.map((journey) => journey.journeySteps.map((step) => step.id));
       return !journeySteps.flat().includes(clientStep.journeyStepId);
     });
-    console.log("Deleted Journeys", deletedJourneys);
     await prismadb.journey_steps_clients.deleteMany({
       where: {
         id: {
@@ -93,7 +91,6 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
     }
     );
     const results = await Promise.all(syncStepsQuery);
-    console.log("Results", results);
     return NextResponse.json({ data: updatedClient }, { status: 200 });
   } catch
   (error) {
