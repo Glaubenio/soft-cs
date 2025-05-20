@@ -44,9 +44,12 @@ const formSchema = z.object({
 });
 
 export const ClientForm = ({ open, setOpen, client }: Props) => {
+  const [contacts, setContacts] = useState(client?.contacts || [])
   const { activeUsers } = useContext(ClientsContext)
   const { journeys } = useContext(JourneysContext)
-  const [contactFormOpen, setContactFormOpen] = useState(false);
+  const [contactFormInfo, setContactFormInfo] = useState<{ open: boolean, contactIndex?: number }>({
+    open: false
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const t = useTranslations()
@@ -85,11 +88,23 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
       });
     }
   }
+  console.log("contactFormInfo", contactFormInfo)
 
   return (<Dialog open={open} onOpenChange={setOpen}>
+    {contactFormInfo.open &&
+      <ContactForm
+        onNewContactData={(data) => {
+          setContacts(data)
+        }}
+        clientId={client?.id!}
+        contactIndex={contactFormInfo.contactIndex}
+        allContacts={contacts}
+        setOpen={(open) => setContactFormInfo(prev => ({ ...prev, open: open }))}
+        open={contactFormInfo.open}
+      />}
     <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px] w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] overflow-scroll">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-0">
+        <form onSubmit={form.handleSubmit(onSubmit)} id="client-form" className="flex flex-col gap-0">
           <DialogHeader className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
             <DialogTitle className="hidden">{client ? 'Editar cliente' : 'Criar cliente'}</DialogTitle>
             <div className="flex flex-row items-start">
@@ -149,7 +164,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
               </div>
             </div>
             <div className="flex flex-row gap-2 justify-end md:self-start">
-              <Button type="submit" className="[&_svg]:size-[12px]">
+              <Button type="submit" form="client-form" className="[&_svg]:size-[12px]">
                 {
                   form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : <CheckCircle />
                 }
@@ -161,7 +176,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
               </Button>
             </div>
           </DialogHeader>
-          <ContactForm setOpen={setContactFormOpen} open={contactFormOpen} />
+
           <Separator className="my-[16px]" />
           <div>
             <FormField
@@ -251,40 +266,40 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
             <FormField
               control={form.control}
               name="journeyIds"
-              render={({ field }) => {
-                console.log("field.value", field.value)
-                return (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel className="text-[12px] font-[400] text-light-gray">Jornadas:</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        {...field}
-                        className="mt-[6px] bg-lighter-gray"
-                        modalPopover={true}
-                        options={journeys.map((journey) => ({
-                          label: journey.name,
-                          value: journey.id,
-                        }))}
-                        defaultValue={field.value}
-                        onValueChange={field.onChange}
-                        placeholder="Selecione..."
-                        variant="inverted"
-                        animation={2}
-                        maxCount={3}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full">
+                  <FormLabel className="text-[12px] font-[400] text-light-gray">Jornadas:</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      {...field}
+                      className="mt-[6px] bg-lighter-gray"
+                      modalPopover={true}
+                      options={journeys.map((journey) => ({
+                        label: journey.name,
+                        value: journey.id,
+                      }))}
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                      placeholder="Selecione..."
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )
+              }
             />
           </div>
           <div className="flex flex-col gap-2 mt-[16px] bg-lighter-gray px-[14px] py-[12px] rounded-[20px] mt-[16px]">
             <div className="flex flex-row justify-between items-center">
               <div className="text-[16px] font-[700]">Contatos</div>
               <Button
-                onClick={() => setContactFormOpen(true)}
+                onClick={() => setContactFormInfo({ open: true, contactIndex: undefined })}
                 variant="ghost"
+                type="button"
+                disabled={!client}
                 className="text-primary text-[12px] [&_svg]:size-[12px]">
                 <PlusCircle />Adicionar contato
               </Button>
@@ -292,47 +307,57 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
             <Table>
               <TableHeader className="border-b">
                 <TableRow>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Nome
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Cargo
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Celular
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     E-mail
                   </TableHead>
-                  <TableHead className=" px-0 h-[14px]">
+                  <TableHead className=" px-0 md:px-2 h-[14px]">
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableCell className="text-[10px] p-0">
-                  Salles Silva
-                </TableCell>
-                <TableCell className="text-[10px] p-0">
-                  Atendente
-                </TableCell>
-                <TableCell className="text-[10px] p-0">
-                  (85) 9 9999-9999
-                </TableCell>
-                <TableCell className="text-[10px] p-0">
-                  email@email.com
-                </TableCell>
-                <TableCell className="p-0">
-                  <Button className="size-[24px] [&_svg]:size-[12px]">
-                    <Edit />
-                  </Button>
-                </TableCell>
+                {
+                  contacts?.map((contact, index) => <TableRow className="mt-1" key={index}>
+                    <TableCell className="text-[10px] p-0 md:p-2">
+                      {contact.name}
+                    </TableCell>
+                    <TableCell className="text-[10px] p-0 md:p-2">
+                      {contact.jobTitle}
+                    </TableCell>
+                    <TableCell className="text-[10px] p-0 md:p-2">
+                      {contact.phoneNumber}
+                    </TableCell>
+                    <TableCell className="text-[10px] p-0 md:p-2">
+                      {contact.email}
+                    </TableCell>
+                    <TableCell className="p-0">
+                      <Button onClick={() => setContactFormInfo({ open: true, contactIndex: index })} type="button" className="size-[24px] [&_svg]:size-[12px]">
+                        <Edit />
+                      </Button>
+                    </TableCell>
+                  </TableRow>)
+                }
               </TableBody>
             </Table>
           </div>
           <div className="flex flex-col gap-2 mt-[16px] bg-lighter-gray px-[14px] py-[12px] rounded-[20px] mt-[16px]">
             <div className="flex flex-row justify-between items-center">
               <div className="text-[16px] font-[700]">Tarefas</div>
-              <Button variant="ghost" className="text-primary text-[12px]"><PlusCircle className="h-[12px] w-[12px]" />Ver todos</Button>
+              <Button
+                type="button"
+                disabled={!client}
+                variant="ghost"
+                className="text-primary text-[12px]">
+                <PlusCircle className="h-[12px] w-[12px]" />Ver todos
+              </Button>
             </div>
             <Table>
               <TableHeader className="border-b">

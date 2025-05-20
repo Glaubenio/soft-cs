@@ -39,7 +39,7 @@ export const TaskForm = ({ open, setOpen, task }: Props) => {
   const { toast } = useToast();
   const router = useRouter()
 
-  const { activeUsers } = useContext(TasksContext)
+  const { activeUsers, clients } = useContext(TasksContext)
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -117,10 +117,9 @@ export const TaskForm = ({ open, setOpen, task }: Props) => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Clientes</SelectLabel>
-                          <SelectItem value="client1">Cliente 1</SelectItem>
-                          <SelectItem value="client2">Cliente 2</SelectItem>
-                          <SelectItem value="client3">Cliente 3</SelectItem>
-                          <SelectItem value="client4">Cliente 4</SelectItem>
+                          {
+                            clients.map((client) => <SelectItem key={client.id} value={client.id}>{client.name}</SelectItem>)
+                          }
                         </SelectGroup>
                       </SelectContent>
                     </Select>

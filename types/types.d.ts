@@ -42,10 +42,9 @@ export interface Journey {
 }
 
 export interface ClientContact {
-  id: string;
   name: string | null;
   email: string | null;
-  phone: string | null;
+  phoneNumber: string | null;
   jobTitle: string | null;
 }
 
@@ -62,6 +61,7 @@ export interface Client {
   description: string | null;
   csmResponsible: User?;
   userId: string | null;
+  contacts: ClientContact[];
   recurringContractRevenue: number;
   journeyStepsClients: JourneyStepClient[];
   serviceType: "HIGH" | "LOW" | "TECH" | null;

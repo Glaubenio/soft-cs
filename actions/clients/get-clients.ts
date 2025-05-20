@@ -1,8 +1,8 @@
-import {prismadb} from "@/lib/prisma";
-import {client_service_types, client_statuses} from "@prisma/client";
-import {getUser} from "@/actions/get-user";
+import { prismadb } from "@/lib/prisma";
+import { client_service_types, client_statuses } from "@prisma/client";
+import { getUser } from "@/actions/get-user";
 
-export const getClients = async (name?: string, serviceType?: string[], csmResponsible?: string[], status?: string[]) => {
+export const getClients = async (includeAssociations: boolean = true, name?: string, serviceType?: string[], csmResponsible?: string[], status?: string[]) => {
     let whereClause: any = {};
 
     if (name && name.length > 0) {
@@ -40,10 +40,10 @@ export const getClients = async (name?: string, serviceType?: string[], csmRespo
     return await prismadb.clients.findMany({
         where: whereClause,
         include: {
-            csmResponsible: true,
+            csmResponsible: includeAssociations,
             journeyStepsClients: {
                 include: {
-                    journeyStep: true
+                    journeyStep: includeAssociations
                 }
             }
         }

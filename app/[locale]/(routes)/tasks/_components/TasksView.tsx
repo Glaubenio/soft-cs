@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TasksLists } from "./TasksLists";
 import TasksKanban from "./TasksKanban";
 import { TasksToolbar } from "./TasksToolbar";
-import { Task, User } from "@/types/types";
+import { Client, Task, User } from "@/types/types";
 import { TasksProvider } from "../tasks-context";
 import { Kanban, List } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,9 +13,10 @@ interface Props {
   tasks: Task[]
   activeUsers: User[]
   activeTab: string
+  clients: Client[]
 }
 
-const TasksView = ({ tasks, activeUsers, activeTab }: Props) => {
+const TasksView = ({ tasks, activeUsers, activeTab, clients }: Props) => {
   const router = useRouter();
   const tabTriggerClass = `data-[state=active]:bg-primary 
                           data-[state=active]:text-white  
@@ -34,6 +35,7 @@ const TasksView = ({ tasks, activeUsers, activeTab }: Props) => {
   return (
     <TasksProvider
       tasks={tasks}
+      clients={clients}
       activeUsers={activeUsers}
     >
       <div className="space-y-3">

@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { prismadb } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getUser } from "@/actions/get-user";
 
 export async function PUT(req: Request, props: { params: Promise<{ taskId: string }> }) {
-    const session = await getServerSession(authOptions);
+    const user = await getUser();
     const params = await props.params;
     const taskId = params.taskId;
 
@@ -17,9 +18,10 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
         endDate,
         priority,
         status,
-        responsibleId, } = body;
+        responsibleId,
+        clientId } = body;
 
-    if (!session) {
+    if (!user) {
         return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -28,18 +30,6 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
     }
 
     try {
-        // const user = await prismadb.users.findUnique({
-        //     where: {
-        //         id: session.user.id,
-        //     }
-        // })
-
-        // const account = await prismadb.crm_Accounts.findFirst({
-        //     where: {
-        //         id: user?.accountId || "",
-        //     }
-        // });
-
         const task = await prismadb.tasks.update({
             where: {
                 id: taskId,
@@ -56,16 +46,16 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
                         id: responsibleId,
                     },
                 },
-                // client: {
-                //     connect: {
-                //         id: clientId,
-                //     },
-                // },
-                // account: {
-                //     connect: {
-                //         id: account?.id,
-                //     },
-                // },
+                client: {
+                    connect: {
+                        id: clientId,
+                    },
+                },
+                account: {
+                    connect: {
+                        id: user?.accountId!,
+                    },
+                },
             }
         });
 

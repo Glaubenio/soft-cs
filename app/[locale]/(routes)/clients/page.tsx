@@ -19,7 +19,6 @@ const ClientPage = async ({ searchParams }: {
 
   if (!session) return redirect("/sign-in");
   const clients = await getClients();
-  console.log(clients);
   const journeys = await getJourneys();
   const activeUsers = await getActiveUsers();
 

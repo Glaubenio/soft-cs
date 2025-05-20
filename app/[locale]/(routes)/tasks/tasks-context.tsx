@@ -1,5 +1,5 @@
 import { useToast } from "@/components/ui/use-toast";
-import { Task, User } from "@/types/types";
+import { Client, Task, User } from "@/types/types";
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 
@@ -9,6 +9,7 @@ interface TasksContextType {
   deleteTask: (task: Task, onFinish: () => void) => void;
   deleting: boolean;
   setCurrentTasks: (tasks: Task[]) => void;
+  clients: Client[]
 }
 export const TasksContext = createContext<TasksContextType>({
   tasks: [],
@@ -16,12 +17,14 @@ export const TasksContext = createContext<TasksContextType>({
   deleteTask: () => { },
   deleting: false,
   setCurrentTasks: () => { },
+  clients: []
 })
 
-export const TasksProvider = ({ children, tasks, activeUsers }: {
+export const TasksProvider = ({ children, tasks, activeUsers, clients }: {
   children: React.ReactNode,
   tasks: Task[],
   activeUsers: User[]
+  clients: Client[]
 }) => {
   const [currentTasks, setCurrentTasks] = useState<Task[]>(tasks);
   const { toast } = useToast();
@@ -48,7 +51,14 @@ export const TasksProvider = ({ children, tasks, activeUsers }: {
     setCurrentTasks(tasks);
   }, [tasks])
   return (
-    <TasksContext.Provider value={{ tasks: currentTasks, activeUsers, deleteTask, deleting, setCurrentTasks: setCurrentTasks } as TasksContextType
+    <TasksContext.Provider value={{
+      clients,
+      tasks: currentTasks,
+      activeUsers,
+      deleteTask,
+      deleting,
+      setCurrentTasks: setCurrentTasks
+    } as TasksContextType
     }>
       {children}
     </TasksContext.Provider>
