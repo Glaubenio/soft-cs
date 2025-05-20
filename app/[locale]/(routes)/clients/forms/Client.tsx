@@ -52,6 +52,11 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
   const t = useTranslations()
   const { toast } = useToast();
 
+  const clientJourneyIds = () => {
+    const journeyIds = client?.journeyStepsClients?.map((association) => association.journeyStep?.journeyId || "") || [];
+    const uniqueJourneyIds = Array.from(new Set(journeyIds));
+    return uniqueJourneyIds
+  }
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,7 +66,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
       userId: client?.userId || undefined,
       recurringContractRevenue: client?.recurringContractRevenue || 0,
       serviceType: client?.serviceType || "LOW",
-      jorneyIds: client?.journeyIds || [],
+      jorneyIds: clientJourneyIds(),
     }
   })
 

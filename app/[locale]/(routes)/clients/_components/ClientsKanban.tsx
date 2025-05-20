@@ -20,93 +20,6 @@ import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ClientsContext } from "../clients-context";
 import { useTranslations } from "next-intl";
-const clients = () => [
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Carla Valentin",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Ativo",
-    revenue: "R$ 12.000,00",
-    csm: "Tony Stark",
-  },
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Cersei Lannister",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Cancelamento",
-    revenue: "R$ 15.000,00",
-    csm: "Jon Snow",
-  },
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Robert Baratheon",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Em risco",
-    revenue: "R$ 120.000,00",
-    csm: "Daenerys Targaryen",
-  },
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Robert Baratheon",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Em risco",
-    revenue: "R$ 120.000,00",
-    csm: "Daenerys Targaryen",
-  }, {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Robert Baratheon",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Em risco",
-    revenue: "R$ 120.000,00",
-    csm: "Daenerys Targaryen",
-  }, {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Robert Baratheon",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Em risco",
-    revenue: "R$ 120.000,00",
-    csm: "Daenerys Targaryen",
-  }, {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Robert Baratheon",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Em risco",
-    revenue: "R$ 120.000,00",
-    csm: "Daenerys Targaryen",
-  }, {
-    id: Math.floor(Math.random() * 1000).toString(),
-    name: "Robert Baratheon",
-    avatarUrl: `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`,
-    status: "Em risco",
-    revenue: "R$ 120.000,00",
-    csm: "Daenerys Targaryen",
-  },
-]
-
-const sections = [
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    title: "Adoção",
-    clients: clients(),
-  },
-  {
-    id: Math.floor(Math.random() * 1000).toString(),
-    title: "Expansão",
-    clients: clients(),
-  }, {
-    id: Math.floor(Math.random() * 1000).toString(),
-    title: "Risco de churn",
-    clients: clients(),
-  }
-];
-
-let timer: any;
-const timeout = 1000;
-
-interface Task {
-  id: string;
-  section: string;
-}
 
 const ClientsKanban = (props: any) => {
   const { clients, selectedJourney, setCurrentClients } = useContext(ClientsContext);
@@ -192,124 +105,131 @@ const ClientsKanban = (props: any) => {
         <div className="flex flex-col md:flex-row">
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="flex flex-col md:flex-row items-start gap-2">
-              {groupedClients()?.map((section: any, index: any) => (
-                <Collapsible
-                  open={isMobile ? undefined : true}
-                  className="flex flex-col items-center justify-center w-full md:w-[360px] mt-[12px]  bg-white rounded-[20px] "
-                  key={section.id}
-                >
-                  <Droppable
-                    isCombineEnabled={false}
-                    isDropDisabled={false}
+              {groupedClients()?.map((section: any, index: any) => {
+                const colorStyle = {
+                  '--section-border-color': selectedJourney ? section.color : `hsl(var(--primary))`,
+                } as React.CSSProperties;
+                return (
+                  <Collapsible
+                    open={isMobile ? undefined : true}
+                    className="flex flex-col items-center justify-center w-full md:w-[360px] mt-[12px] bg-white rounded-[20px] "
                     key={section.id}
-                    droppableId={section.id}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className="flex flex-col w-full h-full px-[14px] py-[12px] rounded-[20px]"
-                      >
+                  >
+                    <Droppable
+                      isCombineEnabled={false}
+                      isDropDisabled={false}
+                      key={section.id}
+                      droppableId={section.id}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          className="flex flex-col w-full h-full px-[14px] py-[12px] rounded-[20px]"
+                        >
 
-                        <div className="flex items-center justify-between flex-row py-[16px] px-[14px] shadow-soft-cs rounded-[12px] text-[16px] bg-white font-[700] border-0 border-t-4 border-solid border-primary">
-                          {section?.title}
-                          <CollapsibleTrigger asChild className="flex md:hidden">
-                            <Button variant="ghost" size="sm">
-                              <ChevronsUpDown className="h-4 w-4" />
-                              <span className="sr-only">Toggle</span>
-                            </Button>
-                          </CollapsibleTrigger>
-                        </div>
+                          <div style={colorStyle} className="border-[--section-border-color] flex items-center justify-between flex-row py-[16px] px-[14px] shadow-soft-cs rounded-[12px] text-[16px] bg-white font-[700] border-0 border-t-4 border-solid">
+                            {section?.title}
+                            <CollapsibleTrigger asChild className="flex md:hidden">
+                              <Button variant="ghost" size="sm">
+                                <ChevronsUpDown className="h-4 w-4" />
+                                <span className="sr-only">Toggle</span>
+                              </Button>
+                            </CollapsibleTrigger>
+                          </div>
 
-                        <CollapsibleContent>
-                          {section.clients?.map((client: any, index: any) => {
-                            const statusColor = t('ClientStatus.color.' + client.status);
-                            return (
-                              <Draggable
-                                key={client.id}
-                                draggableId={client.id}
-                                index={index}
-                              >
-                                {(provided: any, snapshot: any) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    cursor={
-                                      snapshot.isDragging ? "grabbing" : "grab"
-                                    }
-                                    className="block bg-[#F7F8FF] flex-col items-start justify-center text-xs px-[14px] py-[12px] rounded-[12px] mb-[8px]"
-                                    type="button"
-                                  >
-                                    {/* Kanban card Header*/}
-                                    <div className="flex flex-row justify-between items-center w-full">
-                                      <div className="flex flex-col">
-                                        <div className="flex flex-row gap-2 items-center text-[18px] font-[400]">
-                                          <Avatar className="w-[25px] h-[25px]">
-                                            <AvatarImage
-                                              src={client?.avatarUrl ? client?.avatarUrl : `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
-                                            />
-                                          </Avatar>{client.name}
+                          <CollapsibleContent>
+                            {section.clients?.map((client: any, index: any) => {
+                              const statusColor = t('ClientStatus.color.' + client.status);
+                              return (
+                                <Draggable
+                                  key={client.id}
+                                  draggableId={client.id}
+                                  index={index}
+                                >
+                                  {(provided: any, snapshot: any) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      cursor={
+                                        snapshot.isDragging ? "grabbing" : "grab"
+                                      }
+                                      className="block bg-[#F7F8FF] flex-col items-start justify-center text-xs px-[14px] py-[12px] rounded-[12px] mb-[8px]"
+                                      type="button"
+                                    >
+                                      {/* Kanban card Header*/}
+                                      <div className="flex flex-row justify-between items-center w-full">
+                                        <div className="flex flex-col">
+                                          <div className="flex flex-row gap-2 items-center text-[18px] font-[400]">
+                                            <Avatar className="w-[25px] h-[25px]">
+                                              <AvatarImage
+                                                src={client?.avatarUrl ? client?.avatarUrl : `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
+                                              />
+                                            </Avatar>{client.name}
+                                          </div>
+                                          <div className="flex flex-row font-[400] text-[10px] mt-[6px] items-center gap-1">
+                                            Status: <div className={`bg-light-${statusColor} rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
+                                              <div className={`h-[6px] w-[6px] bg-dot-${statusColor} rounded-full inline-block mr-[8px]`} />
+                                              <div className={`text-dot-${statusColor} text-[10px] font-[700]`}>
+                                                {t('ClientStatus.label.' + client.status)}
+                                              </div>
+                                            </div>
+                                          </div>
                                         </div>
-                                        <div className="flex flex-row font-[400] text-[10px] mt-[6px] items-center gap-1">
-                                          Status: <div className={`bg-light-${statusColor} rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
-                                            <div className={`h-[6px] w-[6px] bg-dot-${statusColor} rounded-full inline-block mr-[8px]`} />
-                                            <div className={`text-dot-${statusColor} text-[10px] font-[700]`}>
-                                              {t('ClientStatus.label.' + client.status)}
+                                        <div className="flex flex-row gap-1 items-center">
+                                          <Button className="size-[28px] [&_svg]:size-[12px]" >
+                                            <Edit />
+                                          </Button>
+                                          <Button className="size-[28px] [&_svg]:size-[12px]" >
+                                            <EllipsisVertical />
+                                          </Button>
+                                        </div>
+                                      </div>
+                                      <Separator className="my-[10px]" />
+                                      {/* Kanban card Body*/}
+                                      < div className="flex flex-col w-full text-[10px] font-[400] text-light-gray" >
+                                        Descrição:
+                                        <div className="text-[12px] font-[400] text-foreground">
+                                          {client.description}
+                                        </div>
+                                        <div className="flex flex-row mt-[10px] gap-1">
+                                          <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
+                                            RR:
+                                            <div className={`font-[700]`}>
+                                              {formatter.format(client.recurringContractRevenue)}
+                                            </div>
+                                          </div>
+                                          <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
+                                            CSM:
+                                            <div className={`font-[700]`}>
+                                              {client.csmResponsible?.name}
+                                            </div>
+                                          </div>
+                                          <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
+                                            Atendimento:
+                                            <div className={`font-[700]`}>
+                                              {t('ClientServiceType.' + client.serviceType)}
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="flex flex-row gap-1 items-center">
-                                        <Button className="size-[28px] [&_svg]:size-[12px]" >
-                                          <Edit />
-                                        </Button>
-                                        <Button className="size-[28px] [&_svg]:size-[12px]" >
-                                          <EllipsisVertical />
-                                        </Button>
-                                      </div>
                                     </div>
-                                    <Separator className="my-[10px]" />
-                                    {/* Kanban card Body*/}
-                                    < div className="flex flex-col w-full text-[10px] font-[400] text-light-gray" >
-                                      Descrição:
-                                      <div className="text-[12px] font-[400] text-foreground">
-                                        {client.description}
-                                      </div>
-                                      <div className="flex flex-row mt-[10px] gap-1">
-                                        <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
-                                          RR:
-                                          <div className={`font-[700]`}>
-                                            {formatter.format(client.recurringContractRevenue)}
-                                          </div>
-                                        </div>
-                                        <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
-                                          CSM:
-                                          <div className={`font-[700]`}>
-                                            {client.csmResponsible?.name}
-                                          </div>
-                                        </div>
-                                        <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] `}>
-                                          Atendimento:
-                                          <div className={`font-[700]`}>
-                                            {t('ClientServiceType.' + client.serviceType)}
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </Draggable>
-                            )
-                          })
-                          }
-                        </CollapsibleContent>
-                        {provided.placeholder}
+                                  )}
+                                </Draggable>
+                              )
+                            })
+                            }
+                          </CollapsibleContent>
+                          {provided.placeholder}
 
-                      </div>
-                    )}
-                  </Droppable>
-                </Collapsible >
-              ))}
+                        </div>
+                      )}
+                    </Droppable>
+                  </Collapsible >
+                )
+              }
+
+              )}
             </div >
           </DragDropContext >
         </div >

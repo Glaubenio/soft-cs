@@ -28,9 +28,10 @@ export interface Task {
 }
 
 export interface JourneyStep {
-  id: string;
+  id?: string;
   name: string;
   color: string;
+  journeyId?: string;
 }
 
 export interface Journey {
@@ -46,6 +47,13 @@ export interface ClientContact {
   phone: string | null;
   jobTitle: string | null;
 }
+
+export interface JourneyStepClient {
+  id: string;
+  clientId: string;
+  journeyStepId: string;
+  journeyStep: JourneyStep | null;
+}
 export interface Client {
   id: string;
   name: string | null;
@@ -54,5 +62,6 @@ export interface Client {
   csmResponsible: User?;
   userId: string | null;
   recurringContractRevenue: number;
+  journeyStepsClients: JourneyStepClient[];
   serviceType: "HIGH" | "LOW" | "TECH" | null;
 }

@@ -1,5 +1,5 @@
 //import { PrismaClient } from "@prisma/client";
-const {PrismaClient} = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 /*
 Seed data is used to populate the database with initial data.
 */
@@ -16,7 +16,7 @@ const crmAccountsData = require("../initial-data/crm_Accounts.json");
 
 const prisma = new PrismaClient();
 
-const {faker} = require('@faker-js/faker');
+const { faker } = require('@faker-js/faker');
 
 async function main() {
     // Your seeding logic here using Prisma Client
@@ -116,7 +116,7 @@ async function main() {
                 const account = accounts[i % accounts.length];
 
                 await prisma.users.update({
-                    where: {id: user.id},
+                    where: { id: user.id },
                     data: {
                         account: {
                             connect: {
@@ -137,88 +137,97 @@ async function main() {
 
     console.log("-------- Seeding Tasks --------");
 
-    for (let i = 0; i < 10; i++) {
-        let newTask = {
-            title: faker.lorem.sentence(),
-            content: faker.lorem.paragraph(),
-            startDate: faker.date.past(),
-            endDate: faker.date.future(),
-            priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
-            status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
-        }
+    const tasks = await prisma.tasks.findMany();
+    if (tasks.length > 0) {
+        console.log("Tasks already seeded");
+    } else {
+        for (let i = 0; i < 10; i++) {
+            let newTask = {
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
+                startDate: faker.date.past(),
+                endDate: faker.date.future(),
+                priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
+                status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
+            }
 
-        try {
-            const randomUser = users[Math.floor(Math.random() * users.length)]
-            const account = accounts[Math.floor(Math.random() * accounts.length)]
+            try {
+                const randomUser = users[Math.floor(Math.random() * users.length)]
+                const account = accounts[Math.floor(Math.random() * accounts.length)]
 
-            const task = await prisma.tasks.create({
-                data: {
-                    ...newTask,
-                    responsible: {
-                        connect: {
-                            id: randomUser.id,
+                const task = await prisma.tasks.create({
+                    data: {
+                        ...newTask,
+                        responsible: {
+                            connect: {
+                                id: randomUser.id,
+                            },
                         },
-                    },
-                    account: {
-                        connect: {
-                            id: account.id,
-                        },
+                        account: {
+                            connect: {
+                                id: account.id,
+                            },
+                        }
+                    }, include: {
+                        responsible: true,
+                        account: true
                     }
-                }, include: {
-                    responsible: true,
-                    account: true
-                }
-            })
+                })
 
-        } catch (e) {
-            console.log("Error creating client: ", e)
+            } catch (e) {
+                console.log("Error creating client: ", e)
+            }
         }
+
+        console.log("-------- Seed Tasks Complete --------");
     }
 
-    console.log("-------- Seed Tasks Complete --------");
-
     console.log("-------- Seeding Clients --------");
+    const clients = await prisma.clients.findMany();
+    if (clients.length > 0) {
+        console.log("Clients already seeded");
+    } else {
+        for (let i = 0; i < 3; i++) {
+            let newClient = {
+                "name": faker.person.fullName(),
+                "description": faker.lorem.paragraph(),
+                "recurringContractRevenue": faker.number.float(),
+                "image": faker.image.url()
+            }
 
-    for (let i = 0; i < 3; i++) {
-        let newClient = {
-            "name": faker.person.fullName(),
-            "description": faker.lorem.paragraph(),
-            "recurringContractRevenue": faker.number.float(),
-            "image": faker.image.url()
-        }
+            try {
+                const randomUser = users[Math.floor(Math.random() * users.length)]
+                const tasks = await prisma.tasks.findMany()
+                const randomTasks = tasks.sort(() => 0.5 - Math.random()).slice(0, 4)
+                const account = accounts[Math.floor(Math.random() * accounts.length)]
 
-        try {
-            const randomUser = users[Math.floor(Math.random() * users.length)]
-            const tasks = await prisma.tasks.findMany()
-            const randomTasks = tasks.sort(() => 0.5 - Math.random()).slice(0, 4)
-            const account = accounts[Math.floor(Math.random() * accounts.length)]
+                console.log("Task created: ", randomTasks)
 
-            console.log("Task created: ", randomTasks)
-
-            const client = await prisma.clients.create({
-                data: {
-                    ...newClient,
-                    csmResponsible: {
-                        connect: {
-                            id: randomUser.id,
+                const client = await prisma.clients.create({
+                    data: {
+                        ...newClient,
+                        csmResponsible: {
+                            connect: {
+                                id: randomUser.id,
+                            },
                         },
+                        tasks: randomTasks,
+                        account: {
+                            connect: {
+                                id: account.id,
+                            },
+                        }
+                    }, include: {
+                        csmResponsible: true,
+                        tasks: true,
+                        account: true
                     },
-                    tasks: randomTasks,
-                    account: {
-                        connect: {
-                            id: account.id,
-                        },
-                    }
-                }, include: {
-                    csmResponsible: true,
-                    tasks: true,
-                    account: true
-                },
-            })
+                })
 
-            console.log("Client created: ", client)
-        } catch (e) {
-            console.log("Error creating client: ", e)
+                console.log("Client created: ", client)
+            } catch (e) {
+                console.log("Error creating client: ", e)
+            }
         }
     }
 

@@ -41,7 +41,8 @@ const ClientsKanban = () => {
     const kanbandColumns = [
       "TODO",
       "DOING",
-      "DONE"
+      "DONE",
+      "DELAYED"
     ]
     return kanbandColumns.map((status) => {
       return {

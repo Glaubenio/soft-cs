@@ -18,7 +18,6 @@ export const ClientsContext = createContext<ClientContextType>({
   queryParams: {},
   activeUsers: [],
   setCurrentClients: () => { },
-  selectedJourney: null,
 });
 
 export const CientsProvider = ({ children, clients, activeUsers, currentQueryParams }: {
