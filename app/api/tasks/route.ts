@@ -37,12 +37,6 @@ export async function POST(req: Request) {
             return new NextResponse("User not found", { status: 404 });
         }
 
-        const accountConnect: any = {}
-        accountConnect.account = {
-            connect: {
-                id: user.accountId,
-            },
-        }
         const task = await prismadb.tasks.create({
             data: {
                 title: title,
@@ -56,12 +50,16 @@ export async function POST(req: Request) {
                         id: responsibleId,
                     },
                 },
+                account: {
+                    connect: {
+                        id: user.accountId!,
+                    },
+                }
                 // client: {
                 //     connect: {
                 //         id: clientId,
                 //     },
-                // },
-                // account: accountConnect.account,
+                // }
             },
         });
 

@@ -55,7 +55,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
   const clientJourneyIds = () => {
     const journeyIds = client?.journeyStepsClients?.map((association) => association.journeyStep?.journeyId || "") || [];
     const uniqueJourneyIds = Array.from(new Set(journeyIds));
-    return uniqueJourneyIds
+    return uniqueJourneyIds.filter((id) => id !== null && id !== undefined);
   }
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -262,6 +262,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
                         label: journey.name,
                         value: journey.id,
                       }))}
+                      defaultValue={field.value}
                       onValueChange={field.onChange}
                       placeholder="Selecione..."
                       variant="inverted"

@@ -3,13 +3,15 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Edit, EllipsisVertical } from "lucide-react"
-import { useContext } from "react"
+import { Edit, EllipsisVertical, Trash } from "lucide-react"
+import { useContext, useState } from "react"
 import { ClientsContext } from "../clients-context"
 import { useTranslations } from "next-intl"
 import { Client } from "@/types/types"
+import { ClientForm } from "../forms/Client";
+import AlertModal from "@/components/modals/alert-modal";
 
-const ClientRow = ({ client }: { client: Client }) => {
+const ClientRow = ({ client, onEditClick, onDeleteClick }: { client: Client, onEditClick: (client: Client) => void, onDeleteClick: (client: Client) => void }) => {
   const formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -58,18 +60,18 @@ const ClientRow = ({ client }: { client: Client }) => {
       </div>
     </TableCell>
     <TableCell className="space-x-2 flex flex-row items-center">
-      <Button>
+      <Button onClick={() => onEditClick(client)} >
         <Edit className="w-4 h-4" />
       </Button>
-      <Button>
-        <EllipsisVertical className="w-4 h-4" />
+      <Button onClick={() => onDeleteClick(client)} >
+        <Trash className="w-4 h-4" />
       </Button>
     </TableCell>
   </TableRow>
 }
 
 // Desktop view
-const ClientsTable = ({ clients }: { clients: Client[] }) => <div className="hidden md:flex gap-2 py-10">
+const ClientsTable = ({ clients, onEditClick, onDeleteClick }: { clients: Client[], onEditClick: (client: Client) => void, onDeleteClick: (client: Client) => void }) => <div className="hidden md:flex gap-2 py-10">
   <Table className="bg-white rounded-[20px]">
     <TableHeader>
       <TableRow>
@@ -88,6 +90,8 @@ const ClientsTable = ({ clients }: { clients: Client[] }) => <div className="hid
         <ClientRow
           key={index}
           client={client}
+          onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
         />
       ))}
     </TableBody>
@@ -95,7 +99,7 @@ const ClientsTable = ({ clients }: { clients: Client[] }) => <div className="hid
 </div>
 
 // Mobile view
-const ClientsCardList = ({ clients }: { clients: Client[] }) => {
+const ClientsCardList = ({ clients, onDeleteClick, onEditClick }: { clients: Client[], onEditClick: (client: Client) => void, onDeleteClick: (client: Client) => void }) => {
   const t = useTranslations()
   const formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -132,11 +136,11 @@ const ClientsCardList = ({ clients }: { clients: Client[] }) => {
 
           </div>
           <div className="flex flex-row gap-1 items-center">
-            <Button className="size-[28px] [&_svg]:size-[12px]" >
+            <Button onClick={() => onEditClick(client)} className="size-[28px] [&_svg]:size-[12px]" >
               <Edit />
             </Button>
-            <Button className="size-[28px] [&_svg]:size-[12px]" >
-              <EllipsisVertical />
+            <Button onClick={() => onDeleteClick(client)} className="size-[28px] [&_svg]:size-[12px]" >
+              <Trash />
             </Button>
           </div>
         </div>
@@ -173,9 +177,38 @@ const ClientsCardList = ({ clients }: { clients: Client[] }) => {
 }
 
 export const ClientsList = ({ data }: any) => {
-  const { clients } = useContext(ClientsContext)
+  const [clientFormInfo, setClientFormInfo] = useState<{ open: boolean, client?: Client }>({
+    open: false,
+    client: undefined
+  });
+  const [deleteModalInfo, setDeleteModalInfo] = useState<{ open: boolean; client?: Client }>({
+    open: false,
+    client: undefined
+  });
+
+
+  const { clients, deleteClient, deleting } = useContext(ClientsContext)
   return <div>
-    <ClientsTable clients={clients} />
-    <ClientsCardList clients={clients} />
+    <AlertModal
+      isOpen={deleteModalInfo.open}
+      onClose={() => setDeleteModalInfo(prev => ({ ...prev, open: false }))}
+      onConfirm={() => deleteClient(deleteModalInfo.client!, () => setDeleteModalInfo({ open: false, client: undefined }))}
+      loading={deleting}
+    />
+    {
+      clientFormInfo.open &&
+      <ClientForm
+        open={clientFormInfo.open}
+        setOpen={(open) => setClientFormInfo(prev => ({ ...prev, open: open }))}
+        client={clientFormInfo.client} />
+    }
+
+    <ClientsTable
+      clients={clients}
+      onEditClick={(client) => setClientFormInfo({ open: true, client: client })}
+      onDeleteClick={(client) => setDeleteModalInfo({ open: true, client: client })} />
+    <ClientsCardList clients={clients}
+      onEditClick={(client) => setClientFormInfo({ open: true, client: client })}
+      onDeleteClick={(client) => setDeleteModalInfo({ open: true, client: client })} />
   </div>
 }

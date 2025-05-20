@@ -17,9 +17,7 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
         endDate,
         priority,
         status,
-        responsibleId,
-        clientId
-    } = body;
+        responsibleId, } = body;
 
     if (!session) {
         return new NextResponse("Unauthenticated", { status: 401 });

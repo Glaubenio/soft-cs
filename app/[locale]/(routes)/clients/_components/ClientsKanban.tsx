@@ -1,32 +1,33 @@
 "use client";
-
-import axios from "axios";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRouter } from "next/navigation";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { ChevronsUpDown, Edit, EllipsisVertical } from "lucide-react";
+import { useContext, useState } from "react";
+import { ChevronsUpDown, Edit, EllipsisVertical, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import AlertModal from "@/components/modals/alert-modal";
-import LoadingComponent from "@/components/LoadingComponent";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ClientsContext } from "../clients-context";
 import { useTranslations } from "next-intl";
+import { ClientForm } from "../forms/Client";
+import { Client } from "@/types/types";
 
 const ClientsKanban = (props: any) => {
-  const { clients, selectedJourney, setCurrentClients } = useContext(ClientsContext);
-  const [data, setData]: any = useState([]);
-  const router = useRouter();
-
-  const { toast } = useToast();
+  const { clients, selectedJourney, setCurrentClients, deleteClient, deleting } = useContext(ClientsContext);
+  const [clientFormInfo, setClientFormInfo] = useState<{ open: boolean, client?: Client }>({
+    open: false,
+    client: undefined
+  });
+  const [deleteModalInfo, setDeleteModalInfo] = useState<{ open: boolean; client?: Client }>({
+    open: false,
+    client: undefined
+  });
 
   const t = useTranslations()
 
@@ -101,6 +102,19 @@ const ClientsKanban = (props: any) => {
   });
   return (
     <>
+      <AlertModal
+        isOpen={deleteModalInfo.open}
+        onClose={() => setDeleteModalInfo(prev => ({ ...prev, open: false }))}
+        onConfirm={() => deleteClient(deleteModalInfo.client!, () => setDeleteModalInfo({ open: false, client: undefined }))}
+        loading={deleting}
+      />
+      {
+        clientFormInfo.open &&
+        <ClientForm
+          open={clientFormInfo.open}
+          setOpen={(open) => setClientFormInfo(prev => ({ ...prev, open: open }))}
+          client={clientFormInfo.client} />
+      }
       <div className="flex flex-col space-y-2">
         <div className="flex flex-col md:flex-row">
           <DragDropContext onDragEnd={onDragEnd}>
@@ -177,11 +191,16 @@ const ClientsKanban = (props: any) => {
                                           </div>
                                         </div>
                                         <div className="flex flex-row gap-1 items-center">
-                                          <Button className="size-[28px] [&_svg]:size-[12px]" >
+                                          <Button
+                                            onClick={() => setClientFormInfo({ open: true, client: client })}
+                                            className="size-[28px] [&_svg]:size-[12px]" >
                                             <Edit />
                                           </Button>
-                                          <Button className="size-[28px] [&_svg]:size-[12px]" >
-                                            <EllipsisVertical />
+                                          <Button
+                                            onClick={() => setDeleteModalInfo({ open: true, client: client })}
+                                            className="size-[28px] [&_svg]:size-[12px]"
+                                          >
+                                            <Trash />
                                           </Button>
                                         </div>
                                       </div>
