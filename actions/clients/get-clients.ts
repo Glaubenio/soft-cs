@@ -1,7 +1,5 @@
 import {prismadb} from "@/lib/prisma";
 import {client_service_types, client_statuses} from "@prisma/client";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/lib/auth";
 import {getUser} from "@/actions/get-user";
 
 export const getClients = async (name?: string, serviceType?: string[], csmResponsible?: string[], status?: string[]) => {
