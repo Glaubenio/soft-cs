@@ -18,6 +18,21 @@ const prisma = new PrismaClient();
 
 const {faker} = require('@faker-js/faker');
 
+const tasksDataGenerator = (quantity: number) => {
+    const tasks = [];
+    for (let i = 0; i < quantity; i++) {
+        tasks.push({
+            title: faker.lorem.sentence(),
+            content: faker.lorem.paragraph(),
+            startDate: faker.date.past(),
+            endDate: faker.date.future(),
+            priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
+            status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
+        });
+    }
+    return tasks;
+}
+
 async function main() {
     // Your seeding logic here using Prisma Client
     console.log("-------- Seeding DB --------");
@@ -191,34 +206,7 @@ async function main() {
             const randomUser = users[Math.floor(Math.random() * users.length)]
             const account = accounts[Math.floor(Math.random() * accounts.length)]
 
-            const newTasks = []
-
-            newTasks.push({
-                title: faker.lorem.sentence(),
-                content: faker.lorem.paragraph(),
-                startDate: faker.date.past(),
-                endDate: faker.date.future(),
-                priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
-                status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
-            })
-
-            newTasks.push({
-                title: faker.lorem.sentence(),
-                content: faker.lorem.paragraph(),
-                startDate: faker.date.past(),
-                endDate: faker.date.future(),
-                priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
-                status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
-            })
-
-            newTasks.push({
-                title: faker.lorem.sentence(),
-                content: faker.lorem.paragraph(),
-                startDate: faker.date.past(),
-                endDate: faker.date.future(),
-                priority: faker.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
-                status: faker.helpers.arrayElement(["TODO", "DOING", "DONE", "DELAYED"]),
-            })
+            const newTasks = tasksDataGenerator(5)
 
             const client = await prisma.clients.create({
                 data: {
