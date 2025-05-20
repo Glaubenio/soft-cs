@@ -14,6 +14,9 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children?: React.ReactNode;
+  hidesCloseButton?: boolean;
+  icon?: React.ReactNode;
+  className?: string;
 }
 
 export default function Modal({
@@ -22,6 +25,9 @@ export default function Modal({
   isOpen,
   onClose,
   children,
+  hidesCloseButton = false,
+  className,
+  icon = null,
 }: ModalProps) {
   const onChange = (open: boolean) => {
     if (!open) {
@@ -31,10 +37,14 @@ export default function Modal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+      <DialogContent className={className} hidesCloseButton={hidesCloseButton}>
+        <DialogHeader className="flex items-center justify-center flex-col">
+          {icon && <div className="flex size-[66px] bg-light-purple justify-center items-center rounded-full">
+            {icon}
+          </div>
+          }
+          <DialogTitle className="font-bold text-[18px] mt-[16px]">{title}</DialogTitle>
+          <DialogDescription className="text-[12px] text-center">{description}</DialogDescription>
         </DialogHeader>
         <div>{children}</div>
       </DialogContent>

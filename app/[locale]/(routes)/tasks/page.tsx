@@ -36,6 +36,11 @@ const TasksPage = async ({
 
             <Suspense fallback={<SuspenseLoading />}>
                 <TasksView
+                    filters={{
+                        status,
+                        priority,
+                        responsibleId
+                    }}
                     activeTab={activeTab}
                     tasks={tasks}
                     clients={clients}

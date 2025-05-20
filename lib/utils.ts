@@ -18,6 +18,7 @@ export function hexToRgbA(hex: string, alpha: number) {
   throw new Error('Bad Hex');
 }
 
+
 export function generateRandomPassword() {
   const length = 10;
   const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

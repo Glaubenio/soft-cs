@@ -2,7 +2,12 @@ import { prismadb } from "@/lib/prisma";
 import { client_service_types, client_statuses } from "@prisma/client";
 import { getUser } from "@/actions/get-user";
 
-export const getClients = async (includeAssociations: boolean = true, name?: string, serviceType?: string[], csmResponsible?: string[], status?: string[]) => {
+export const getClients = async (
+    includeAssociations: boolean = true,
+    name?: string,
+    serviceType?: string[],
+    csmResponsible?: string[],
+    status?: string[]) => {
     let whereClause: any = {};
 
     if (name && name.length > 0) {
@@ -24,7 +29,7 @@ export const getClients = async (includeAssociations: boolean = true, name?: str
     }
 
     if (csmResponsible && csmResponsible.length > 0) {
-        whereClause.responsibleId = {
+        whereClause.userId = {
             in: csmResponsible
         };
     }

@@ -15,13 +15,24 @@ interface Props {
   activeTab: string;
   activeUsers: User[],
   queryParams: Record<string, string | string[] | undefined>;
+  filters: {
+    status: string[]
+    serviceType: string[]
+    responsibleId: string[]
+    name: string
+  }
 }
-const ClientsView = ({ journeys, activeTab, clients, activeUsers, queryParams }: Props) => {
+const ClientsView = ({ journeys, activeTab, clients, activeUsers, queryParams, filters }: Props) => {
   const router = useRouter();
   return (
     <>
       <JourneysProvider journeys={journeys}>
-        <CientsProvider currentQueryParams={queryParams} clients={clients} activeUsers={activeUsers}>
+        <CientsProvider
+          currentQueryParams={queryParams}
+          filters={filters}
+          clients={clients}
+          activeUsers={activeUsers}
+        >
           <Tabs defaultValue={activeTab}>
             <TabsList className="flex md:flex-row flex-col-reverse justify-between md:items-center gap-1 md:gap-0 items-start w-full">
               <div >

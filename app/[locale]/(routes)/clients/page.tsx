@@ -9,6 +9,7 @@ import SuspenseLoading from "@/components/loadings/suspense";
 import { getJourneys } from "@/actions/journeys/get-journeys";
 import { getClients } from "@/actions/clients/get-clients";
 import { getActiveUsers } from "@/actions/get-users";
+import { statuses } from "../invoice/data/data";
 
 export const maxDuration = 300;
 
@@ -18,12 +19,22 @@ const ClientPage = async ({ searchParams }: {
   const session: Session | null = await getServerSession(authOptions);
 
   if (!session) return redirect("/sign-in");
-  const clients = await getClients();
+
   const journeys = await getJourneys();
   const activeUsers = await getActiveUsers();
 
   const queryParams = await searchParams;
-
+  const name = (queryParams.name as string) || '';
+  const serviceType = (queryParams.serviceType as string)?.split(',').filter((a) => a.length > 0) || [];
+  const status = (queryParams.status as string)?.split(',').filter((a) => a.length > 0) || [];
+  const responsibleId = (queryParams.responsibleId as string)?.split(',').filter((a) => a.length > 0) || [];
+  const clients = await getClients(
+    true,
+    name,
+    serviceType,
+    responsibleId,
+    status
+  );
   const activeTab: string = (queryParams.activeTab as string) || 'list'
 
   return (
@@ -34,6 +45,12 @@ const ClientPage = async ({ searchParams }: {
           queryParams={queryParams}
           clients={clients}
           activeTab={activeTab}
+          filters={{
+            status: status,
+            serviceType: serviceType,
+            responsibleId: responsibleId,
+            name: name
+          }}
           journeys={journeys} />
 
       </Suspense>

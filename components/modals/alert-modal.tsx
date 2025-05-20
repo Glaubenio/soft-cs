@@ -6,6 +6,7 @@ import Modal from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 
 import { Icons } from "../ui/icons";
+import { CheckCircle, Trash, XCircle } from "lucide-react";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -32,17 +33,22 @@ const AlertModal = ({
 
   return (
     <Modal
-      title="Tem certeza?"
-      description="Essa ação não pode ser desfeita."
+      icon={<Trash className="text-primary" />}
+      hidesCloseButton={true}
+      className="!w-auto !rounded-[12px] max-w-[400px]"
+      title="Tem certeza que deseja excluir?"
+      description={"Esta ação não poderá ser desfeita.\nO item será removido permanentemente."}
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className="pt-6 space-x-2 flex items-center justify-end w-full ">
-        <Button disabled={loading} variant={"outline"} onClick={onClose}>
+      <div className="pt-6 space-x-2 flex items-center justify-center w-full ">
+        <Button disabled={loading} onClick={onClose}>
           Cancelar
+          <XCircle />
         </Button>
-        <Button disabled={loading} variant={"destructive"} onClick={onConfirm}>
-          {loading ? <Icons.spinner className="animate-spin" /> : "Continuar"}
+        <Button disabled={loading} className="border-destructive text-destructive" variant={"outline"} onClick={onConfirm}>
+          Excluir
+          {loading ? <Icons.spinner className="animate-spin" /> : <CheckCircle className="text-destructive" />}
         </Button>
       </div>
     </Modal>

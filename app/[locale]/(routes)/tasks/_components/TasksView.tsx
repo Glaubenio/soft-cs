@@ -14,9 +14,14 @@ interface Props {
   activeUsers: User[]
   activeTab: string
   clients: Client[]
+  filters: {
+    status: string[]
+    priority: string[]
+    responsibleId: string[]
+  }
 }
 
-const TasksView = ({ tasks, activeUsers, activeTab, clients }: Props) => {
+const TasksView = ({ tasks, activeUsers, activeTab, clients, filters }: Props) => {
   const router = useRouter();
   const tabTriggerClass = `data-[state=active]:bg-primary 
                           data-[state=active]:text-white  
@@ -35,6 +40,7 @@ const TasksView = ({ tasks, activeUsers, activeTab, clients }: Props) => {
   return (
     <TasksProvider
       tasks={tasks}
+      filters={filters}
       clients={clients}
       activeUsers={activeUsers}
     >

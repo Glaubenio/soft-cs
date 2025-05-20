@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 const SearchInput = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
   const disabled = props.value === '' || props.value === undefined || props.disabled
 
+
   return (
     <div className="relative">
       <Input

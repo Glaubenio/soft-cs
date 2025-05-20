@@ -1,9 +1,11 @@
+'use client';
 import { Client, Journey, User } from "@/types/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { JourneysContext } from "./journeys-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import useDebounce from "@/hooks/useDebounce";
 
 interface ClientContextType {
   clients: Client[];
@@ -14,6 +16,15 @@ interface ClientContextType {
   selectedJourney?: Journey;
   deleteClient: (client: Client, onFinish: () => void) => void;
   deleting: boolean;
+  handleSelectedFilter: (name: 'status' | 'serviceType' | 'responsibleId', value: string) => void;
+  submitFilters: () => void;
+  changeName: (name: string) => void;
+  currentFilters: {
+    status: string[]
+    serviceType: string[]
+    responsibleId: string[]
+    name: string
+  }
 }
 
 export const ClientsContext = createContext<ClientContextType>({
@@ -24,14 +35,34 @@ export const ClientsContext = createContext<ClientContextType>({
   setCurrentClients: () => { },
   deleteClient: () => { },
   deleting: false,
+  handleSelectedFilter: () => { },
+  submitFilters: () => { },
+  changeName: () => { },
+  currentFilters: {
+    status: [],
+    serviceType: [],
+    responsibleId: [],
+    name: ''
+  },
 });
 
-export const CientsProvider = ({ children, clients, activeUsers, currentQueryParams }: {
-  clients: Client[],
-  activeUsers: User[],
-  children: React.ReactNode,
-  currentQueryParams: Record<string, string | string[] | undefined>;
-}) => {
+export const CientsProvider = ({
+  children,
+  clients,
+  activeUsers,
+  currentQueryParams,
+  filters }: {
+    clients: Client[],
+    activeUsers: User[],
+    children: React.ReactNode,
+    currentQueryParams: Record<string, string | string[] | undefined>;
+    filters: {
+      status: string[]
+      serviceType: string[]
+      responsibleId: string[]
+      name: string
+    }
+  }) => {
   const router = useRouter();
   const { toast } = useToast();
   const { journeys } = useContext(JourneysContext);
@@ -40,6 +71,45 @@ export const CientsProvider = ({ children, clients, activeUsers, currentQueryPar
   // Qualquer outro valor será um id de jornada
   const [queryParams, setQueryParams] = useState<Record<string, string | string[] | undefined>>(currentQueryParams);
   const [deleting, setDeleting] = useState(false);
+  const [currentFilters, setFilters] = useState<{
+    status: string[]
+    serviceType: string[]
+    responsibleId: string[]
+    name: string
+  }>(filters)
+
+  const changeName = (name: string) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      name: name,
+    }));
+
+  }
+
+  const handleSelectedFilter = (name: 'status' | 'serviceType' | 'responsibleId', value: string) => {
+    if (currentFilters[name]?.includes(value)) {
+      setFilters({
+        ...currentFilters,
+        [name]: currentFilters[name].filter((s) => s !== value),
+      })
+    } else {
+      setFilters({
+        ...currentFilters,
+        [name]: [...currentFilters[name], value],
+      })
+    }
+  }
+
+  const submitFilters = () => {
+    router.push(`/clients?status=${currentFilters.status.join(',')}` +
+      `&serviceType=${currentFilters.serviceType.join(',')}` +
+      `&name=${currentFilters.name}` +
+      `&responsibleId=${currentFilters.responsibleId.join(',')}`)
+  }
+
+  useEffect(() => {
+    submitFilters();
+  }, [currentFilters.name])
 
   useEffect(() => {
     const newSearchParams = new URLSearchParams(window.location.search).toString();
@@ -85,7 +155,11 @@ export const CientsProvider = ({ children, clients, activeUsers, currentQueryPar
       selectedJourney,
       setQueryParams: updateQueryParams,
       queryParams,
-      activeUsers
+      activeUsers,
+      handleSelectedFilter,
+      submitFilters,
+      currentFilters: currentFilters,
+      changeName
     }}>
       {children}
     </ClientsContext.Provider>

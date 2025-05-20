@@ -11,36 +11,10 @@ import { useRouter } from "next/navigation"
 import { TasksContext } from "../tasks-context"
 
 const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => {
-  const router = useRouter()
-  const { activeUsers } = useContext(TasksContext)
-  const [filters, setFilters] = useState<{
-    status: string[]
-    priority: string[]
-    responsibleId: string[]
-  }>({ status: [], priority: [], responsibleId: [] })
-
-  const handleSelectedFilter = (name: 'status' | 'priority' | 'responsibleId', value: string) => {
-    if (filters[name]?.includes(value)) {
-      setFilters({
-        ...filters,
-        [name]: filters[name].filter((s) => s !== value),
-      })
-    } else {
-      setFilters({
-        ...filters,
-        [name]: [...filters[name], value],
-      })
-    }
-  }
+  const { activeUsers, handleSelectedFilter, submitFilters, currentFilters } = useContext(TasksContext)
 
   const t = useTranslations()
-
-  const submitFilters = () => {
-    router.push(`/tasks?status=${filters.status.join(',')}` +
-      `&priority=${filters.priority.join(',')}` +
-      `&responsibleId=${filters.responsibleId.join(',')}`)
-  }
-
+  const { status, priority, responsibleId } = currentFilters
   return <DropdownMenu>
     <DropdownMenuTrigger asChild>
       {triggerButton}
@@ -50,13 +24,19 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <div className="flex items-center gap-2 px-2">
-          <Checkbox onCheckedChange={() => handleSelectedFilter("status", "TODO")} />{t('TaskStatus.TODO')}
+          <Checkbox
+            defaultChecked={status.includes("TODO")}
+            onCheckedChange={() => handleSelectedFilter("status", "TODO")} />{t('TaskStatus.TODO')}
         </div>
         <div className="flex items-center gap-2 px-2">
-          <Checkbox onCheckedChange={() => handleSelectedFilter("status", "DOING")} />{t('TaskStatus.DOING')}
+          <Checkbox
+            defaultChecked={status.includes("DOING")}
+            onCheckedChange={() => handleSelectedFilter("status", "DOING")} />{t('TaskStatus.DOING')}
         </div>
         <div className="flex items-center gap-2 px-2">
-          <Checkbox onCheckedChange={() => handleSelectedFilter("status", "DONE")} />{t('TaskStatus.DONE')}
+          <Checkbox
+            defaultChecked={status.includes("DONE")}
+            onCheckedChange={() => handleSelectedFilter("status", "DONE")} />{t('TaskStatus.DONE')}
         </div>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
@@ -65,16 +45,20 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
       <DropdownMenuGroup>
         <div className="flex items-center gap-2 px-2">
           <Checkbox
+            defaultChecked={priority.includes("HIGH")}
+
             onCheckedChange={() => handleSelectedFilter("priority", "HIGH")}
           />{t('TaskPriority.label.HIGH')}
         </div>
         <div className="flex items-center gap-2 px-2">
           <Checkbox
+            defaultChecked={priority.includes("MEDIUM")}
             onCheckedChange={() => handleSelectedFilter("priority", "MEDIUM")}
           />{t('TaskPriority.label.MEDIUM')}
         </div>
         <div className="flex items-center gap-2 px-2">
           <Checkbox
+            defaultChecked={priority.includes("LOW")}
             onCheckedChange={() => handleSelectedFilter("priority", "LOW")}
           />{t('TaskPriority.label.LOW')}
         </div>
@@ -85,6 +69,7 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
       <DropdownMenuGroup>
         {activeUsers.map((user: User) => <div key={user.id} className="flex items-center gap-2 px-2">
           <Checkbox
+            defaultChecked={responsibleId.includes(user.id)}
             onCheckedChange={() => handleSelectedFilter("responsibleId", user.id)}
           />{user.name}
         </div>
