@@ -27,29 +27,16 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
   }
 
   try {
-    const user = await prismadb.users.findUnique({
-      where: {
-        id: session.user.id,
-      }
-    })
-
-    if (!user) {
-      return new NextResponse("User not found", { status: 404 });
-    }
     const client = await prismadb.clients.findUnique({
+      include: {
+        journeyStepsClients: true,
+      },
       where: {
         id: clientId,
       }
     })
     if (!client) {
       return new NextResponse("Client not found", { status: 404 });
-    }
-
-    const accountConnect: any = {}
-    accountConnect.account = {
-      connect: {
-        id: user.accountId,
-      },
     }
     const updatedClient = await prismadb.clients.update({
       where: {
@@ -64,11 +51,6 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
         recurringContractRevenue,
       },
     });
-    await prismadb.journey_steps_clients.deleteMany({
-      where: {
-        clientId: clientId,
-      }
-    })
     const journeys = await prismadb.journeys.findMany({
       include: {
         journeySteps: true,
@@ -79,7 +61,28 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
         },
       },
     });
-    const syncStepsQuery = journeys.map(async (journey) => {
+    const newJourneys = journeys.filter((journey) => {
+      const journeySteps = journey.journeySteps.map((step) => step.id);
+      return !client.journeyStepsClients.some((clientStep) => {
+        return journeySteps.includes(clientStep.journeyStepId);
+      });
+    });
+
+    console.log("New Journeys", newJourneys);
+    const deletedJourneys = client.journeyStepsClients.filter((clientStep) => {
+      const journeySteps = journeys.map((journey) => journey.journeySteps.map((step) => step.id));
+      return !journeySteps.flat().includes(clientStep.journeyStepId);
+    });
+    console.log("Deleted Journeys", deletedJourneys);
+    await prismadb.journey_steps_clients.deleteMany({
+      where: {
+        id: {
+          in: deletedJourneys.map((journey) => journey.id),
+        },
+      }
+    })
+    const syncStepsQuery = newJourneys.map(async (journey) => {
+
       const firstStep = journey.journeySteps[0];
       await prismadb.journey_steps_clients.create({
         data: {

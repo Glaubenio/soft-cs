@@ -19,7 +19,11 @@ export const ClientsToolbar = ({ activeTab }: Props) => {
   const { selectedJourney } = useContext(ClientsContext);
 
   return <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-    <ClientForm open={clientFormOpen} setOpen={setClientFormOpen} />
+    {
+      clientFormOpen &&
+      <ClientForm open={clientFormOpen} setOpen={setClientFormOpen} />
+    }
+
     <JourneysDialog open={journeysDialogOpen} setOpen={setJourneysDialogOpen} />
     {
       activeTab === 'kanban' && <div className="flex flex-row gap-1 ">

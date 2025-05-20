@@ -54,8 +54,10 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
 
   const clientJourneyIds = () => {
     const journeyIds = client?.journeyStepsClients?.map((association) => association.journeyStep?.journeyId || "") || [];
+    console.log("clientJourneyIds", journeyIds)
     const uniqueJourneyIds = Array.from(new Set(journeyIds));
-    return uniqueJourneyIds.filter((id) => id !== null && id !== undefined);
+    console.log("Unique journey ids: ", uniqueJourneyIds)
+    return uniqueJourneyIds.filter((id) => Boolean(id));
   }
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -66,7 +68,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
       userId: client?.userId || undefined,
       recurringContractRevenue: client?.recurringContractRevenue || 0,
       serviceType: client?.serviceType || "LOW",
-      jorneyIds: clientJourneyIds(),
+      journeyIds: clientJourneyIds(),
     }
   })
 
@@ -249,30 +251,33 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
           <div className="flex flex-col mt-[16px] w-full">
             <FormField
               control={form.control}
-              name="jorneyIds"
-              render={({ field }) => (
-                <FormItem className="flex flex-col w-full">
-                  <FormLabel className="text-[12px] font-[400] text-light-gray">Jornadas:</FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      {...field}
-                      className="mt-[6px] bg-lighter-gray"
-                      modalPopover={true}
-                      options={journeys.map((journey) => ({
-                        label: journey.name,
-                        value: journey.id,
-                      }))}
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder="Selecione..."
-                      variant="inverted"
-                      animation={2}
-                      maxCount={3}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              name="journeyIds"
+              render={({ field }) => {
+                console.log("field.value", field.value)
+                return (
+                  <FormItem className="flex flex-col w-full">
+                    <FormLabel className="text-[12px] font-[400] text-light-gray">Jornadas:</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        {...field}
+                        className="mt-[6px] bg-lighter-gray"
+                        modalPopover={true}
+                        options={journeys.map((journey) => ({
+                          label: journey.name,
+                          value: journey.id,
+                        }))}
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                        placeholder="Selecione..."
+                        variant="inverted"
+                        animation={2}
+                        maxCount={3}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
             />
           </div>
           <div className="flex flex-col gap-2 mt-[16px] bg-lighter-gray px-[14px] py-[12px] rounded-[20px] mt-[16px]">

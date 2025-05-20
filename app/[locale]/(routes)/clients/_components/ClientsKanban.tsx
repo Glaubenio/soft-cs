@@ -6,7 +6,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { useContext, useState } from "react";
-import { ChevronsUpDown, Edit, EllipsisVertical, Trash } from "lucide-react";
+import { ChevronsUpDown, Edit, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import AlertModal from "@/components/modals/alert-modal";
@@ -17,6 +17,7 @@ import { ClientsContext } from "../clients-context";
 import { useTranslations } from "next-intl";
 import { ClientForm } from "../forms/Client";
 import { Client } from "@/types/types";
+import axios from "axios";
 
 const ClientsKanban = (props: any) => {
   const { clients, selectedJourney, setCurrentClients, deleteClient, deleting } = useContext(ClientsContext);
@@ -76,17 +77,51 @@ const ClientsKanban = (props: any) => {
     }
     );
     setCurrentClients(updatedClients)
-    // await axios.put(`/api/clients/${clientToUpdate.id}`, {
-    //   ...clientToUpdate,
-    //   status: destinationStatus,
-    // })
+    await axios.put(`/api/clients/${clientToUpdate.id}`, {
+      ...clientToUpdate,
+      status: destinationStatus,
+    })
+  }
+
+  const reorderForJourney = async (source: any, destination: any) => {
+    const { droppableId: sourceJourneyStepId, index: sourceIndex } = source;
+    const { droppableId: destinationJourneyStepId } = destination;
+    const clientToUpdate = groupedClients().find((section: any) => section.id === sourceJourneyStepId)?.clients[sourceIndex];
+    if (!clientToUpdate) {
+      console.log("Client not found");
+      return;
+    }
+    const updatedClients = clients.map((client: any) => {
+      if (client.id === clientToUpdate.id) {
+        const updatedJourneySteps = client.journeyStepsClients.map((stepClientAssociation: any) => {
+          if (stepClientAssociation.journeyStepId === sourceJourneyStepId) {
+            return {
+              ...stepClientAssociation,
+              journeyStepId: destinationJourneyStepId,
+            }
+          }
+          return stepClientAssociation;
+        });
+        return {
+          ...client,
+          journeyStepsClients: updatedJourneySteps,
+        };
+      }
+      return client;
+    });
+    setCurrentClients(updatedClients)
+    await axios.put(`/api/clients/${clientToUpdate.id}/updateJourneyStep`, {
+      ...clientToUpdate,
+      sourceJourneyStepId: sourceJourneyStepId,
+      newJourneyStepId: destinationJourneyStepId,
+    })
   }
 
 
   const onDragEnd = async ({ source, destination }: DropResult) => {
     if (!destination) return;
     if (selectedJourney) {
-      // TODO: Atualizar etapa na jornada vizualizada
+      await reorderForJourney(source, destination)
     } else {
       await reorderForStatus(source, destination)
     }
