@@ -1,7 +1,6 @@
 import {prismadb} from "@/lib/prisma";
 import {task_priorities, task_status} from "@prisma/client";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/lib/auth";
+import {getUser} from "@/actions/get-user";
 
 export const getTasks = async (priority?: string[], status?: string[], responsibleId?: string[]) => {
     let whereClause: any = {};
@@ -23,12 +22,7 @@ export const getTasks = async (priority?: string[], status?: string[], responsib
         };
     }
 
-    const session = await getServerSession(authOptions);
-    const current_user = await prismadb.users.findUnique({
-        where: {
-            id: session?.user?.id,
-        }
-    });
+    const current_user = await getUser();
 
     if (!current_user) {
         throw new Error("User not found");

@@ -195,7 +195,7 @@ async function main() {
             }
         }
         console.log("-------- Seed Tasks Complete --------");
-    }else {
+    } else {
         console.log("Tasks already seeded");
     }
 
@@ -206,7 +206,7 @@ async function main() {
 
         for (const journey of journeysData) {
             await prisma.journeys.create({
-                data:{
+                data: {
                     ...journey
                 },
                 include: {
@@ -238,7 +238,7 @@ async function main() {
 
                 const newTasks = tasksDataGenerator(5)
 
-                const client = await prisma.clients.create({
+                await prisma.clients.create({
                     data: {
                         ...newClient,
                         csmResponsible: {
@@ -262,15 +262,53 @@ async function main() {
                         account: true
                     },
                 })
-
-                console.log("Client created: ", client)
-
             } catch (e) {
                 console.log("Error creating client: ", e)
             }
         }
-    }else {
+    } else {
         console.log("Clients already seeded");
+    }
+
+    const journeysStepsCount = await prisma.journey_steps_clients.count();
+
+    if (journeysStepsCount === 0) {
+        console.log("-------- Seeding Journey Steps Clients --------");
+
+        try {
+            const clients = await prisma.clients.findMany();
+
+            const journeySteps = await prisma.journey_steps.findMany({
+                where: {
+                    position: 0
+                },
+            })
+
+            if (clients.length > 0) {
+                for (let i = 0; i < clients.length; i++) {
+                    await prisma.journey_steps_clients.create({
+                        data: {
+                            journeyStep: {
+                                connect: {
+                                    id: journeySteps[i % 2].id,
+                                },
+                            },
+                            client: {
+                                connect: {
+                                    id: clients[i].id,
+                                },
+                            }
+                        }
+                    })
+                }
+            }
+
+            console.log("-------- Seed Journey Steps Clients completed --------");
+        } catch (e) {
+            console.log("Error creating journey steps clients: ", e)
+        }
+    } else {
+        console.log("Journey Steps Clients already seeded");
     }
 
     console.log("-------- Seed DB completed --------");
