@@ -25,7 +25,7 @@ export const POST = async (req: Request, props: { params: Promise<{ clientId: st
 
         await prismadb.clients.update({
             where: {
-                clientId: clientId,
+                id: clientId,
             },
             data: {
                 contacts: body,
