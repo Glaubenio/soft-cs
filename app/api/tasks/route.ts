@@ -45,6 +45,7 @@ export async function POST(req: Request) {
                 endDate: endDate,
                 priority: priority,
                 status: status,
+                clientId: clientId,
                 responsible: {
                     connect: {
                         id: responsibleId,
@@ -55,11 +56,6 @@ export async function POST(req: Request) {
                         id: user.accountId!,
                     },
                 }
-                // client: {
-                //     connect: {
-                //         id: clientId,
-                //     },
-                // }
             },
         });
 

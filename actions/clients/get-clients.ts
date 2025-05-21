@@ -45,6 +45,12 @@ export const getClients = async (
     return await prismadb.clients.findMany({
         where: whereClause,
         include: {
+            tasks: {
+                take: 3,
+                include: {
+                    responsible: includeAssociations,
+                }
+            },
             csmResponsible: includeAssociations,
             journeyStepsClients: {
                 include: {

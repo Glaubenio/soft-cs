@@ -108,6 +108,7 @@ export const CientsProvider = ({
   }
 
   useEffect(() => {
+    
     submitFilters();
   }, [currentFilters.name])
 

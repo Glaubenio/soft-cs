@@ -12,7 +12,7 @@ type Props = {
 
 const ClientsMenu = ({ open, title }: Props) => {
   const pathname = usePathname();
-  const isPath = pathname.includes("clients");
+  const isPath = pathname.endsWith("clients");
   return (
     <div className={`flex flex-row items-center ${isPath && "mb-7 md:mb-0"}`}>
       <Link

@@ -25,6 +25,7 @@ import MoneyInput from "@/components/ui/money-input";
 import { TableRow } from "@tremor/react";
 import { JourneysContext } from "../journeys-context";
 import { MultiSelect } from "@/components/ui/multiselect";
+import Link from "next/link";
 
 
 interface Props {
@@ -102,7 +103,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
         setOpen={(open) => setContactFormInfo(prev => ({ ...prev, open: open }))}
         open={contactFormInfo.open}
       />}
-    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px] w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] overflow-scroll">
+    <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[780px] w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] overflow-scroll">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} id="client-form" className="flex flex-col gap-0">
           <DialogHeader className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
@@ -351,74 +352,84 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
           <div className="flex flex-col gap-2 mt-[16px] bg-lighter-gray px-[14px] py-[12px] rounded-[20px] mt-[16px]">
             <div className="flex flex-row justify-between items-center">
               <div className="text-[16px] font-[700]">Tarefas</div>
-              <Button
-                type="button"
-                disabled={!client}
-                variant="ghost"
-                className="text-primary text-[12px]">
-                <PlusCircle className="h-[12px] w-[12px]" />Ver todos
-              </Button>
+              <Link href={`/clients/${client?.id}/tasks`}>
+                <Button
+                  type="button"
+                  disabled={!client}
+                  variant="ghost"
+                  className="text-primary text-[12px]">
+                  <PlusCircle className="h-[12px] w-[12px]" />Ver todos
+                </Button>
+              </Link>
             </div>
             <Table>
               <TableHeader className="border-b">
                 <TableRow>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Nome
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Responsável
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Status
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Prioridade
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Início
                   </TableHead>
-                  <TableHead className="text-[10px] px-0 h-[14px]">
+                  <TableHead className="text-[10px] px-0 md:px-2 h-[14px]">
                     Fim
                   </TableHead>
-                  <TableHead className="px-0 h-[14px]">
+                  <TableHead className="px-0 md:px-2 h-[14px]">
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableCell className="text-[10px] p-0">
-                  Acompanhamento Estratégico do Cliente
-                </TableCell>
-                <TableCell className="text-[10px] p-0">
-                  João Almeida
-                </TableCell>
-                <TableCell className="p-0">
-                  <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] whitespace-nowrap`}>
-                    Em Andamento
-                  </div>
-                </TableCell>
-                <TableCell className="p-0">
-                  <div className={`bg-light-green rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-dot-green text-[10px] whitespace-nowrap`}>
-                    <div className={`h-[6px] w-[6px] bg-dot-green rounded-full inline-block mr-[8px]`} />
+                {
+                  client?.tasks?.map((task) => {
+                    const priorityColor = t('TaskPriority.color.' + task.priority)
+                    return <TableRow className="mt-1" key={task.id}>
+                      <TableCell className="text-[10px] p-0 md:p-2">
+                        {task.title}
+                      </TableCell>
+                      <TableCell className="text-[10px] p-0 md:p-2">
+                        {task.responsible?.name}
+                      </TableCell>
+                      <TableCell className="p-0 md:p-2">
+                        <div className={`bg-menu-active rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-primary text-[10px] whitespace-nowrap`}>
+                          {t(`TaskStatus.${task.status}`)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="p-0 md:p-2">
+                        <div className={`bg-light-${priorityColor} rounded-full flex flex-row items-center px-[8px] w-fit py-[2px] text-dot-${priorityColor} text-[10px] whitespace-nowrap`}>
+                          <div className={`h-[6px] w-[6px] bg-dot-${priorityColor} rounded-full inline-block mr-[8px]`} />
 
-                    Ativo
-                  </div>
-                </TableCell>
-                <TableCell className="text-[10px] p-0">
-                  01/01/2023
-                </TableCell>
-                <TableCell className="text-[10px] p-0">
-                  01/01/2023
-                </TableCell>
-                <TableCell className="p-0">
-                  <div className="flex flex-1 gap-1 justify-center items-center">
-                    <Button className="size-[28px] [&_svg]:size-[12px]">
-                      <Edit />
-                    </Button>
-                    <Button className="size-[28px] [&_svg]:size-[12px]">
-                      <EllipsisVertical />
-                    </Button>
-                  </div>
-                </TableCell>
+                          {t('TaskPriority.label.' + task.priority)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-[10px] p-0 md:p-2">
+                        {task.startDate?.toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-[10px] p-0 md:p-2">
+                        {task.endDate?.toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="p-0 md:p-2">
+                        <div className="flex flex-1 gap-1 justify-center items-center">
+                          <Button className="size-[28px] [&_svg]:size-[12px]">
+                            <Edit />
+                          </Button>
+                          <Button className="size-[28px] [&_svg]:size-[12px]">
+                            <EllipsisVertical />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  })
+                }
+
               </TableBody>
             </Table>
           </div>

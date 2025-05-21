@@ -65,4 +65,5 @@ export interface Client {
   recurringContractRevenue: number;
   journeyStepsClients: JourneyStepClient[];
   serviceType: "HIGH" | "LOW" | "TECH" | null;
+  tasks: Task[];
 }

@@ -49,13 +49,13 @@ const TasksView = ({ tasks, activeUsers, activeTab, clients, filters }: Props) =
           <TabsList className="flex flex-row md:justify-between items-center w-full gap-1">
             <div className="flex items-center gap-2">
               <TabsTrigger
-                onClick={() => router.push('/tasks?activeTab=list')}
+                onClick={() => router.push('?activeTab=list')}
                 className={tabTriggerClass}
                 value="list">
                 <List className="size-[12px] md:hidden" />Lista
               </TabsTrigger>
               <TabsTrigger
-                onClick={() => router.push('/tasks?activeTab=kanban')}
+                onClick={() => router.push('?activeTab=kanban')}
                 className={tabTriggerClass}
                 value="kanban">
                 <Kanban className="size-[12px] md:hidden" /> Kanban

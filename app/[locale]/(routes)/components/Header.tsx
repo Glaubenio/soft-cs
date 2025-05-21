@@ -34,21 +34,28 @@ const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
       };
     }
 
-    if (pathname.includes('profile')) {
+    if (pathname.endsWith('profile')) {
       return {
         title: "Perfil",
         breadcrumb: 'Páginas/ Perfil',
       }
     }
-
     if (pathname.includes('clients')) {
-      return {
-        title: "Clientes",
-        breadcrumb: 'Páginas/ Clientes',
+      if (pathname.endsWith('clients')) {
+        return {
+          title: "Clientes",
+          breadcrumb: 'Páginas/ Clientes',
+        }
+      } else if (pathname.endsWith('tasks')) {
+        return {
+          title: "Clientes",
+          breadcrumb: 'Páginas/ Tarefas do cliente',
+        }
       }
     }
 
-    if (pathname.includes('tasks')) {
+
+    if (pathname.endsWith('tasks')) {
       return {
         title: "Tarefas",
         breadcrumb: 'Páginas/ Tarefas',

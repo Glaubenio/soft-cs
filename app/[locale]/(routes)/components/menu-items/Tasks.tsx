@@ -12,7 +12,7 @@ type Props = {
 
 const DashboardMenu = ({ open, title }: Props) => {
   const pathname = usePathname();
-  const isPath = pathname.includes("tasks");
+  const isPath = pathname.endsWith("tasks");
 
   return (
     <div className={`flex flex-row items-center ${isPath && "mb-7 md:mb-0"}`}>
