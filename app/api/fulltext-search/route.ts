@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const resultsCrmAccounts = await prismadb.crm_Accounts.findMany({
       where: {
         OR: [
-          { description: { contains: search, mode: "insensitive" } },
+          //{ description: { contains: search, mode: "insensitive" } },
           { name: { contains: search, mode: "insensitive" } },
           { email: { contains: search, mode: "insensitive" } },
           // add more fields as needed

@@ -15,7 +15,7 @@ model crm_Accounts {
   name               String
   email              String?
   image              String?
-  cnpj               String
+  cnpj               String?
   segment            String?
   size               String?
   phoneNumber        String?
@@ -43,9 +43,8 @@ model crm_Accounts {
 }
 
 model crm_Leads {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  v  Int    @default(0) @map("__v")
-
+  id                 String        @id @default(auto()) @map("_id") @db.ObjectId
+  v                  Int           @default(0) @map("__v")
   createdAt          DateTime?     @default(now()) @db.Date
   createdBy          String?       @db.ObjectId
   updatedAt          DateTime?     @updatedAt @db.Date

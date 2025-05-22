@@ -1,104 +1,88 @@
-import { NextResponse } from "next/server";
-import { prismadb } from "@/lib/prisma";
-import { hash } from "bcryptjs";
-import { newUserNotify } from "@/lib/new-user-notify";
+import {NextResponse} from "next/server";
+import {prismadb} from "@/lib/prisma";
+import {hash} from "bcryptjs";
+import {newUserNotify} from "@/lib/new-user-notify";
 import {getUser} from "@/actions/get-user";
 
 export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    const { name, username, email, language, password, confirmPassword } = body;
+    const currentUser = await getUser()
 
-    if (!name || !email || !language || !password || !confirmPassword) {
-      return new NextResponse("Unauthenticated", { status: 401 });
+    if (!currentUser) {
+        return new NextResponse("Unauthenticated", {status: 401});
     }
 
-    if (password !== confirmPassword) {
-      return new NextResponse("Password does not match", { status: 401 });
+    if (!currentUser.is_admin) {
+        return new NextResponse("Unauthorized", {status: 403});
     }
 
-    const checkexisting = await prismadb.users.findFirst({
-      where: {
-        email: email,
-      },
-    });
+    try {
+        const body = await req.json();
+        const {
+            name,
+            username,
+            email,
+            jobTitle,
+            accountId
+        } = body;
 
-    if (checkexisting) {
-      return new NextResponse("User already exist", { status: 401 });
+        if (!name || !email || !accountId) {
+            return new NextResponse("Unauthenticated", {status: 401});
+        }
+
+        if (await prismadb.users.findFirst({where: {email: email}})) {
+            return new NextResponse("User already exist", {status: 401});
+        }
+
+        if (await prismadb.crm_Contracts.findFirst({where: {id: accountId}})) {
+            return new NextResponse("Account does not exists", {status: 400});
+        }
+
+        const password = Math.random().toString(36).slice(-8);
+
+        const user = await prismadb.users.create({
+            data: {
+                name,
+                username,
+                avatar: "",
+                email,
+                jobTitle,
+                userLanguage: "pt_br",
+                userStatus: "ACTIVE",
+                password: await hash("@" + password, 12),
+                account: {
+                    connect: {
+                        id: accountId,
+                    },
+                }
+            },
+        });
+
+        newUserNotify(user);
+
+        return NextResponse.json(user, {status: 201});
+    } catch (error) {
+        console.log("[USERS_POST]", error);
+        return new NextResponse("Initial error", {status: 500});
     }
-
-    /*
-    Check if user is first user in the system. If yes, then create user with admin rights. If not, then create user with no admin rights.
-    */
-
-    const isFirstUser = await prismadb.users.findMany({});
-    if (isFirstUser.length === 0) {
-      //There is no user in the system, so create user with admin rights and set userStatus to ACTIVE
-      const user = await prismadb.users.create({
-        data: {
-          name,
-          username,
-          avatar: "",
-          account_name: "",
-          is_account_admin: false,
-          is_admin: true,
-          email,
-          userLanguage: language,
-          userStatus: "ACTIVE",
-          password: await hash(password, 12),
-        },
-      });
-      return NextResponse.json(user);
-    } else {
-      //There is at least one user in the system, so create user with no admin rights and set userStatus to PENDING
-      const user = await prismadb.users.create({
-        data: {
-          name,
-          username,
-          avatar: "",
-          account_name: "",
-          is_account_admin: false,
-          is_admin: false,
-          email,
-          userLanguage: language,
-          userStatus:
-            process.env.NEXT_PUBLIC_APP_URL === "https://demo.nextcrm.io"
-              ? "ACTIVE"
-              : "PENDING",
-          password: await hash(password, 12),
-        },
-      });
-
-      /*
-      Function will send email to all admins about new user registration which is in PENDING state and need to be activated
-    */
-      newUserNotify(user);
-
-      return NextResponse.json(user);
-    }
-  } catch (error) {
-    console.log("[USERS_POST]", error);
-    return new NextResponse("Initial error", { status: 500 });
-  }
 }
 
 export async function GET() {
-  const currentUser = await getUser()
+    const currentUser = await getUser()
 
-  if (!currentUser) {
-    return new NextResponse("Unauthenticated", { status: 401 });
-  }
+    if (!currentUser) {
+        return new NextResponse("Unauthenticated", {status: 401});
+    }
 
-  if (!currentUser.is_admin) {
-    return new NextResponse("Unauthorized", { status: 403 });
-  }
+    if (!currentUser.is_admin) {
+        return new NextResponse("Unauthorized", {status: 403});
+    }
 
-  try {
-    const users = await prismadb.users.findMany();
+    try {
+        const users = await prismadb.users.findMany();
 
-    return NextResponse.json(users);
-  } catch (error) {
-    console.log("[USERS_GET]", error);
-    return new NextResponse("Initial error", { status: 500 });
-  }
+        return NextResponse.json(users);
+    } catch (error) {
+        console.log("[USERS_GET]", error);
+        return new NextResponse("Initial error", {status: 500});
+    }
 }

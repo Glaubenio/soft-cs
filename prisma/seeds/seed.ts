@@ -108,9 +108,9 @@ async function main() {
         console.log("GPT Models already seeded");
     }
 
-    const crmAccounts = await prisma.crm_Accounts.findMany();
+    const crmAccountsCount = await prisma.crm_Accounts.count();
 
-    if (crmAccounts.length === 0) {
+    if (crmAccountsCount === 0) {
         console.log("-------- Seeding Accounts --------");
 
         await prisma.crm_Accounts.createMany({

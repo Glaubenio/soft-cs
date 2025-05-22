@@ -3,12 +3,14 @@
     "name": "Conta 1",
     "description": "Conta 1",
     "email": "conta1@softcs.com",
-    "status": "Active"
+    "status": "Active",
+    "cnpj": "12345678000195"
   },
   {
     "name": "Conta 2",
     "description": "Conta 2",
     "email": "conta2@softcs.com",
-    "status": "Active"
+    "status": "Active",
+    "cnpj": "12345678000195"
   }
 ]
