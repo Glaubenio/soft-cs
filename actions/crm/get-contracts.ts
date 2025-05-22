@@ -5,11 +5,11 @@ import { prismadb } from "@/lib/prisma";
 export const getContractsWithIncludes = async () => {
   const data = await prismadb.crm_Contracts.findMany({
     include: {
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
       assigned_account: {
         select: {
           name: true,
@@ -29,11 +29,11 @@ export const getContractsByAccountId = async (accountId: string) => {
       account: accountId,
     },
     include: {
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
       assigned_account: {
         select: {
           name: true,

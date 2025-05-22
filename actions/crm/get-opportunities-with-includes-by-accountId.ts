@@ -16,11 +16,11 @@ export const getOpportunitiesFullByAccountId = async (accountId: string) => {
           name: true,
         },
       },
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
     },
     orderBy: {
       created_on: "desc",

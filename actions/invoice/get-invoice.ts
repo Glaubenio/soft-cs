@@ -6,11 +6,11 @@ export const getInvoice = async (invoiceId: string) => {
       id: invoiceId,
     },
     include: {
-      users: {
-        select: {
-          name: true,
-        },
-      },
+      // users: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
     },
   });
 

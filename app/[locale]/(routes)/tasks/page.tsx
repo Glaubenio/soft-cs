@@ -5,21 +5,20 @@ import { redirect, useSearchParams } from "next/navigation";
 import { Session } from "next-auth";
 import TasksView from "./_components/TasksView";
 import SuspenseLoading from "@/components/loadings/suspense";
-import { getTasks } from "@/actions/tasks/get-tasks";
 import { getActiveUsers } from "@/actions/get-users";
 import { getClients } from "@/actions/clients/get-clients";
 
 export const maxDuration = 300;
 
 export const TasksPage = async ({
-    params: { clientId },
+    params,
 }: {
-    params: { clientId?: string };
+    params: Promise<{ clientId: string }>;
 }) => {
     const session: Session | null = await getServerSession(authOptions);
     const clients = await getClients(false)
     const activeUsers = await getActiveUsers();
-
+    const { clientId } = await params
     if (!session) return redirect("/sign-in");
 
     return (

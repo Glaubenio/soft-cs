@@ -5,13 +5,13 @@ export const getBoard = async (id: string) => {
     where: {
       id: id,
     },
-    include: {
-      assigned_user: {
-        select: {
-          name: true,
-        },
-      },
-    },
+    // include: {
+    //   // assigned_user: {
+    //   //   select: {
+    //   //     name: true,
+    //   //   },
+    //   // },
+    // },
   });
 
   // const sections = await prismadb.sections.findMany({

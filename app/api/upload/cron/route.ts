@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
         invoice_type: "Taxable document",
         status: "new",
         favorite: false,
-        assigned_user_id: admin[0].id,
+        // assigned_user_id: admin[0].id,
         invoice_file_url: url,
         invoice_file_mimeType: file.contentType,
         rossum_status: "importing",

@@ -32,12 +32,12 @@ export async function PUT(req: Request, props: { params: Promise<{ opportunityId
 
     const data = await prismadb.crm_Opportunities.findMany({
       include: {
-        assigned_to_user: {
-          select: {
-            avatar: true,
-            name: true,
-          },
-        },
+        // assigned_to_user: {
+        //   select: {
+        //     avatar: true,
+        //     name: true,
+        //   },
+        // },
       },
     });
 

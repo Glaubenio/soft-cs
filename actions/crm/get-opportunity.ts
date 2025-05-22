@@ -31,12 +31,12 @@ export const getOpportunity = async (opportunityId: string) => {
           email: true,
         },
       },
-      assigned_to_user: {
-        select: {
-          name: true,
-          email: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //     email: true,
+      //   },
+      // },
       documents: {
         select: {
           id: true,

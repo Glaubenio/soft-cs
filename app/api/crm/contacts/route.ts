@@ -46,8 +46,8 @@ export async function POST(req: Request) {
     const newContact = await prismadb.crm_Contacts.create({
       data: {
         v: 0,
-        createdBy: userId,
-        updatedBy: userId,
+        // createdBy: userId,
+        // updatedBy: userId,
         ...(assigned_account !== null && assigned_account !== undefined
           ? {
             assigned_accounts: {
@@ -57,11 +57,11 @@ export async function POST(req: Request) {
             },
           }
           : {}),
-        assigned_to_user: {
-          connect: {
-            id: assigned_to,
-          },
-        },
+        // assigned_to_user: {
+        //   connect: {
+        //     id: assigned_to,
+        //   },
+        // },
         birthday: birthday_day + "/" + birthday_month + "/" + birthday_year,
         description,
         email,
@@ -174,11 +174,11 @@ export async function PUT(req: Request) {
             },
           }
           : {}),
-        assigned_to_user: {
-          connect: {
-            id: assigned_to,
-          },
-        },
+        // assigned_to_user: {
+        //   connect: {
+        //     id: assigned_to,
+        //   },
+        // },
         birthday: birthday_day + "/" + birthday_month + "/" + birthday_year,
         description,
         email,

@@ -38,8 +38,8 @@ export async function POST(req: Request) {
     const newLead = await prismadb.crm_Leads.create({
       data: {
         v: 1,
-        createdBy: userId,
-        updatedBy: userId,
+        // createdBy: userId,
+        // updatedBy: userId,
         firstName: first_name,
         lastName: last_name,
         company,
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         lead_source,
         refered_by,
         campaign,
-        assigned_to: assigned_to || userId,
+        // assigned_to: assigned_to || userId,
         accountsIDs: accountIDs,
         status: "NEW",
         type: "DEMO",
@@ -59,9 +59,9 @@ export async function POST(req: Request) {
 
     if (assigned_to !== userId) {
       const notifyRecipient = await prismadb.users.findFirst({
-        where: {
-          id: assigned_to,
-        },
+        // where: {
+        //   id: assigned_to,
+        // },
       });
 
       if (!notifyRecipient) {
@@ -138,7 +138,7 @@ export async function PUT(req: Request) {
         lead_source,
         refered_by,
         campaign,
-        assigned_to: assigned_to || userId,
+        // assigned_to: assigned_to || userId,
         accountsIDs: accountIDs,
         status,
         type,

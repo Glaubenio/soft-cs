@@ -27,9 +27,9 @@ export async function POST(req: Request, props: { params: Promise<{ userId: stri
   }
   try {
     const checkIfExist = await prismadb.openAi_keys.findFirst({
-      where: {
-        user: userId,
-      },
+      // where: {
+      //   user: userId,
+      // },
     });
     //console.log(checkIfExist, "Check if exist");
     //console.log(checkIfExist !== null, "Check if exist result");
@@ -56,7 +56,7 @@ export async function POST(req: Request, props: { params: Promise<{ userId: stri
           v: 0,
           api_key: secretKey,
           organization_id: organizationId,
-          user: userId,
+          // user: userId,
         },
       });
 

@@ -24,9 +24,9 @@ export async function GET(request: Request, props: { params: Promise<{ invoiceId
   }
 
   const invoice = await prismadb.invoices.findFirst({
-    where: {
-      id: invoiceId,
-    },
+    // where: {
+    //   id: invoiceId,
+    // },
   });
 
   if (!invoice) {

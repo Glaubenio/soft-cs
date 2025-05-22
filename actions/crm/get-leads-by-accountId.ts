@@ -6,11 +6,11 @@ export const getLeadsByAccountId = async (accountId: string) => {
       accountsIDs: accountId,
     },
     include: {
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
     },
     orderBy: {
       createdAt: "desc",

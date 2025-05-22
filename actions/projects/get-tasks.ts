@@ -7,23 +7,23 @@ export const getTasks = async () => {
   const userId = session?.user?.id;
 
   const boards = await prismadb.boards.findMany({
-    where: {
-      OR: [
-        {
-          user: userId,
-        },
-        {
-          visibility: "public",
-        },
-      ],
-    },
-    include: {
-      assigned_user: {
-        select: {
-          name: true,
-        },
-      },
-    },
+    // where: {
+    //   OR: [
+    //     {
+    //       user: userId,
+    //     },
+    //     {
+    //       visibility: "public",
+    //     },
+    //   ],
+    // },
+    // include: {
+    //   // assigned_user: {
+    //   //   select: {
+    //   //     name: true,
+    //   //   },
+    //   // },
+    // },
     orderBy: {
       createdAt: "desc",
     },

@@ -11,9 +11,9 @@ const ProfilePage = async () => {
   const user = await getServerSession(authOptions);
 
   const openAiKeyUser = await prismadb.openAi_keys.findFirst({
-    where: {
-      user: user?.user?.id,
-    },
+    // where: {
+    //   user: user?.user?.id,
+    // },
   });
 
   const openAiKeySystem = await prismadb.systemServices.findFirst({

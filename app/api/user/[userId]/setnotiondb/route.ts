@@ -27,9 +27,9 @@ export async function POST(req: Request, props: { params: Promise<{ userId: stri
   }
   try {
     const checkIfExist = await prismadb.secondBrain_notions.findFirst({
-      where: {
-        user: userId,
-      },
+      // where: {
+      //   user: userId,
+      // },
     });
     //console.log(checkIfExist, "Check if exist");
     //console.log(checkIfExist !== null, "Check if exist result");
@@ -56,7 +56,7 @@ export async function POST(req: Request, props: { params: Promise<{ userId: stri
           v: 0,
           notion_api_key: secretKey,
           notion_db_id: databaseId,
-          user: userId,
+          // user: userId,
         },
       });
 

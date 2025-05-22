@@ -9,13 +9,7 @@ import AccountsView from "./_components/AccountsView";
 
 export const maxDuration = 300;
 
-export const AccountsPage = async ({
-    params: { clientId },
-    searchParams,
-}: {
-    params: { clientId?: string };
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) => {
+const AccountsPage = async () => {
     const session: Session | null = await getServerSession(authOptions);
 
 
@@ -28,7 +22,6 @@ export const AccountsPage = async ({
 
     return (
         <div className="flex-1 space-y-4 h-full overflow-scroll">
-
             <Suspense fallback={<SuspenseLoading />}>
                 <AccountsView />
             </Suspense>

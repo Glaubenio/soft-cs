@@ -17,9 +17,9 @@ export async function DELETE(req: Request, props: { params: Promise<{ notionId: 
   try {
     //Get the notion database id from the user's profile in the database
     const notionDb = await prismadb.secondBrain_notions.findFirst({
-      where: {
-        user: session.user.id,
-      },
+      // where: {
+      //   user: session.user.id,
+      // },
     });
 
     const { notionId } = params;

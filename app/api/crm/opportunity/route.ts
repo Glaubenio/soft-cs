@@ -38,12 +38,12 @@ export async function POST(req: Request) {
     const newOpportunity = await prismadb.crm_Opportunities.create({
       data: {
         account: account,
-        assigned_to: assigned_to,
+        // assigned_to: assigned_to,
         budget: Number(budget),
         campaign: campaign,
         close_date: close_date,
         contact: contact,
-        created_by: userId,
+        // created_by: userId,
         last_activity_by: userId,
         updatedBy: userId,
         currency: currency,
@@ -124,7 +124,7 @@ export async function PUT(req: Request) {
       where: { id },
       data: {
         account: account,
-        assigned_to: assigned_to,
+        // assigned_to: assigned_to,
         budget: Number(budget),
         campaign: campaign,
         close_date: close_date,

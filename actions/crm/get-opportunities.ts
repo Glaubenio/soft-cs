@@ -3,12 +3,12 @@ import { prismadb } from "@/lib/prisma";
 export const getOpportunities = async () => {
   const data = await prismadb.crm_Opportunities.findMany({
     include: {
-      assigned_to_user: {
-        select: {
-          avatar: true,
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     avatar: true,
+      //     name: true,
+      //   },
+      // },
     },
   });
   return data;

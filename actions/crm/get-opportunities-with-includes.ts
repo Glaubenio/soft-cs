@@ -15,11 +15,11 @@ export const getOpportunitiesFull = async () => {
           name: true,
         },
       },
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
     },
     orderBy: {
       created_on: "desc",

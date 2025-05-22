@@ -61,8 +61,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         companySignedDate,
         description,
         account: account || undefined,
-        assigned_to: assigned_to || undefined,
-        createdBy: user.id,
+        // createdBy: user.id,
       },
     });
     //console.log(result, "result");

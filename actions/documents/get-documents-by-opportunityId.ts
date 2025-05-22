@@ -8,16 +8,16 @@ export const getDocumentsByOpportunityId = async (opportunityId: string) => {
       },
     },
     include: {
-      created_by: {
-        select: {
-          name: true,
-        },
-      },
-      assigned_to_user: {
-        select: {
-          name: true,
-        },
-      },
+      // created_by: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
+      // assigned_to_user: {
+      //   select: {
+      //     name: true,
+      //   },
+      // },
     },
     orderBy: {
       date_created: "desc",

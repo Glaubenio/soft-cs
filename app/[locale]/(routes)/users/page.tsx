@@ -8,7 +8,7 @@ import UsersView from "./_components/UsersView";
 
 export const maxDuration = 300;
 
-export const UsersPage = async () => {
+const UsersPage = async () => {
     const session: Session | null = await getServerSession(authOptions);
 
     if (!session) return redirect("/sign-in");

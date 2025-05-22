@@ -138,7 +138,7 @@ export const ContactForm = ({ open, setOpen, allContacts, contactIndex, clientId
                   <FormItem >
                     <FormLabel className="text-[12px] font-[400] text-light-gray">Celular</FormLabel>
                     <FormControl ref={withMask("(99) [9]9999-9999")}>
-                      <Input  {...field} pattern="\d*" className="bg-lighter-gray border-foreground border mt-[6px]" placeholder="(85) 9 98279371" />
+                      <Input  {...field} className="bg-lighter-gray border-foreground border mt-[6px]" type="tel" placeholder="(85) 9 98279371" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

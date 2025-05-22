@@ -14,9 +14,9 @@ export async function openAiHelper(userId: string) {
 
   //Check if the user has a private openai key
   const userOpenAiKey = await prismadb.openAi_keys.findFirst({
-    where: {
-      user: userId,
-    },
+    // where: {
+    //   user: userId,
+    // },
   });
 
   let apiKey = openAiKey?.serviceKey || userOpenAiKey?.api_key;

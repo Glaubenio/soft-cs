@@ -74,8 +74,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         description,
         status,
         account: account || undefined,
-        assigned_to: assigned_to || undefined,
-        createdBy: user.id,
+        // assigned_to: assigned_to || undefined,
+        // createdBy: user.id,
       },
     });
 

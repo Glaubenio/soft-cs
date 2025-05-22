@@ -210,10 +210,10 @@ export const ClientsList = ({ data }: any) => {
     }
 
     <ClientsTable
-      clients={clients}
+      clients={clients || []}
       onEditClick={(client) => setClientFormInfo({ open: true, client: client })}
       onDeleteClick={(client) => setDeleteModalInfo({ open: true, client: client })} />
-    <ClientsCardList clients={clients}
+    <ClientsCardList clients={clients || []}
       onEditClick={(client) => setClientFormInfo({ open: true, client: client })}
       onDeleteClick={(client) => setDeleteModalInfo({ open: true, client: client })} />
   </div>
