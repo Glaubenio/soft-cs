@@ -13,7 +13,7 @@ export async function GET(req: Request, props: { params: Promise<{ userId: strin
   }
 
   try {
-    const user = await prismadb.users.findMany({
+    const user = await prismadb.users.findFirst({
       where: {
         id: params.userId,
       },
