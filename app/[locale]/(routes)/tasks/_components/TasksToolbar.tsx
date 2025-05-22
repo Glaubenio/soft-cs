@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation"
 import { TasksContext } from "../tasks-context"
 
 const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => {
-  const { activeUsers, handleSelectedFilter, submitFilters, currentFilters } = useContext(TasksContext)
+  const { activeUsers, handleSelectedFilter, currentFilters } = useContext(TasksContext)
 
   const t = useTranslations()
   const { status, priority, responsibleId } = currentFilters
@@ -76,12 +76,6 @@ const FilterDropDownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => 
         )
         }
       </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <Button
-        onClick={() => submitFilters()}
-        className="float-right mr-1">
-        Aplicar
-      </Button>
     </DropdownMenuContent>
   </DropdownMenu>
 }

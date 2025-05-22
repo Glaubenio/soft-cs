@@ -1,49 +1,46 @@
-import {authOptions} from "@/lib/auth";
-import {prismadb} from "@/lib/prisma";
-import {getServerSession} from "next-auth";
-import {NextResponse} from "next/server";
-import {client_service_types, client_statuses} from "@prisma/client";
-import {getUser} from "@/actions/get-user";
+import { authOptions } from "@/lib/auth";
+import { prismadb } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
+import { client_service_types, client_statuses } from "@prisma/client";
+import { getUser } from "@/actions/get-user";
 
-export async function GET(props: {
-    params: Promise<{
-        includeAssociations: boolean,
-        name?: string,
-        serviceType?: string[],
-        csmResponsible?: string[],
-        status?: string[]
-    }>
-}) {
-    const params = await props.params;
+export async function GET(req: NextRequest) {
+
     const session = await getServerSession(authOptions);
 
     if (!session) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
+    const params = req.nextUrl.searchParams
+    const name = params.get('name');
+    const serviceType = params.get('serviceType')?.split(',').filter((a) => a.length > 0) || [];
+    const status = params.get('status')?.split(',').filter((a) => a.length > 0) || [];
+    const responsibleId = params.get('responsibleId')?.split(',').filter((a) => a.length > 0) || [];
 
     let whereClause: any = {};
 
-    if (params.name && params.name.length > 0) {
+    if (name && name.length > 0) {
         whereClause.name = {
-            contains: params.name,
+            contains: name,
             mode: "insensitive"
         };
     }
 
-    if (params.serviceType && params.serviceType.length > 0) {
+    if (serviceType.length > 0) {
         whereClause.serviceType = {
-            in: params.serviceType as client_service_types[]
+            in: serviceType as client_service_types[]
         };
     }
-    if (params.status && params.status.length > 0) {
+    if (status.length > 0) {
         whereClause.status = {
-            in: params.status as client_statuses[]
+            in: status as client_statuses[]
         };
     }
 
-    if (params.csmResponsible && params.csmResponsible.length > 0) {
+    if (responsibleId.length > 0) {
         whereClause.userId = {
-            in: params.csmResponsible
+            in: responsibleId
         };
     }
 
@@ -63,13 +60,13 @@ export async function GET(props: {
                 tasks: {
                     take: 3,
                     include: {
-                        responsible: params.includeAssociations,
+                        responsible: true,
                     }
                 },
-                csmResponsible: params.includeAssociations,
+                csmResponsible: true,
                 journeyStepsClients: {
                     include: {
-                        journeyStep: params.includeAssociations
+                        journeyStep: true
                     }
                 }
             }
@@ -78,7 +75,7 @@ export async function GET(props: {
         return NextResponse.json(clients);
     } catch (error) {
         console.log("[USER_GET]", error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }
 
@@ -96,11 +93,11 @@ export const POST = async (req: Request) => {
     } = body;
 
     if (!session) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!name || !serviceType || !recurringContractRevenue || !status) {
-        return new NextResponse("Missing one of the task data ", {status: 400});
+        return new NextResponse("Missing one of the task data ", { status: 400 });
     }
 
     try {
@@ -111,7 +108,7 @@ export const POST = async (req: Request) => {
         })
 
         if (!user) {
-            return new NextResponse("User not found", {status: 404});
+            return new NextResponse("User not found", { status: 404 });
         }
 
         const accountConnect: any = {}
@@ -141,20 +138,20 @@ export const POST = async (req: Request) => {
             },
         });
         const syncStepsQuery = journeys.map(async (journey) => {
-                const firstStep = journey.journeySteps.find((step) => step.position === 0)!;
-                await prismadb.journey_steps_clients.create({
-                    data: {
-                        clientId: newClient.id,
-                        journeyStepId: firstStep.id,
-                    }
-                })
-            }
+            const firstStep = journey.journeySteps.find((step) => step.position === 0)!;
+            await prismadb.journey_steps_clients.create({
+                data: {
+                    clientId: newClient.id,
+                    journeyStepId: firstStep.id,
+                }
+            })
+        }
         );
         await Promise.all(syncStepsQuery);
-        return NextResponse.json({data: newClient}, {status: 201});
+        return NextResponse.json({ data: newClient }, { status: 201 });
     } catch
-        (error) {
+    (error) {
         console.log(error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }

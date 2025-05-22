@@ -1,40 +1,36 @@
-import {NextResponse} from "next/server";
-import {prismadb} from "@/lib/prisma";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/lib/auth";
-import {getUser} from "@/actions/get-user";
-import {task_priorities, task_status} from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import { prismadb } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { getUser } from "@/actions/get-user";
+import { task_priorities, task_status } from "@prisma/client";
 
-export async function GET(props: {
-    params: Promise<{
-        clientId?: string,
-        priority?: string[],
-        status?: string[],
-        responsibleId?: string[]
-    }>
-}) {
-
-    const params = await props.params;
+export async function GET(req: NextRequest) {
+    const params = req.nextUrl.searchParams
     let whereClause: any = {};
-
-    if (params.priority && params.priority.length > 0) {
+    console.log("params", params);
+    const priority = params.get("priority")?.split(',').filter((a) => a.length > 0) || [];
+    const status = params.get("status")?.split(',').filter((a) => a.length > 0) || [];
+    const responsibleId = params.get("responsibleId")?.split(',').filter((a) => a.length > 0) || [];
+    const clientId = params.get("clientId");
+    if (priority.length > 0) {
         whereClause.priority = {
-            in: params.priority as task_priorities[]
+            in: priority as task_priorities[]
         };
     }
-    if (params.status && params.status.length > 0) {
+    if (status.length > 0) {
         whereClause.status = {
-            in: params.status as task_status[]
+            in: status as task_status[]
         };
     }
 
-    if (params.responsibleId && params.responsibleId.length > 0) {
+    if (responsibleId.length > 0) {
         whereClause.responsibleId = {
-            in: params.responsibleId
+            in: responsibleId
         };
     }
-    if (params.clientId) {
-        whereClause.clientId = params.clientId;
+    if (clientId) {
+        whereClause.clientId = clientId;
     }
 
     const current_user = await getUser();
@@ -56,7 +52,7 @@ export async function GET(props: {
         return NextResponse.json(tasks);
     } catch (error) {
         console.log("[USER_GET]", error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }
 
@@ -76,11 +72,11 @@ export async function POST(req: Request) {
     } = body;
 
     if (!session) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!title || !responsibleId || !title || !content) {
-        return new NextResponse("Missing one of the task data ", {status: 400});
+        return new NextResponse("Missing one of the task data ", { status: 400 });
     }
 
     try {
@@ -91,7 +87,7 @@ export async function POST(req: Request) {
         })
 
         if (!user) {
-            return new NextResponse("User not found", {status: 404});
+            return new NextResponse("User not found", { status: 404 });
         }
 
         const task = await prismadb.tasks.create({
@@ -102,7 +98,7 @@ export async function POST(req: Request) {
                 endDate: endDate,
                 priority: priority,
                 status: status,
-                clientId: clientId,
+
                 responsible: {
                     connect: {
                         id: responsibleId,
@@ -112,14 +108,19 @@ export async function POST(req: Request) {
                     connect: {
                         id: user.accountId!,
                     },
-                }
+                },
+                client: {
+                    connect: {
+                        id: clientId,
+                    },
+                },
             },
         });
 
-        return NextResponse.json({data: task}, {status: 201});
+        return NextResponse.json({ data: task }, { status: 201 });
     } catch
-        (error) {
+    (error) {
         console.log(error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }

@@ -4,7 +4,6 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Session } from "next-auth";
 import SuspenseLoading from "@/components/loadings/suspense";
-import { getUsers } from "@/actions/get-users";
 import UsersView from "./_components/UsersView";
 
 export const maxDuration = 300;
@@ -17,14 +16,12 @@ export const UsersPage = async () => {
     if (!user.isAdmin) {
         return redirect("/");
     }
-    const Users = await getUsers();
 
     return (
         <div className="flex-1 space-y-4 h-full overflow-scroll">
 
             <Suspense fallback={<SuspenseLoading />}>
-                <UsersView
-                    users={Users} />
+                <UsersView />
             </Suspense>
         </div>
     );

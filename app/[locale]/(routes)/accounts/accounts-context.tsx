@@ -1,35 +1,36 @@
 import { useToast } from "@/components/ui/use-toast";
+import { defaultFetcher } from "@/lib/utils";
 import { Client, Account, User } from "@/types/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
+import useSWR from "swr";
 
 interface AccountsContextType {
   accounts: Account[];
   deleteAccount: (account: Account, onFinish: () => void) => void;
   deleting: boolean;
-  setCurrentAccounts: (accounts: Account[]) => void;
-
+  isLoading: boolean;
 }
 export const AccountsContext = createContext<AccountsContextType>({
   accounts: [],
   deleteAccount: () => { },
   deleting: false,
-  setCurrentAccounts: () => { },
+  isLoading: false
 })
 
-export const AccountsProvider = ({ children, accounts }: {
+export const AccountsProvider = ({ children }: {
   children: React.ReactNode,
-  accounts: Account[],
 }) => {
-  const [currentAccounts, setCurrentAccounts] = useState<Account[]>(accounts);
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);
+  const { data: accounts, isLoading, mutate } = useSWR<Account[]>('/api/crm/account', (url: string) => defaultFetcher(url))
 
   const deleteAccount = async (task: Account, onFinish: () => void) => {
     setDeleting(true)
     try {
-      await axios.delete(`/api/accounts/${task.id}`)
+      await axios.delete(`/api/crm/account/${task.id}`)
+      mutate();
       onFinish();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || "Error deleting account";
@@ -42,15 +43,12 @@ export const AccountsProvider = ({ children, accounts }: {
     setDeleting(false)
   }
 
-  useEffect(() => {
-    setCurrentAccounts(accounts);
-  }, [accounts])
   return (
     <AccountsContext.Provider value={{
-      accounts: currentAccounts,
+      accounts,
       deleteAccount,
       deleting,
-      setCurrentAccounts: setCurrentAccounts,
+      isLoading
     } as AccountsContextType
     }>
       {children}

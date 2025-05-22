@@ -9,6 +9,7 @@ import { TasksContext } from "../tasks-context"
 import { Task } from "@/types/types";
 import { TaskForm } from "../forms/Task";
 import AlertModal from "@/components/modals/alert-modal";
+import LoadingComponent from "@/components/LoadingComponent";
 
 
 const TaskRow = ({ onEditClick, onDeleteClick, task }: {
@@ -17,6 +18,8 @@ const TaskRow = ({ onEditClick, onDeleteClick, task }: {
   onEditClick: (task: Task) => void
 }) => {
   const { title, content, responsible, status, priority, startDate, endDate } = task;
+  const parsedStartDate = task.startDate ? new Date(task.startDate) : undefined;
+  const parsedEndDate = task.endDate ? new Date(task.endDate) : undefined;
   const t = useTranslations();
 
   const priorityColor = t(`TaskPriority.color.${priority}`);
@@ -43,8 +46,8 @@ const TaskRow = ({ onEditClick, onDeleteClick, task }: {
         </div>
       </div>
     </TableCell>
-    <TableCell className="text-[14px] font-[400]">{startDate?.toLocaleDateString()}</TableCell>
-    <TableCell className="text-[14px] font-[400]">{endDate?.toLocaleDateString()}</TableCell>
+    <TableCell className="text-[14px] font-[400]">{parsedStartDate?.toLocaleDateString()}</TableCell>
+    <TableCell className="text-[14px] font-[400]">{parsedEndDate?.toLocaleDateString()}</TableCell>
     <TableCell className="space-x-2 flex flex-row items-center">
       <Button onClick={() => onEditClick(task)}>
         <Edit className="w-4 h-4" />
@@ -66,7 +69,8 @@ const TasksCardList = ({ tasks, onEditClick, onDeleteClick }: {
 
   return <div className="md:hidden flex flex-col gap-2">
     {tasks.map((task) => {
-
+      const startDate = task.startDate ? new Date(task.startDate) : undefined;
+      const endDate = task.endDate ? new Date(task.endDate) : undefined;
       const priorityColor = t(`TaskPriority.color.${task.priority}`);
       return <div key={task.id} className="flex flex-col rounded-[12px] px-[12px] py-[14px] bg-white gap-2">
         <div className="flex flex-row justify-between items-center w-full">
@@ -109,11 +113,11 @@ const TasksCardList = ({ tasks, onEditClick, onDeleteClick }: {
         <div className="flex flex-row justify-between items-center w-full">
           <div className="flex flex-col">
             <div className="text-[10px]">Início:</div>
-            <div className="text-[12px] font-[700]">{task.startDate?.toLocaleDateString()}</div>
+            <div className="text-[12px] font-[700]">{startDate?.toLocaleDateString()}</div>
           </div>
           <div className="flex flex-col">
             <div className="text-[10px]">Fim:</div>
-            <div className="text-[12px] font-[700]">{task.endDate?.toLocaleDateString()}</div>
+            <div className="text-[12px] font-[700]">{endDate?.toLocaleDateString()}</div>
           </div>
           <div className="flex flex-col">
             <div className="text-[10px]">Responsável:</div>
@@ -169,9 +173,13 @@ export const TasksLists = () => {
     task: undefined,
   });
   const [deleteModalInfo, setDeleteModalInfo] = useState<{ open: boolean; task?: Task }>({ open: false, task: undefined });
-  const { tasks, deleteTask, deleting } = useContext(TasksContext);
+  const { tasks, deleteTask, deleting, isLoading } = useContext(TasksContext);
   const onDeleteClick = (task: Task) => {
     setDeleteModalInfo({ open: true, task });
+  }
+
+  if (isLoading) {
+    return <LoadingComponent />
   }
   return <div>
     <AlertModal

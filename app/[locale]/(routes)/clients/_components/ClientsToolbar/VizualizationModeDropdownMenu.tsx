@@ -11,7 +11,7 @@ import { ClientsContext } from "../../clients-context";
 
 export const VizualizationModeDropdownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => {
   const { journeys } = useContext(JourneysContext);
-  const { setQueryParams } = useContext(ClientsContext);
+  const { setSelectedJourney } = useContext(ClientsContext);
   return <DropdownMenu>
     <DropdownMenuTrigger asChild>
       {triggerButton}
@@ -20,16 +20,12 @@ export const VizualizationModeDropdownMenu = ({ triggerButton }: { triggerButton
       <DropdownMenuLabel>Tipo de vizualação</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem onClick={() => setQueryParams({
-          journeyId: undefined
-        })}>
+        <DropdownMenuItem onClick={() => setSelectedJourney()}>
           Status
         </DropdownMenuItem>
         {
-          journeys.map((journey) => (
-            <DropdownMenuItem onClick={() => setQueryParams({
-              journeyId: journey.id
-            })} key={journey.id}>
+          journeys?.map((journey) => (
+            <DropdownMenuItem onClick={() => setSelectedJourney(journey)} key={journey.id}>
               Jornada: {journey.name}
             </DropdownMenuItem>
           ))

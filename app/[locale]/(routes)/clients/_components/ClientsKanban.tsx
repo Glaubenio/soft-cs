@@ -20,7 +20,7 @@ import { Client } from "@/types/types";
 import axios from "axios";
 
 const ClientsKanban = (props: any) => {
-  const { clients, selectedJourney, setCurrentClients, deleteClient, deleting } = useContext(ClientsContext);
+  const { clients, selectedJourney, deleteClient, deleting, refresh } = useContext(ClientsContext);
   const [clientFormInfo, setClientFormInfo] = useState<{ open: boolean, client?: Client }>({
     open: false,
     client: undefined
@@ -35,7 +35,7 @@ const ClientsKanban = (props: any) => {
   const groupedClients = () => {
     if (selectedJourney) {
       return selectedJourney.journeySteps.map((step) => {
-        const stepClients = clients.filter((client: any) => {
+        const stepClients = clients?.filter((client: any) => {
           return client?.journeyStepsClients?.find((stepClientAssociation: any) => {
             return stepClientAssociation.journeyStepId === step.id
           })
@@ -44,7 +44,7 @@ const ClientsKanban = (props: any) => {
           id: step.id,
           title: step.name,
           color: step.color,
-          clients: stepClients,
+          clients: stepClients || [],
         }
       })
     }
@@ -53,7 +53,7 @@ const ClientsKanban = (props: any) => {
         id: status,
         title: t(`ClientStatus.label.${status}`),
         color: 'primary',
-        clients: clients.filter((client: any) => client.status === status),
+        clients: clients?.filter((client: any) => client.status === status) || [],
       };
     })
   }
@@ -66,7 +66,7 @@ const ClientsKanban = (props: any) => {
       console.log("Client not found");
       return;
     }
-    const updatedClients = clients.map((client: any) => {
+    const updatedClients = clients?.map((client: any) => {
       if (client.id === clientToUpdate.id) {
         return {
           ...client,
@@ -76,7 +76,7 @@ const ClientsKanban = (props: any) => {
       return client;
     }
     );
-    setCurrentClients(updatedClients)
+    refresh(updatedClients, { revalidate: false });
     await axios.put(`/api/clients/${clientToUpdate.id}`, {
       ...clientToUpdate,
       status: destinationStatus,
@@ -91,7 +91,7 @@ const ClientsKanban = (props: any) => {
       console.log("Client not found");
       return;
     }
-    const updatedClients = clients.map((client: any) => {
+    const updatedClients = clients?.map((client: any) => {
       if (client.id === clientToUpdate.id) {
         const updatedJourneySteps = client.journeyStepsClients.map((stepClientAssociation: any) => {
           if (stepClientAssociation.journeyStepId === sourceJourneyStepId) {
@@ -108,8 +108,8 @@ const ClientsKanban = (props: any) => {
         };
       }
       return client;
-    });
-    setCurrentClients(updatedClients)
+    }) || [];
+    refresh(updatedClients, { revalidate: false });
     await axios.put(`/api/clients/${clientToUpdate.id}/updateJourneyStep`, {
       ...clientToUpdate,
       sourceJourneyStepId: sourceJourneyStepId,

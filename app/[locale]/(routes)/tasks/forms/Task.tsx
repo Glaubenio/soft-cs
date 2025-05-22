@@ -37,9 +37,8 @@ const formSchema = z.object({
 export const TaskForm = ({ open, setOpen, task }: Props) => {
   const t = useTranslations()
   const { toast } = useToast();
-  const router = useRouter()
 
-  const { activeUsers, clients } = useContext(TasksContext)
+  const { activeUsers, clients, refresh } = useContext(TasksContext)
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -60,7 +59,7 @@ export const TaskForm = ({ open, setOpen, task }: Props) => {
       data.startDate = data.startDate ? new Date(data.startDate) : null
       data.endDate = data.endDate ? new Date(data.endDate) : null
       await (task ? axios.put(`/api/tasks/${task?.id}`, data) : axios.post("/api/tasks", data))
-      router.refresh()
+      refresh()
       setOpen(false)
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Erro desconhecido"

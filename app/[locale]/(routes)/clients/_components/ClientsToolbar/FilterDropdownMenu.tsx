@@ -15,7 +15,7 @@ import { User } from "@/types/types";
 
 export const FilterDropdownMenu = ({ triggerButton }: { triggerButton: ReactNode }) => {
   const router = useRouter()
-  const { activeUsers, handleSelectedFilter, submitFilters, currentFilters } = useContext(ClientsContext)
+  const { activeUsers, handleSelectedFilter, currentFilters } = useContext(ClientsContext)
 
 
   const t = useTranslations()
@@ -91,12 +91,6 @@ export const FilterDropdownMenu = ({ triggerButton }: { triggerButton: ReactNode
           {t('ClientStatus.label.IN_IMPLANTATION')}
         </div>
       </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <Button
-        onClick={() => submitFilters()}
-        className="float-right mr-1">
-        Aplicar
-      </Button>
     </DropdownMenuContent>
   </DropdownMenu>
 }

@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl"
 import { Client } from "@/types/types"
 import { ClientForm } from "../forms/Client";
 import AlertModal from "@/components/modals/alert-modal";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const ClientRow = ({ client, onEditClick, onDeleteClick }: { client: Client, onEditClick: (client: Client) => void, onDeleteClick: (client: Client) => void }) => {
   const formatter = new Intl.NumberFormat('pt-BR', {
@@ -55,7 +56,7 @@ const ClientRow = ({ client, onEditClick, onDeleteClick }: { client: Client, onE
     <TableCell>
       <div className={`bg-menu-active rounded-full flex flex-row items-center px-[12px] w-fit py-[4px]`}>
         <div className={`text-primary text-[10px] font-[700]`}>
-          {serviceType}
+          {t(`ClientServiceType.${serviceType}`)}
         </div>
       </div>
     </TableCell>
@@ -187,7 +188,12 @@ export const ClientsList = ({ data }: any) => {
   });
 
 
-  const { clients, deleteClient, deleting } = useContext(ClientsContext)
+  const { clients, deleteClient, deleting, isLoading } = useContext(ClientsContext)
+  if (isLoading) {
+    return <div className="flex flex-col items-center justify-center w-full h-full">
+      <LoadingComponent />
+    </div>
+  }
   return <div>
     <AlertModal
       isOpen={deleteModalInfo.open}

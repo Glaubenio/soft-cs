@@ -1,5 +1,15 @@
+import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+export const defaultFetcher = (url: string, queryParams?: Record<string, string>) => {
+  return axios.get(url, {
+    params: queryParams,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.data)
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

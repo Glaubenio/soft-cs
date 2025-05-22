@@ -10,6 +10,7 @@ import AlertModal from "@/components/modals/alert-modal"
 import axios from "axios"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
+import LoadingComponent from "@/components/LoadingComponent"
 
 interface Props {
   open: boolean
@@ -41,8 +42,8 @@ const JourneyRow = ({ onDeleteClick, onEditClick, journey }: {
 }
 
 export const JourneysDialog = ({ open, setOpen }: Props) => {
+  const { journeys, isLoading, refresh } = useContext(JourneysContext)
   const { toast } = useToast()
-  const router = useRouter()
   const [journeyFormInfo, setJourneyFormInfo] = useState<{ open: boolean; journey?: Journey }>({
     open: false,
   })
@@ -57,8 +58,8 @@ export const JourneysDialog = ({ open, setOpen }: Props) => {
     try {
       const response = await axios.delete(`/api/journeys/${journey.id}`)
       console.log("Journey deleted", response.data);
+      refresh()
       setDeleteModalInfo({ open: false, journey: undefined })
-      router.refresh()
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || "Error deletando jornada";
       toast({
@@ -71,8 +72,11 @@ export const JourneysDialog = ({ open, setOpen }: Props) => {
     setDeleting(false)
   }
 
-  const [formOpen, setFormOpen] = useState(false)
-  const { journeys } = useContext(JourneysContext)
+  if (isLoading) {
+    return <div className="flex flex-col items-center justify-center w-full h-full">
+      <LoadingComponent />
+    </div>
+  }
   return <Dialog open={open} onOpenChange={setOpen}>
     <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px]  w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] gap-0">
       {journeyFormInfo.open && <JourneyForm
@@ -127,7 +131,7 @@ export const JourneysDialog = ({ open, setOpen }: Props) => {
         <div className="flex flex md:hidden mt-1 h-full">Jornadas</div>
       </DialogHeader>
       {
-        journeys.map((journey, index) => <JourneyRow
+        journeys?.map((journey, index) => <JourneyRow
           onEditClick={(journey) => setJourneyFormInfo({ open: true, journey })}
           onDeleteClick={(journey) => setDeleteModalInfo({ open: true, journey })}
           key={index}

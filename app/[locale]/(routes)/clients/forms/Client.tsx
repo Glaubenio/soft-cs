@@ -46,7 +46,7 @@ const formSchema = z.object({
 
 export const ClientForm = ({ open, setOpen, client }: Props) => {
   const [contacts, setContacts] = useState(client?.contacts || [])
-  const { activeUsers } = useContext(ClientsContext)
+  const { activeUsers, refresh } = useContext(ClientsContext)
   const { journeys } = useContext(JourneysContext)
   const [contactFormInfo, setContactFormInfo] = useState<{ open: boolean, contactIndex?: number }>({
     open: false
@@ -59,6 +59,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
   const clientJourneyIds = () => {
     const journeyIds = client?.journeyStepsClients?.map((association) => association.journeyStep?.journeyId || "") || [];
     const uniqueJourneyIds = Array.from(new Set(journeyIds));
+    console.log("uniqueJourneyIds", uniqueJourneyIds)
     return uniqueJourneyIds
   }
 
@@ -78,8 +79,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
   const onSubmit = async (data: any) => {
     try {
       await (client ? axios.put(`/api/clients/${client?.id}`, data) : axios.post("/api/clients", data))
-      router.refresh()
-
+      refresh()
       setOpen(false)
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Erro desconhecido"
@@ -275,10 +275,10 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
                       {...field}
                       className="mt-[6px] bg-lighter-gray"
                       modalPopover={true}
-                      options={journeys.map((journey) => ({
+                      options={journeys?.map((journey) => ({
                         label: journey.name,
                         value: journey.id,
-                      }))}
+                      })) || []}
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                       placeholder="Selecione..."
@@ -390,6 +390,8 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
               <TableBody>
                 {
                   client?.tasks?.map((task) => {
+                    const startDate = task.startDate ? new Date(task.startDate) : undefined
+                    const endDate = task.endDate ? new Date(task.endDate) : undefined
                     const priorityColor = t('TaskPriority.color.' + task.priority)
                     return <TableRow className="mt-1" key={task.id}>
                       <TableCell className="text-[10px] p-0 md:p-2">
@@ -411,10 +413,10 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
                         </div>
                       </TableCell>
                       <TableCell className="text-[10px] p-0 md:p-2">
-                        {task.startDate?.toLocaleDateString()}
+                        {startDate?.toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-[10px] p-0 md:p-2">
-                        {task.endDate?.toLocaleDateString()}
+                        {endDate?.toLocaleDateString()}
                       </TableCell>
                       <TableCell className="p-0 md:p-2">
                         <div className="flex flex-1 gap-1 justify-center items-center">

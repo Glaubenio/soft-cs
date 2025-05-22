@@ -25,14 +25,12 @@ export const AccountsPage = async ({
     if (!user.isAdmin) {
         return redirect("/");
     }
-    const accounts = await getAccounts();
 
     return (
         <div className="flex-1 space-y-4 h-full overflow-scroll">
 
             <Suspense fallback={<SuspenseLoading />}>
-                <AccountsView
-                    accounts={accounts} />
+                <AccountsView />
             </Suspense>
         </div>
     );

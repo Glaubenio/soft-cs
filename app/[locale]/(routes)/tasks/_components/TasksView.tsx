@@ -10,18 +10,12 @@ import { Kanban, List } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Props {
-  tasks: Task[]
   activeUsers: User[]
-  activeTab: string
   clients: Client[]
-  filters: {
-    status: string[]
-    priority: string[]
-    responsibleId: string[]
-  }
+  clientId?: string
 }
 
-const TasksView = ({ tasks, activeUsers, activeTab, clients, filters }: Props) => {
+const TasksView = ({ clientId, activeUsers, clients }: Props) => {
   const router = useRouter();
   const tabTriggerClass = `data-[state=active]:bg-primary 
                           data-[state=active]:text-white  
@@ -39,23 +33,20 @@ const TasksView = ({ tasks, activeUsers, activeTab, clients, filters }: Props) =
                           border-primary`
   return (
     <TasksProvider
-      tasks={tasks}
-      filters={filters}
+      clientId={clientId}
       clients={clients}
       activeUsers={activeUsers}
     >
       <div className="space-y-3">
-        <Tabs defaultValue={activeTab}>
+        <Tabs defaultValue="list">
           <TabsList className="flex flex-row md:justify-between items-center w-full gap-1">
             <div className="flex items-center gap-2">
               <TabsTrigger
-                onClick={() => router.push('?activeTab=list')}
                 className={tabTriggerClass}
                 value="list">
                 <List className="size-[12px] md:hidden" />Lista
               </TabsTrigger>
               <TabsTrigger
-                onClick={() => router.push('?activeTab=kanban')}
                 className={tabTriggerClass}
                 value="kanban">
                 <Kanban className="size-[12px] md:hidden" /> Kanban

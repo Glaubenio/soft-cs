@@ -1,35 +1,37 @@
 import { useToast } from "@/components/ui/use-toast";
-import { Client, User, User } from "@/types/types";
+import { User } from "@/types/types";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import useSWR from 'swr'
+import { createContext, useState } from "react";
+import { defaultFetcher } from "@/lib/utils";
 
 interface UsersContextType {
   users: User[];
   deleteUser: (user: User, onFinish: () => void) => void;
   deleting: boolean;
-  setCurrentUsers: (users: User[]) => void;
-
+  isLoading: boolean;
+  refresh: () => void;
 }
 export const UsersContext = createContext<UsersContextType>({
   users: [],
   deleteUser: () => { },
   deleting: false,
-  setCurrentUsers: () => { },
+  isLoading: false,
+  refresh: () => { }
 })
 
-export const UsersProvider = ({ children, users }: {
-  children: React.ReactNode,
-  users: User[],
+export const UsersProvider = ({ children }: {
+  children: React.ReactNode
 }) => {
-  const [currentUsers, setCurrentUsers] = useState<User[]>(users);
+  const { data: users, isLoading, mutate } = useSWR<User[]>('/api/user', (url: string) => defaultFetcher(url))
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);
 
   const deleteUser = async (task: User, onFinish: () => void) => {
     setDeleting(true)
     try {
-      await axios.delete(`/api/users/${task.id}`)
+      await axios.delete(`/api/user/${task.id}`)
+      mutate();
       onFinish();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || "Error deleting user";
@@ -42,15 +44,13 @@ export const UsersProvider = ({ children, users }: {
     setDeleting(false)
   }
 
-  useEffect(() => {
-    setCurrentUsers(users);
-  }, [users])
   return (
     <UsersContext.Provider value={{
-      users: currentUsers,
+      isLoading,
+      users,
       deleteUser,
       deleting,
-      setCurrentUsers: setCurrentUsers,
+      refresh: mutate
     } as UsersContextType
     }>
       {children}

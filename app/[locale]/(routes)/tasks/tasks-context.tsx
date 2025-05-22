@@ -1,62 +1,71 @@
 import { useToast } from "@/components/ui/use-toast";
+import { defaultFetcher } from "@/lib/utils";
 import { Client, Task, User } from "@/types/types";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
+import useSWR from "swr";
 
 interface TasksContextType {
   tasks: Task[];
   activeUsers: User[];
   deleteTask: (task: Task, onFinish: () => void) => void;
   deleting: boolean;
-  setCurrentTasks: (tasks: Task[]) => void;
   clients: Client[]
-  submitFilters: () => void;
+  isLoading: boolean;
   handleSelectedFilter: (name: 'status' | 'priority' | 'responsibleId', value: string) => void;
+  refresh: (tasks?: Task[], options?: any) => void;
   currentFilters: {
     status: string[]
     priority: string[]
     responsibleId: string[]
   }
 }
+
+interface Filters {
+  status: string[]
+  priority: string[]
+  responsibleId: string[]
+  clientId: string
+}
+
 export const TasksContext = createContext<TasksContextType>({
   tasks: [],
   activeUsers: [],
   deleteTask: () => { },
   deleting: false,
-  setCurrentTasks: () => { },
   clients: [],
-  submitFilters: () => { },
+  refresh: () => { },
   handleSelectedFilter: () => { },
   currentFilters: {
     status: [],
     priority: [],
     responsibleId: [],
-  }
+  },
+  isLoading: false
 })
 
-export const TasksProvider = ({ children, tasks, activeUsers, clients, filters }: {
+export const TasksProvider = ({ children, activeUsers, clients, clientId }: {
   children: React.ReactNode,
-  tasks: Task[],
   activeUsers: User[]
   clients: Client[],
-  filters: {
-    status: string[]
-    priority: string[]
-    responsibleId: string[]
-  }
+  clientId?: string
 }) => {
-  const router = useRouter();
-  const [currentTasks, setCurrentTasks] = useState<Task[]>(tasks);
+  const [currentFilters, setFilters] = useState<Filters>({
+    status: [],
+    priority: [],
+    responsibleId: [],
+    clientId: clientId || ''
+  })
+  const { data: tasks, isLoading, mutate } = useSWR<Task[]>(['/api/tasks', currentFilters],
+    ([url, queryFilters]) => defaultFetcher(url, {
+      status: (queryFilters as Filters).status.join(','), // Não achei jeito melhor de fazer o parsing disso
+      priority: (queryFilters as Filters).priority.join(','),
+      responsibleId: (queryFilters as Filters).responsibleId.join(','),
+      clientId: (queryFilters as Filters).clientId
+    }))
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);
 
-
-  const [currentFilters, setFilters] = useState<{
-    status: string[]
-    priority: string[]
-    responsibleId: string[]
-  }>(filters)
 
   const handleSelectedFilter = (name: 'status' | 'priority' | 'responsibleId', value: string) => {
     if (currentFilters[name]?.includes(value)) {
@@ -72,18 +81,12 @@ export const TasksProvider = ({ children, tasks, activeUsers, clients, filters }
     }
   }
 
-  const submitFilters = () => {
-    router.push(`/tasks?status=${currentFilters.status.join(',')}` +
-      `&priority=${currentFilters.priority.join(',')}` +
-      `&responsibleId=${currentFilters.responsibleId.join(',')}`)
-  }
-
-
   const deleteTask = async (task: Task, onFinish: () => void) => {
     setDeleting(true)
     try {
       await axios.delete(`/api/tasks/${task.id}`)
       onFinish();
+      mutate();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || "Error deleting task";
       toast({
@@ -95,20 +98,17 @@ export const TasksProvider = ({ children, tasks, activeUsers, clients, filters }
     setDeleting(false)
   }
 
-  useEffect(() => {
-    setCurrentTasks(tasks);
-  }, [tasks])
   return (
     <TasksContext.Provider value={{
       clients,
-      tasks: currentTasks,
+      isLoading,
+      tasks,
       activeUsers,
       deleteTask,
       deleting,
-      setCurrentTasks: setCurrentTasks,
-      submitFilters,
       handleSelectedFilter,
       currentFilters,
+      refresh: mutate
     } as TasksContextType
     }>
       {children}

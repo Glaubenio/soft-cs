@@ -47,9 +47,9 @@ export async function PUT(req: Request, props: { params: Promise<{ taskId: strin
                     },
                 },
                 client: {
-                    connect: {
+                    connect: clientId ? {
                         id: clientId,
-                    },
+                    } : undefined,
                 },
                 account: {
                     connect: {

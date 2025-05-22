@@ -9,10 +9,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
 import { CheckCircle, Edit, Loader2, PlusCircle, XCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
-import React from "react"
+import React, { useContext } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { z } from "zod"
 import { StepLabel } from "./_components/StepLabel"
+import { JourneysContext } from "../../journeys-context"
 
 interface Props {
   open: boolean
@@ -30,8 +31,8 @@ const formSchema = z.object({
 });
 
 export const JourneyForm = ({ open, setOpen, journey }: Props) => {
+  const { refresh } = useContext(JourneysContext)
   const { toast } = useToast()
-  const router = useRouter()
   const addStep = () => {
     const newStep = {
       color: "#150F41",
@@ -57,7 +58,7 @@ export const JourneyForm = ({ open, setOpen, journey }: Props) => {
   const onSubmit = async (data: any) => {
     try {
       await (journey ? axios.put(`/api/journeys/${journey?.id}`, data) : axios.post("/api/journeys", data))
-      router.refresh()
+      refresh()
 
       setOpen(false)
     } catch (error: any) {
@@ -68,8 +69,6 @@ export const JourneyForm = ({ open, setOpen, journey }: Props) => {
       });
     }
   }
-
-  console.log(fields, "fields")
 
   return <Dialog open={open} onOpenChange={setOpen}>
     <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] md:max-w-[680px] w-[calc(100vw-32px)] max-h-[calc(100vh-32px)] gap-0 overflow-scroll">
