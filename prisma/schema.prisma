@@ -11,49 +11,35 @@ datasource db {
 }
 
 model crm_Accounts {
-  id                   String              @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt            DateTime            @default(now()) @db.Date
-  createdBy            String?             @db.ObjectId
-  updatedAt            DateTime?           @updatedAt @db.Date
-  updatedBy            String?             @db.ObjectId
-  annual_revenue       String?
-  assigned_to          String?             @db.ObjectId
-  billing_city         String?
-  billing_country      String?
-  billing_postal_code  String?
-  billing_state        String?
-  billing_street       String?
-  company_id           String?
-  description          String?
-  email                String?
-  employees            String?
-  fax                  String?
-  industry             String?             @db.ObjectId
-  member_of            String?
-  name                 String
-  office_phone         String?
-  shipping_city        String?
-  shipping_country     String?
-  shipping_postal_code String?
-  shipping_state       String?
-  shipping_street      String?
-  status               String?             @default("Inactive")
-  type                 String?             @default("Customer")
-  vat                  String?
-  website              String?
-  invoices             Invoices[]
-  documentsIDs         String[]            @db.ObjectId
-  assigned_documents   Documents[]         @relation(fields: [documentsIDs], references: [id])
-  contacts             crm_Contacts[]
-  leads                crm_Leads[]
-  industry_type        crm_Industry_Type?  @relation(fields: [industry], references: [id])
-  opportunities        crm_Opportunities[]
-  contracts            crm_Contracts[]
-  watchers             String[]            @db.ObjectId
-  clients              clients[]
-  journeys             journeys[]
-  tasks                tasks[]
-  users                Users[]
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  email              String?
+  image              String?
+  cnpj               String
+  segment            String?
+  size               String?
+  phoneNumber        String?
+  createdAt          DateTime            @default(now()) @db.Date
+  createdBy          String?             @db.ObjectId
+  updatedAt          DateTime?           @updatedAt @db.Date
+  updatedBy          String?             @db.ObjectId
+  assigned_to        String?             @db.ObjectId
+  industry           String?             @db.ObjectId
+  status             String?             @default("Inactive")
+  type               String?             @default("Customer")
+  invoices           Invoices[]
+  documentsIDs       String[]            @db.ObjectId
+  assigned_documents Documents[]         @relation(fields: [documentsIDs], references: [id])
+  contacts           crm_Contacts[]
+  leads              crm_Leads[]
+  industry_type      crm_Industry_Type?  @relation(fields: [industry], references: [id])
+  opportunities      crm_Opportunities[]
+  contracts          crm_Contracts[]
+  watchers           String[]            @db.ObjectId
+  clients            clients[]
+  journeys           journeys[]
+  tasks              tasks[]
+  users              Users[]
 }
 
 model crm_Leads {

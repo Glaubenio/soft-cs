@@ -8,11 +8,12 @@ import { task_priorities, task_status } from "@prisma/client";
 export async function GET(req: NextRequest) {
     const params = req.nextUrl.searchParams
     let whereClause: any = {};
-    console.log("params", params);
+
     const priority = params.get("priority")?.split(',').filter((a) => a.length > 0) || [];
     const status = params.get("status")?.split(',').filter((a) => a.length > 0) || [];
     const responsibleId = params.get("responsibleId")?.split(',').filter((a) => a.length > 0) || [];
     const clientId = params.get("clientId");
+
     if (priority.length > 0) {
         whereClause.priority = {
             in: priority as task_priorities[]

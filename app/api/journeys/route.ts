@@ -5,6 +5,7 @@ import {prismadb} from "@/lib/prisma";
 export async function GET() {
     const user = await getUser();
     const accountId = user.accountId;
+
     if (!accountId) {
         throw new Error("Account ID is required");
     }
