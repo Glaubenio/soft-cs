@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Edit, EllipsisVertical, Trash } from "lucide-react"
+import { Edit, Trash } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useContext, useState } from "react"
 import { TasksContext } from "../tasks-context"

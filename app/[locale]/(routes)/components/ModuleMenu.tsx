@@ -54,11 +54,11 @@ const ModuleMenu = ({ modules, dict, build }: Props) => {
             <DashboardMenu open={open} title={dict.ModuleMenu.dashboard} />
             <ClientsModuleMenu open={open} title={dict.ModuleMenu.clients} />
             <TasksModuleMenu open={open} title={dict.ModuleMenu.projects} />
-            <DocumentsModuleMenu
+            {/* <DocumentsModuleMenu
               open={open}
               title={dict.ModuleMenu.documents}
             />
-            <EmailsModuleMenu open={open} title={dict.ModuleMenu.emails} />
+            <EmailsModuleMenu open={open} title={dict.ModuleMenu.emails} /> */}
           </div>
         </div>
       </div>

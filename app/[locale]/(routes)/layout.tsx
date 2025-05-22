@@ -22,14 +22,13 @@ export default async function AppLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  console.log(session, "session");
 
   if (!session) {
     return redirect("/sign-in");
   }
 
   const user = session?.user;
-
+  console.log("user", user);
   if (user?.userStatus === "PENDING") {
     return redirect("/pending");
   }
@@ -43,12 +42,11 @@ export default async function AppLayout({
       <SideBar build={1} />
       <div className="flex flex-col h-full w-full overflow-hidden px-[16px] md:px-0">
         <Header
-          id={session.user.id as string}
-          name={session.user.name as string}
-          email={session.user.email as string}
-          avatar={session.user.image as string}
-          lang={session.user.userLanguage as string}
-          isAdmin={session.user.is_admin}
+          id={user.id as string}
+          name={user.name as string}
+          avatar={user.image as string}
+          lang={user.userLanguage as string}
+          isAdmin={user.isAdmin}
         />
         <div className="flex-grow overflow-y-auto h-full py-[20px] pr-0 md:pr-[32px] mt-[20px] mb-[87px] md:mb-0">{children}</div>
       </div>

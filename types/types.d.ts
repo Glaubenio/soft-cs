@@ -67,3 +67,13 @@ export interface Client {
   serviceType: "HIGH" | "LOW" | "TECH" | null;
   tasks: Task[];
 }
+
+export interface Account {
+  id: string;
+  name: string | null;
+}
+
+export interface Account {
+  id: string;
+  name: string | null;
+}

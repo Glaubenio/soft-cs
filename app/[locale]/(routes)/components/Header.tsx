@@ -18,13 +18,12 @@ import { signOut } from "next-auth/react";
 type Props = {
   id: string;
   name: string;
-  email: string;
   avatar: string;
   lang: string;
   isAdmin: boolean;
 };
 
-const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
+const Header = ({ id, name, avatar, isAdmin }: Props) => {
   const pathname = usePathname();
   const getBreadcrumbAndTitle = (): { title: string | undefined, breadcrumb: string | undefined } => {
     if (pathname.split('/').length == 2) {
@@ -98,7 +97,6 @@ const Header = ({ id, name, email, avatar, isAdmin }: Props) => {
           userId={id}
           isAdmin={isAdmin}
           name={name}
-          email={email}
         />
       </div>
     </div>

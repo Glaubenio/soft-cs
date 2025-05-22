@@ -27,11 +27,11 @@ const TabBar = async () => {
     <ClientsModuleMenu open={true} title={dict.ModuleMenu.clients} />
     <TasksModuleMenu open={true} title={dict.ModuleMenu.projects} />
     <DashboardMenu open={true} title={dict.ModuleMenu.dashboard} />
-    <DocumentsModuleMenu
+    {/* <DocumentsModuleMenu
       open={true}
       title={dict.ModuleMenu.documents}
     />
-    <EmailsModuleMenu open={true} title={dict.ModuleMenu.emails} />
+    <EmailsModuleMenu open={true} title={dict.ModuleMenu.emails} /> */}
 
   </div>
 }
