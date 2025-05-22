@@ -57,7 +57,7 @@ export async function GET(props: {
 
 
     try {
-        const user = await prismadb.clients.findMany({
+        const clients = await prismadb.clients.findMany({
             where: whereClause,
             include: {
                 tasks: {
@@ -75,7 +75,7 @@ export async function GET(props: {
             }
         });
 
-        return NextResponse.json(user);
+        return NextResponse.json(clients);
     } catch (error) {
         console.log("[USER_GET]", error);
         return new NextResponse("Initial error", {status: 500});
@@ -150,7 +150,7 @@ export const POST = async (req: Request) => {
                 })
             }
         );
-        const results = await Promise.all(syncStepsQuery);
+        await Promise.all(syncStepsQuery);
         return NextResponse.json({data: newClient}, {status: 201});
     } catch
         (error) {
