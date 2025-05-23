@@ -9,6 +9,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import { Account } from "@/types/types";
 import { AccountForm } from "../forms/Account";
 import AlertModal from "@/components/modals/alert-modal";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const AccountsTable = () => {
   const { accounts, isLoading, deleting, deleteAccount } = useContext(AccountsContext);
@@ -49,7 +50,14 @@ const AccountsTable = () => {
         {accounts?.map((account, index) => (
           <TableRow key={index}>
             <TableCell className="text-sm font-medium text-gray-900">
-              {account.name}
+              <div className="flex flex-row gap-2 items-center text-[14px] font-[400]">
+                <Avatar className="size-[24px]">
+                  <AvatarImage
+                    src={account.imageUpload?.image_url || `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
+                  />
+                </Avatar>{account.name}
+              </div>
+
             </TableCell>
             <TableCell className="text-sm font-medium text-gray-900">
               {account.cnpj}

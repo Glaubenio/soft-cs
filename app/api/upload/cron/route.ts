@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { s3Client } from "@/lib/digital-ocean-s3";
+import { s3Client } from "@/lib/s3";
 import { PutObjectAclCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { prismadb } from "@/lib/prisma";
 import { getServerSession } from "next-auth";

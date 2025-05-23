@@ -14,7 +14,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { withMask } from 'use-mask-input';
 import { useRouter } from "next/navigation"
 import { AvatarImage } from "@radix-ui/react-avatar"
-import { useContext, useRef } from "react"
+import { useContext, useRef, useState } from "react"
 import { AccountsContext } from "../accounts-context"
 
 
@@ -25,6 +25,7 @@ interface Props {
 }
 
 const formSchema = z.object({
+  avatar: z.instanceof(File).optional(),
   name: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
   cnpj: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
   segment: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
@@ -32,12 +33,15 @@ const formSchema = z.object({
 });
 
 export const AccountForm = ({ open, setOpen, account }: Props) => {
+  const [avatarFile, setAvatarFile] = useState<File | undefined>(undefined)
+  const [avatarPreview, setAvatarPreview] = useState<string | undefined>(account?.imageUpload?.image_url || undefined)
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { refresh } = useContext(AccountsContext)
   const { toast } = useToast()
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      avatar: undefined,
       name: account?.name || "",
       cnpj: account?.cnpj || "",
       segment: account?.segment || "",
@@ -47,7 +51,15 @@ export const AccountForm = ({ open, setOpen, account }: Props) => {
 
   const onSubmit = async (data: any) => {
     try {
-      await (account ? axios.put(`/api/account/${account?.id}`, data) : axios.post("/api/account", data))
+      const formData = new FormData()
+      if (avatarFile) {
+        formData.append("avatar", avatarFile)
+      }
+      formData.append("name", data.name)
+      formData.append("cnpj", data.cnpj)
+      formData.append("segment", data.segment)
+      formData.append("size", data.size)
+      await (account ? axios.put(`/api/account/${account?.id}`, formData) : axios.post("/api/account", formData))
       refresh()
       setOpen(false)
     } catch (error: any) {
@@ -59,6 +71,14 @@ export const AccountForm = ({ open, setOpen, account }: Props) => {
     }
   }
 
+  const changeAvatarImage = async (file?: File) => {
+    if (!file) {
+      return;
+    }
+    setAvatarFile(file)
+    setAvatarPreview(URL.createObjectURL(file))
+  }
+
   return <Dialog open={open} onOpenChange={setOpen}>
     <DialogContent hidesCloseButton={true} className="bg-white rounded-[20px] max-w-[680px] gap-0">
       <Form {...form}>
@@ -68,10 +88,10 @@ export const AccountForm = ({ open, setOpen, account }: Props) => {
             <div className="flex flex-row items-start">
               <Avatar className="w-[74px] h-[74px] brightness-[0.5]">
                 <AvatarImage
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
+                  src={avatarPreview || `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
                 />
-                <Input ref={fileInputRef} className="hidden" id="picture" type="file" />
-                <Button variant="ghost" onClick={() => fileInputRef.current?.click()} className="absolute size-[24px] [&_svg]:size-[12px] top-0 right-0 left-0 bottom-0 m-auto">
+                <Input ref={fileInputRef} onChange={(e) => changeAvatarImage(e.target.files?.[0])} className="hidden" id="picture" type="file" />
+                <Button type="button" variant="ghost" onClick={() => fileInputRef.current?.click()} className="absolute size-[24px] [&_svg]:size-[12px] top-0 right-0 left-0 bottom-0 m-auto">
                   <Edit />
                 </Button>
               </Avatar>

@@ -65,6 +65,7 @@ export interface Client {
   status: "ACTIVE" | "INACTIVE" | "IN_IMPLANTATION";
   description: string | null;
   csmResponsible: User?;
+  avatar?: { image_url: string }
   userId: string | null;
   contacts: ClientContact[];
   recurringContractRevenue: number;
@@ -79,4 +80,5 @@ export interface Account {
   cnpj: string | null;
   segment: string | null;
   size: string | null;
+  imageUpload?: { image_url: string } | null;
 }

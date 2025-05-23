@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { s3Client } from "@/lib/digital-ocean-s3";
+import { s3Client } from "@/lib/s3";
 import { ListBucketsCommand } from "@aws-sdk/client-s3";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";

@@ -26,7 +26,7 @@ export const AccountsProvider = ({ children }: {
 }) => {
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);
-  const { data: accounts, isLoading, mutate } = useSWR<Account[]>('/api/crm/account', (url: string) => defaultFetcher(url))
+  const { data: accounts, isLoading, mutate } = useSWR<Account[]>('/api/account', (url: string) => defaultFetcher(url))
 
   const deleteAccount = async (task: Account, onFinish: () => void) => {
     setDeleting(true)

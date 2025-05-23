@@ -1,20 +1,22 @@
 import { authOptions } from "@/lib/auth";
 import { prismadb } from "@/lib/prisma";
+import { s3Client } from "@/lib/s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { client_service_types, client_statuses, ImageUpload } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export const PUT = async (req: Request, props: { params: Promise<{ clientId: string }> }) => {
   const session = await getServerSession(authOptions);
-  const body = await req.json();
-  const {
-    name,
-    status,
-    description,
-    serviceType,
-    recurringContractRevenue,
-    userId,
-    journeyIds,
-  } = body;
+  const body = await req.formData();
+
+  const userId = body.get('userId')?.toString() || null;
+  const journeyIds = JSON.parse(body.get("journeyIds")?.toString() || "[]") || [];
+  const recurringContractRevenue = parseFloat(body.get("recurringContractRevenue")?.toString() || "0");
+  const name = body.get("name")?.toString() || null;
+  const status = body.get("status")?.toString() as client_statuses || null;
+  const description = body.get("description")?.toString() || null;
+  const serviceType = body.get("serviceType")?.toString() as client_service_types || null;
   const params = await props.params;
   const clientId = params.clientId;
 
@@ -22,11 +24,12 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
     return new NextResponse("Unauthenticated", { status: 401 });
   }
 
-  if (!name || !serviceType || !recurringContractRevenue || !status) {
+  if (!name || !serviceType || !status) {
     return new NextResponse("Missing one of the task data ", { status: 400 });
   }
 
   try {
+
     const client = await prismadb.clients.findUnique({
       include: {
         journeyStepsClients: true,
@@ -38,6 +41,28 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
     if (!client) {
       return new NextResponse("Client not found", { status: 404 });
     }
+
+    const avatar = body.get("avatar")
+    let avatarImageUpload: ImageUpload | null = null;
+    if (avatar && avatar instanceof File) {
+      const bytes = await avatar.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const extension = avatar.name.split(".").pop();
+      const fileName = `${name.replace(/\s+/g, "_")}-${Date.now()}.${extension}`;
+      await s3Client.send(new PutObjectCommand({
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: `clients/${fileName}`,
+        Body: buffer,
+        ContentType: avatar.type,
+        ACL: "public-read",
+      }))
+      avatarImageUpload = await prismadb.imageUpload.create({
+        data: {
+          image_url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/clients/${fileName}`,
+        }
+      })
+    }
+
     const updatedClient = await prismadb.clients.update({
       where: {
         id: clientId,
@@ -46,9 +71,18 @@ export const PUT = async (req: Request, props: { params: Promise<{ clientId: str
         name,
         description,
         status,
-        userId,
         serviceType,
         recurringContractRevenue,
+        avatar: avatarImageUpload ? {
+          connect: {
+            id: avatarImageUpload.id,
+          }
+        } : undefined,
+        csmResponsible: userId ? {
+          connect: {
+            id: userId,
+          }
+        } : undefined
       },
     });
     const journeys = await prismadb.journeys.findMany({

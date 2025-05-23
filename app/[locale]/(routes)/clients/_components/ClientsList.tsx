@@ -29,7 +29,7 @@ const ClientRow = ({ client, onEditClick, onDeleteClick }: { client: Client, onE
       <div className="flex flex-row gap-2 items-center text-[14px] font-[400]">
         <Avatar className="size-[24px]">
           <AvatarImage
-            src={`${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
+            src={client.avatar?.image_url || `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
           />
         </Avatar>{name}
       </div>
@@ -119,7 +119,7 @@ const ClientsCardList = ({ clients, onDeleteClick, onEditClick }: { clients: Cli
             <div className="flex flex-row gap-2 items-center text-[18px] font-[400]">
               <Avatar className="size-[46px]">
                 <AvatarImage
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
+                  src={client.avatar?.image_url || `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
                 />
               </Avatar>
               <div className="flex flex-col text-[18px]">

@@ -34,6 +34,7 @@ interface Props {
 }
 
 const formSchema = z.object({
+  avatar: z.instanceof(File).optional(),
   name: z.string({ errorMap: () => ({ message: "Campo obrigatório" }) }).min(1, { message: "Campo obrigatório" }),
   status: z.enum(["ACTIVE", "INACTIVE", "IN_IMPLANTATION"], { errorMap: () => ({ message: "Campo obrigatório" }) }),
   description: z.string().nullable(),
@@ -44,6 +45,8 @@ const formSchema = z.object({
 });
 
 export const ClientForm = ({ open, setOpen, client }: Props) => {
+  const [avatarFile, setAvatarFile] = useState<File | undefined>(undefined)
+  const [avatarPreview, setAvatarPreview] = useState<string | undefined>(client?.avatar?.image_url || undefined)
   const [contacts, setContacts] = useState(client?.contacts || [])
   const { activeUsers, refresh } = useContext(ClientsContext)
   const { journeys } = useContext(JourneysContext)
@@ -64,6 +67,7 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      avatar: undefined,
       name: client?.name || "",
       status: client?.status,
       description: client?.description || "",
@@ -75,8 +79,20 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
   })
 
   const onSubmit = async (data: any) => {
+    console.log("data", data)
     try {
-      await (client ? axios.put(`/api/clients/${client?.id}`, data) : axios.post("/api/clients", data))
+      const formData = new FormData();
+      if (avatarFile) {
+        formData.append("avatar", avatarFile);
+      }
+      formData.append("name", data.name);
+      formData.append("status", data.status);
+      formData.append("description", data.description);
+      formData.append("userId", data.userId);
+      formData.append("recurringContractRevenue", data.recurringContractRevenue);
+      formData.append("serviceType", data.serviceType);
+      formData.append("journeyIds", JSON.stringify(data.journeyIds));
+      await (client ? axios.put(`/api/clients/${client?.id}`, formData) : axios.post("/api/clients", formData))
       refresh()
       setOpen(false)
     } catch (error: any) {
@@ -87,7 +103,14 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
       });
     }
   }
-  console.log("contactFormInfo", contactFormInfo)
+
+  const changeAvatarImage = async (file?: File) => {
+    if (!file) {
+      return;
+    }
+    setAvatarFile(file)
+    setAvatarPreview(URL.createObjectURL(file))
+  }
 
   return (<Dialog open={open} onOpenChange={setOpen}>
     {contactFormInfo.open &&
@@ -109,10 +132,10 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
             <div className="flex flex-row items-start">
               <Avatar className="w-[74px] h-[74px] brightness-[0.5]">
                 <AvatarImage
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
+                  src={avatarPreview || `${process.env.NEXT_PUBLIC_APP_URL}/images/nouser.png`}
                 />
-                <Input ref={fileInputRef} className="hidden" id="picture" type="file" />
-                <Button variant="ghost" onClick={() => fileInputRef.current?.click()} className="absolute size-[24px] [&_svg]:size-[12px] top-0 right-0 left-0 bottom-0 m-auto">
+                <Input ref={fileInputRef} onChange={(e) => changeAvatarImage(e.target.files?.[0])} className="hidden" id="picture" type="file" />
+                <Button type="button" variant="ghost" onClick={() => fileInputRef.current?.click()} className="absolute size-[24px] [&_svg]:size-[12px] top-0 right-0 left-0 bottom-0 m-auto">
                   <Edit />
                 </Button>
               </Avatar>
