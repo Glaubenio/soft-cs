@@ -1,18 +1,18 @@
-import {NextResponse} from "next/server";
-import {prismadb} from "@/lib/prisma";
-import {hash} from "bcryptjs";
-import {newUserNotify} from "@/lib/new-user-notify";
-import {getUser} from "@/actions/get-user";
+import { NextResponse } from "next/server";
+import { prismadb } from "@/lib/prisma";
+import { hash } from "bcryptjs";
+import { newUserNotify } from "@/lib/new-user-notify";
+import { getUser } from "@/actions/get-user";
 
 export async function POST(req: Request) {
     const currentUser = await getUser()
 
     if (!currentUser) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!currentUser.is_admin) {
-        return new NextResponse("Unauthorized", {status: 403});
+        return new NextResponse("Unauthorized", { status: 403 });
     }
 
     try {
@@ -26,15 +26,15 @@ export async function POST(req: Request) {
         } = body;
 
         if (!name || !email || !accountId) {
-            return new NextResponse("Unauthenticated", {status: 401});
+            return new NextResponse("Unauthenticated", { status: 401 });
         }
 
-        if (await prismadb.users.findFirst({where: {email: email}})) {
-            return new NextResponse("User already exist", {status: 401});
+        if (await prismadb.users.findFirst({ where: { email: email } })) {
+            return new NextResponse("User already exist", { status: 401 });
         }
 
-        if (await prismadb.crm_Contracts.findFirst({where: {id: accountId}})) {
-            return new NextResponse("Account does not exists", {status: 400});
+        if (await prismadb.crm_Contracts.findFirst({ where: { id: accountId } })) {
+            return new NextResponse("Account does not exists", { status: 400 });
         }
 
         const password = Math.random().toString(36).slice(-8);
@@ -59,10 +59,10 @@ export async function POST(req: Request) {
 
         newUserNotify(user);
 
-        return NextResponse.json(user, {status: 201});
+        return NextResponse.json(user, { status: 201 });
     } catch (error) {
         console.log("[USERS_POST]", error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }
 
@@ -70,19 +70,23 @@ export async function GET() {
     const currentUser = await getUser()
 
     if (!currentUser) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!currentUser.is_admin) {
-        return new NextResponse("Unauthorized", {status: 403});
+        return new NextResponse("Unauthorized", { status: 403 });
     }
 
     try {
-        const users = await prismadb.users.findMany();
+        const users = await prismadb.users.findMany({
+            include: {
+                account: true
+            }
+        });
 
         return NextResponse.json(users);
     } catch (error) {
         console.log("[USERS_GET]", error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }

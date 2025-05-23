@@ -1,27 +1,30 @@
 import { useToast } from "@/components/ui/use-toast";
-import { User } from "@/types/types";
+import { Account, User } from "@/types/types";
 import axios from "axios";
 import useSWR from 'swr'
 import { createContext, useState } from "react";
 import { defaultFetcher } from "@/lib/utils";
 
 interface UsersContextType {
-  users: User[];
+  users?: User[];
   deleteUser: (user: User, onFinish: () => void) => void;
   deleting: boolean;
   isLoading: boolean;
   refresh: () => void;
+  accounts: Account[];
 }
 export const UsersContext = createContext<UsersContextType>({
   users: [],
   deleteUser: () => { },
   deleting: false,
   isLoading: false,
-  refresh: () => { }
+  refresh: () => { },
+  accounts: []
 })
 
-export const UsersProvider = ({ children }: {
-  children: React.ReactNode
+export const UsersProvider = ({ children, accounts }: {
+  children: React.ReactNode,
+  accounts: Account[]
 }) => {
   const { data: users, isLoading, mutate } = useSWR<User[]>('/api/user', (url: string) => defaultFetcher(url))
   const { toast } = useToast();
@@ -50,8 +53,9 @@ export const UsersProvider = ({ children }: {
       users,
       deleteUser,
       deleting,
+      accounts,
       refresh: mutate
-    } as UsersContextType
+    }
     }>
       {children}
     </UsersContext.Provider>

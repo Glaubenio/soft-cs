@@ -16,7 +16,6 @@ interface Props {
 }
 
 const TasksView = ({ clientId, activeUsers, clients }: Props) => {
-  const router = useRouter();
   const tabTriggerClass = `data-[state=active]:bg-primary 
                           data-[state=active]:text-white  
                           data-[state=active]:border-b-2 

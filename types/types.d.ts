@@ -12,6 +12,9 @@ export interface Session {
 export interface User {
   id: string;
   name?: string | null
+  email?: string | null
+  jobTitle?: string | null
+  account?: Account | null
 }
 export interface Task {
   id: string
@@ -66,11 +69,6 @@ export interface Client {
   journeyStepsClients: JourneyStepClient[];
   serviceType: "HIGH" | "LOW" | "TECH" | null;
   tasks: Task[];
-}
-
-export interface Account {
-  id: string;
-  name: string | null;
 }
 
 export interface Account {

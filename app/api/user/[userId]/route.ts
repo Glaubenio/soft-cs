@@ -1,18 +1,18 @@
-import {NextResponse} from "next/server";
-import {prismadb} from "@/lib/prisma";
-import {getUser} from "@/actions/get-user";
-import {newUserNotify} from "@/lib/new-user-notify";
+import { NextResponse } from "next/server";
+import { prismadb } from "@/lib/prisma";
+import { getUser } from "@/actions/get-user";
+import { newUserNotify } from "@/lib/new-user-notify";
 
 export async function GET(req: Request, props: { params: Promise<{ userId: string }> }) {
     const params = await props.params;
     const currentUser = await getUser()
 
     if (!currentUser) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!currentUser.is_admin) {
-        return new NextResponse("Unauthorized", {status: 403});
+        return new NextResponse("Unauthorized", { status: 403 });
     }
 
     try {
@@ -25,7 +25,7 @@ export async function GET(req: Request, props: { params: Promise<{ userId: strin
         return NextResponse.json(user);
     } catch (error) {
         console.log("[USER_GET]", error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }
 
@@ -34,11 +34,11 @@ export async function PUT(req: Request, props: { params: Promise<{ userId: strin
     const currentUser = await getUser()
 
     if (!currentUser) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!currentUser.is_admin) {
-        return new NextResponse("Unauthorized", {status: 403});
+        return new NextResponse("Unauthorized", { status: 403 });
     }
 
     try {
@@ -52,15 +52,15 @@ export async function PUT(req: Request, props: { params: Promise<{ userId: strin
         } = body;
 
         if (!name || !email || !accountId) {
-            return new NextResponse("Unauthenticated", {status: 401});
+            return new NextResponse("Unauthenticated", { status: 401 });
         }
 
-        if (await prismadb.users.findFirst({where: {email: email}})) {
-            return new NextResponse("User already exist", {status: 401});
+        if (await prismadb.users.findFirst({ where: { email: email, NOT: { id: params.userId } } })) {
+            return new NextResponse("User already exist", { status: 401 });
         }
 
-        if (await prismadb.crm_Contracts.findFirst({where: {id: accountId}})) {
-            return new NextResponse("Account does not exists", {status: 400});
+        if (await prismadb.crm_Contracts.findFirst({ where: { id: accountId } })) {
+            return new NextResponse("Account does not exists", { status: 400 });
         }
 
         const user = await prismadb.users.update({
@@ -82,10 +82,10 @@ export async function PUT(req: Request, props: { params: Promise<{ userId: strin
 
         newUserNotify(user);
 
-        return NextResponse.json(user, {status: 200});
+        return NextResponse.json(user, { status: 200 });
     } catch (error) {
         console.log("[USERS_POST]", error);
-        return new NextResponse("Initial error", {status: 500});
+        return new NextResponse("Initial error", { status: 500 });
     }
 }
 
@@ -94,11 +94,11 @@ export async function DELETE(req: Request, props: { params: Promise<{ userId: st
     const currentUser = await getUser()
 
     if (!currentUser) {
-        return new NextResponse("Unauthenticated", {status: 401});
+        return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!currentUser.is_admin) {
-        return new NextResponse("Unauthorized", {status: 403});
+        return new NextResponse("Unauthorized", { status: 403 });
     }
 
     try {
@@ -111,6 +111,6 @@ export async function DELETE(req: Request, props: { params: Promise<{ userId: st
         return NextResponse.json(user);
     } catch (error) {
         console.log("[USER_DELETE]", error);
-        return NextResponse.json({message: error}, {status: 500});
+        return NextResponse.json({ message: error }, { status: 500 });
     }
 }

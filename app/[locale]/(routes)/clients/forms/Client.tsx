@@ -3,11 +3,10 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle, ChevronDownCircle, Edit, EllipsisVertical, Loader2, PlusCircle, XCircle } from "lucide-react";
+import { CheckCircle, Edit, EllipsisVertical, Loader2, PlusCircle, XCircle } from "lucide-react";
 import { useContext, useRef, useState } from "react";
 import { ContactForm } from "./Contact";
 import { z } from "zod";

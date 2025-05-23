@@ -10,7 +10,7 @@ export const UsersToolbar = () => {
   const [clientFormOpen, setClientFormOpen] = useState(false);
 
   return <div className="flex flex-row gap-1">
-    <UserForm open={clientFormOpen} setOpen={setClientFormOpen} />
+    {clientFormOpen && <UserForm open={clientFormOpen} setOpen={setClientFormOpen} />}
 
     <Button className="md:py-2 md:px-4 md:h-10 md:rounded-[12px] md:text-sm text-[12px] py-1.5 px-3 h-auto rounded-sm" onClick={() => setClientFormOpen(true)}>
       <PlusCircle /> Novo usuário

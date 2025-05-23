@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Session } from "next-auth";
 import SuspenseLoading from "@/components/loadings/suspense";
 import UsersView from "./_components/UsersView";
+import { getAccounts } from "@/actions/crm/get-accounts";
 
 export const maxDuration = 300;
 
@@ -17,11 +18,13 @@ const UsersPage = async () => {
         return redirect("/");
     }
 
+    const accounts = await getAccounts()
+
     return (
         <div className="flex-1 space-y-4 h-full overflow-scroll">
 
             <Suspense fallback={<SuspenseLoading />}>
-                <UsersView />
+                <UsersView accounts={accounts} />
             </Suspense>
         </div>
     );
