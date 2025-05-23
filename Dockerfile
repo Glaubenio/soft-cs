@@ -11,11 +11,10 @@ ARG GOOGLE_SECRET
 ENV GOOGLE_SECRET=$GOOGLE_SECRET
 
 # Fake env
-ENV DO_ENDPOINT a.com
-ENV DO_REGION us-east1
-ENV DO_BUCKET crm
-ENV DO_ACCESS_KEY_ID fakeid
-ENV DO_ACCESS_KEY_SECRET fake-key
+ENV AWS_ACCESS_KEY_ID fakeid
+ENV AWS_SECRET_ACCESS_KEY fake-key
+ENV AWS_REGION us-east-1
+ENV AWS_S3_BUCKET_NAME fake-bucket
 
 RUN corepack enable && \
     rm -f /usr/local/bin/pnpm && \
