@@ -19,6 +19,8 @@ model crm_Accounts {
   segment            String?
   size               String?
   phoneNumber        String?
+  imageId            String?             @db.ObjectId
+  imageUpload        ImageUpload?        @relation(fields: [imageId], references: [id])
   createdAt          DateTime            @default(now()) @db.Date
   createdBy          String?             @db.ObjectId
   updatedAt          DateTime?           @updatedAt @db.Date
@@ -245,7 +247,10 @@ model Employees {
 }
 
 model ImageUpload {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  image_url    String
+  clients      clients[]
+  crm_Accounts crm_Accounts[]
 }
 
 model MyAccount {
@@ -542,7 +547,8 @@ model clients {
   status                   client_statuses         @default(ACTIVE)
   serviceType              client_service_types?   @default(LOW)
   recurringContractRevenue Float                   @default(0.0)
-  image                    String?
+  avatarId                 String?                 @db.ObjectId
+  avatar                   ImageUpload?            @relation(fields: [avatarId], references: [id])
   userId                   String?                 @db.ObjectId
   csmResponsible           Users?                  @relation(fields: [userId], references: [id])
   tasks                    tasks[]
