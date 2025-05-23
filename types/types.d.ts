@@ -8,14 +8,15 @@ export interface Session {
   userStatus: string;
 }
 
-
 export interface User {
   id: string;
   name?: string | null
+  username?: string | null
   email?: string | null
   jobTitle?: string | null
   account?: Account | null
 }
+
 export interface Task {
   id: string
   title: string
@@ -57,6 +58,7 @@ export interface JourneyStepClient {
   journeyStepId: string;
   journeyStep: JourneyStep | null;
 }
+
 export interface Client {
   id: string;
   name: string | null;
@@ -74,4 +76,7 @@ export interface Client {
 export interface Account {
   id: string;
   name: string | null;
+  cnpj: string | null;
+  segment: string | null;
+  size: string | null;
 }

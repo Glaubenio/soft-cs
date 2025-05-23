@@ -1,8 +1,6 @@
-import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { ClientContact } from "@/types/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckCircle, Loader2, PlusCircle, XCircle } from "lucide-react"

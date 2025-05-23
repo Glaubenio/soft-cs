@@ -51,7 +51,6 @@ export const ClientForm = ({ open, setOpen, client }: Props) => {
     open: false
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
   const t = useTranslations()
   const { toast } = useToast();
 

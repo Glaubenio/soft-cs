@@ -11,12 +11,14 @@ interface AccountsContextType {
   deleteAccount: (account: Account, onFinish: () => void) => void;
   deleting: boolean;
   isLoading: boolean;
+  refresh: () => void;
 }
 export const AccountsContext = createContext<AccountsContextType>({
   accounts: [],
   deleteAccount: () => { },
   deleting: false,
-  isLoading: false
+  isLoading: false,
+  refresh: () => { },
 })
 
 export const AccountsProvider = ({ children }: {
@@ -29,7 +31,7 @@ export const AccountsProvider = ({ children }: {
   const deleteAccount = async (task: Account, onFinish: () => void) => {
     setDeleting(true)
     try {
-      await axios.delete(`/api/crm/account/${task.id}`)
+      await axios.delete(`/api/account/${task.id}`)
       mutate();
       onFinish();
     } catch (error: any) {
@@ -48,7 +50,8 @@ export const AccountsProvider = ({ children }: {
       accounts,
       deleteAccount,
       deleting,
-      isLoading
+      isLoading,
+      refresh: mutate
     } as AccountsContextType
     }>
       {children}
